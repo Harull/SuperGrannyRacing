@@ -1,0 +1,31 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "SeniorPlayer.h"
+
+// Sets default values
+ASeniorPlayer::ASeniorPlayer()
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+void ASeniorPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+// Called every frame
+void ASeniorPlayer::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void ASeniorPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+}
+
