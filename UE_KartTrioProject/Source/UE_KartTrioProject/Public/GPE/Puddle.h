@@ -13,9 +13,9 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API APuddle : public AOverlapObject
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere) float timeStun = 2.f;
 	
 public:
-	// Sets default values for this actor's properties
 	APuddle();
 
 protected:
