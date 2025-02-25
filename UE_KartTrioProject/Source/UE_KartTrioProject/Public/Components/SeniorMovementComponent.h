@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include <InputAction.h>
+#include <GameFramework/CharacterMovementComponent.h>
 #include "SeniorMovementComponent.generated.h"
 
 
@@ -11,22 +13,40 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	bool canMove = true;
-	bool canRotate = true;
 
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float forwardSpeed = 20, backwardSpeed = 10, steeringSpeed = 10;
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "10", UIMin = 10), Category = "Parameters") float maxFrontWheelSteeringAngle = 45;
+
+	UPROPERTY(EditAnywhere, Category = "Debug") bool useDebugs = true;
+	UPROPERTY(EditAnywhere, Category = "Debug") float arrowWheelDirectionLength = 100.f;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") float currentSteeringAngle = 0;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canMove = true, canRotate = true, canSteerWheels = true;
+
+	UPROPERTY() TObjectPtr<AActor> personalOwner;
+	UPROPERTY() TObjectPtr<UCharacterMovementComponent> ownersCharacterMovementComponent;
 
 public:	
 	USeniorMovementComponent();
 
 public:
+	FORCEINLINE FVector GetForwardVectorRotatedBySteerAngle() const { return personalOwner->GetActorForwardVector().RotateAngleAxis(currentSteeringAngle, FVector::UpVector); }
+
 	FORCEINLINE void SetCanMove(const bool _value) { canMove = _value; }
 	FORCEINLINE void SetCanRotate(const bool _value) { canRotate = _value; }
+	FORCEINLINE void SetCanSteerWheels(const bool _value) { canSteerWheels = _value; }
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+private:
+	void Init();
+	void InitFields();
 public:
-	void Move(FInputKEKCHOSE);
+	UFUNCTION() void MoveForward(const FInputActionValue& _valuePosFloat);
+	UFUNCTION() void MoveBackward(const FInputActionValue& _valueNegFloat);
+	UFUNCTION() void SteerWheels(const FInputActionValue& _valueFloat);
 
+private:
+	void DrawDebugs();
 };

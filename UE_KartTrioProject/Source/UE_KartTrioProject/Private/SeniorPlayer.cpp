@@ -9,14 +9,13 @@
 ASeniorPlayer::ASeniorPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	charMove = GetCharacterMovement();
-
+	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
+	AddOwnedComponent(seniorMovementcomponent);
 }
 
 void ASeniorPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -30,9 +29,7 @@ void ASeniorPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	InitSubsystem();
-
-	TObjectPtr<UEnhancedInputComponent> _enhInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	InitInputs(_enhInputComponent);
+	InitInputs(Cast<UEnhancedInputComponent>(PlayerInputComponent));
 
 }
 
@@ -53,7 +50,9 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 		UE_LOG(LogTemp, Warning, TEXT("ERROR WHILE INITIALIZING ASeniorPlayer's inputs,  _inputComponent null -> ASeniorPlayer::InitInputs"));
 		return;
 	}
-	//_inputComponent->BindAction()
-	//TODO Implement bindings
+	_inputComponent->BindAction(forward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::MoveForward);
+	_inputComponent->BindAction(backward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::MoveBackward);
+	_inputComponent->BindAction(steering, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::SteerWheels);
+	//TODO Implement other bindings
 }
 
