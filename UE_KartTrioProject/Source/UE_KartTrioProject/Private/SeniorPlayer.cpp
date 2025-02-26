@@ -9,7 +9,28 @@
 ASeniorPlayer::ASeniorPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
 	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
+
+	//CAMERA
+	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
+	springArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
+	camera->SetupAttachment(springArm);
+	springArm->SetupAttachment(RootComponent);
+
+	//COMPOSED MESH OF CART
+	cartCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CartCapsule");
+	shoppingCart = CreateDefaultSubobject<UStaticMeshComponent>("ShoppingCart");
+	backWheels = CreateDefaultSubobject<UStaticMeshComponent>("BackWheels");
+	frontRightWheel = CreateDefaultSubobject<UStaticMeshComponent>("FrontRightWheel");
+	frontLeftWheel = CreateDefaultSubobject<UStaticMeshComponent>("FrontLeftWheel");
+
+	cartCapsuleComponent->SetupAttachment(RootComponent);
+	shoppingCart->SetupAttachment(cartCapsuleComponent);
+	backWheels->SetupAttachment(shoppingCart);
+	frontRightWheel->SetupAttachment(shoppingCart);
+	frontLeftWheel->SetupAttachment(shoppingCart);
+
 	AddOwnedComponent(seniorMovementcomponent);
 }
 
