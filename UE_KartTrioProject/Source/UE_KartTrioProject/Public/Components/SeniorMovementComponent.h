@@ -17,9 +17,16 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMovementDone);
 	FOnMovementDone onMovementDone;
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMoveForwardDone);
+	FOnMoveForwardDone onMoveForwardDone;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMoveBackwardDone);
+	FOnMoveBackwardDone onMoveBackwardDone;
+
 	UPROPERTY() TObjectPtr<USceneComponent> fullCartBody;
 	UPROPERTY() TObjectPtr<USceneComponent> leftFrontWheel;
 	UPROPERTY() TObjectPtr<USceneComponent> rightFrontWheel;
+	//UPROPERTY() TObjectPtr<USceneComponent> rightFrontWheel;
 
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float forwardSpeed = 20;
 	float initialForwardSpeed;
@@ -33,7 +40,12 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, Category = "Debug") bool useDebugs = true;
 	UPROPERTY(EditAnywhere, Category = "Debug") float arrowWheelDirectionLength = 100.f;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") float currentSteeringAngle = 0;
-	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canMove = true, canRotate = true, canSteerWheels = true;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canMove = true;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canRotate = true;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canSteerWheels = true;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool isMovingForward = false;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool isMovingBackward = false;
+
 
 	UPROPERTY() TObjectPtr<AActor> personalOwner;
 	UPROPERTY() TObjectPtr<UCharacterMovementComponent> ownersCharacterMovementComponent;
@@ -43,6 +55,7 @@ public:
 
 public:
 	FORCEINLINE FVector GetForwardVectorRotatedBySteerAngle() const { return personalOwner->GetActorForwardVector().RotateAngleAxis(currentSteeringAngle, FVector::UpVector); }
+	FORCEINLINE FVector GetSymetricalForwardVectorRotatedBySteerAngle() const { return personalOwner->GetActorForwardVector().RotateAngleAxis(-currentSteeringAngle, FVector::UpVector); }
 
 	FORCEINLINE void SetCanMove(const bool _value) { canMove = _value; }
 	FORCEINLINE void SetCanRotate(const bool _value) { canRotate = _value; }
@@ -66,11 +79,18 @@ private:
 
 public:
 	UFUNCTION() void MoveForward(const FInputActionValue& _valuePosFloat);
-	UFUNCTION() void MoveBackward(const FInputActionValue& _valueNegFloat);
+	UFUNCTION() void MoveBackward(const FInputActionValue& _valueFloat);
 	UFUNCTION() void SteerWheels(const FInputActionValue& _valueFloat);
+	UFUNCTION() void SetIsMovingForward(const FInputActionValue& _valueFloat);
+	UFUNCTION() void SetIsMovingBackward(const FInputActionValue& _valueFloat);
+
+private:
 	UFUNCTION() void LerpRotationToMatchForward();
+	UFUNCTION() void LerpRotationToMatchSymetricalForward();
+	UFUNCTION() void LerpRotationToMatchVector(const FVector& _vectorToMatch);
 	UFUNCTION() void LerpSteeringToMatchZero();
 	UFUNCTION() void UpdateMeshRotationYaw();
+
 
 private:
 	void DrawDebugs();

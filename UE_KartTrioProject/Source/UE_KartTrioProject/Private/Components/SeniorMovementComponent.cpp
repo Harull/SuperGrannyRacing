@@ -25,6 +25,8 @@ void USeniorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	DrawDebugs();
+	//ownersSkeletalMesh->SetWorldRotation(UKismetMathLibrary::RInterpTo_Constant(ownersSkeletalMesh->GetComponentRotation(), 
+	//	UKismetMathLibrary::FindLookAtRotation(ownersSkeletalMesh->GetComponentLocation(), ownersSkeletalMesh->GetComponentLocation() + )))
 }
 
 void USeniorMovementComponent::Init()
@@ -44,7 +46,8 @@ void USeniorMovementComponent::InitFields()
 
 void USeniorMovementComponent::InitEvents()
 {
-	onMovementDone.AddDynamic(this, &USeniorMovementComponent::LerpRotationToMatchForward);
+	onMoveForwardDone.AddDynamic(this, &USeniorMovementComponent::LerpRotationToMatchForward);
+	onMoveBackwardDone.AddDynamic(this, &USeniorMovementComponent::LerpRotationToMatchSymetricalForward);
 	onMovementDone.AddDynamic(this, &USeniorMovementComponent::LerpSteeringToMatchZero);
 	onMovementDone.AddDynamic(this, &USeniorMovementComponent::UpdateMeshRotationYaw);
 }
@@ -64,29 +67,49 @@ void USeniorMovementComponent::MoveForward(const FInputActionValue& _valuePosFlo
 	if (!canMove || !ownersCharacterMovementComponent) return;
 	ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * forwardSpeed * GetWorld()->DeltaTimeSeconds);
 	onMovementDone.Broadcast();
+	onMoveForwardDone.Broadcast();
 }
 
-void USeniorMovementComponent::MoveBackward(const FInputActionValue& _valueNegFloat)
+void USeniorMovementComponent::MoveBackward(const FInputActionValue& _valueFloat)
 {
 	if (!canMove || !ownersCharacterMovementComponent) return;
-	ownersCharacterMovementComponent->AddInputVector(-GetForwardVectorRotatedBySteerAngle() * backwardSpeed * GetWorld()->DeltaTimeSeconds);
+	ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * backwardSpeed * GetWorld()->DeltaTimeSeconds);
 	onMovementDone.Broadcast();
+	onMoveBackwardDone.Broadcast();
 }
 
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 {
-	if (!canSteerWheels) return;
+	if (!canSteerWheels || (!isMovingForward && !isMovingBackward)) return;
 	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->GetDeltaSeconds();
 	currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
 }
 
+void USeniorMovementComponent::SetIsMovingForward(const FInputActionValue& _valueFloat)
+{
+	isMovingForward = _valueFloat.Get<float>() >= 0.01;
+}
+
+void USeniorMovementComponent::SetIsMovingBackward(const FInputActionValue& _valueFloat)
+{
+	isMovingBackward = _valueFloat.Get<float>() >= 0.01;
+}
+
 void USeniorMovementComponent::LerpRotationToMatchForward()
 {
-	const FVector& _forwardVectorBySteer = GetForwardVectorRotatedBySteerAngle();
-	if (personalOwner->GetActorForwardVector().Equals(_forwardVectorBySteer, .1f))return;
+	LerpRotationToMatchVector(GetForwardVectorRotatedBySteerAngle());
+}
+
+void USeniorMovementComponent::LerpRotationToMatchSymetricalForward()
+{
+	LerpRotationToMatchVector(GetSymetricalForwardVectorRotatedBySteerAngle());
+}
+
+void USeniorMovementComponent::LerpRotationToMatchVector(const FVector& _vectorToMatch)
+{
+	if (personalOwner->GetActorForwardVector().Equals(_vectorToMatch, .1f))return;
 	const FVector& _personalOwnersLocation = personalOwner->GetActorLocation();
-	const FRotator _targetRotation = UKismetMathLibrary::FindLookAtRotation(_personalOwnersLocation, _forwardVectorBySteer + _personalOwnersLocation);
-	UKismetSystemLibrary::PrintString(this, "target rotation = " + _targetRotation.ToCompactString());
+	const FRotator _targetRotation = UKismetMathLibrary::FindLookAtRotation(_personalOwnersLocation, _vectorToMatch + _personalOwnersLocation);
 	personalOwner->SetActorRotation(UKismetMathLibrary::RInterpTo_Constant(personalOwner->GetActorRotation(), _targetRotation, GetWorld()->DeltaTimeSeconds, toForwardRotationLerpSpeed));
 }
 
@@ -113,5 +136,7 @@ void USeniorMovementComponent::DrawDebugs()
 	const FVector& _currentLoc = personalOwner->GetActorLocation();
 	const FVector& _rotatedForwardVector = GetForwardVectorRotatedBySteerAngle();
 	DrawDebugDirectionalArrow(GetWorld(), _currentLoc, _currentLoc + _rotatedForwardVector * arrowWheelDirectionLength, 10, FColor::Magenta);
+	const FVector& _rotatedBackwardVector = -GetSymetricalForwardVectorRotatedBySteerAngle();
+	DrawDebugDirectionalArrow(GetWorld(), _currentLoc, _currentLoc + _rotatedBackwardVector * arrowWheelDirectionLength, 10, FColor::Yellow);
 }
 

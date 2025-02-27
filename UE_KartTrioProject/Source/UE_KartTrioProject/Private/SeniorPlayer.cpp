@@ -74,6 +74,13 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 	_inputComponent->BindAction(forward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::MoveForward);
 	_inputComponent->BindAction(backward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::MoveBackward);
 	_inputComponent->BindAction(steering, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::SteerWheels);
+
+	_inputComponent->BindAction(forward, ETriggerEvent::Started, seniorMovementcomponent.Get(), &USeniorMovementComponent::SetIsMovingForward);
+	_inputComponent->BindAction(forward, ETriggerEvent::Completed, seniorMovementcomponent.Get(), &USeniorMovementComponent::SetIsMovingForward);
+
+	_inputComponent->BindAction(backward, ETriggerEvent::Started, seniorMovementcomponent.Get(), &USeniorMovementComponent::SetIsMovingBackward);
+	_inputComponent->BindAction(backward, ETriggerEvent::Completed, seniorMovementcomponent.Get(), &USeniorMovementComponent::SetIsMovingBackward);
+
 	//TODO Implement other bindings
-}
+	}
 
