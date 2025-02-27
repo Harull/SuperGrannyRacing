@@ -24,8 +24,10 @@ void APuddle::Tick(float DeltaTime)
 
 void APuddle::EnterAction(AActor* OtherActor)
 {
-	if (ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor))
+	if (TObjectPtr<ASeniorPlayer> _player = Cast<ASeniorPlayer>(OtherActor))
 	{
+		UKismetSystemLibrary::PrintString(this, "Enter action and has a good movemnt component, reseting it");
+
 		TObjectPtr<USeniorMovementComponent> _movement =  _player->GetComponentByClass<USeniorMovementComponent>();
 		if (!_movement) return;
 
@@ -33,10 +35,21 @@ void APuddle::EnterAction(AActor* OtherActor)
 		FTimerDelegate _delegate;
 		_delegate.BindLambda([&]()
 			{
+				UKismetSystemLibrary::PrintString(this, "Lambda started from being executed");
+
+				if (!_movement)
+				{
+					UKismetSystemLibrary::PrintString(this, "What, the movement component is null");
+					return;
+				}
 				_movement->SetCanMove(true);
 				_movement->SetCanRotate(true);
 			});
 		GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, timeStun, false);*/
+
+		//_movement->SetCanMove(false);
+		//_movement->SetCanRotate(false);
+
 
 		/*_movement->SetCanMove(false);
 		_movement->SetCanRotate(false);
@@ -48,6 +61,16 @@ void APuddle::EnterAction(AActor* OtherActor)
 		_movement->SetCanMove(true);
 		_movement->SetCanRotate(true);*/
 	}
+}
+
+void APuddle::DeactivateInputs()
+{
+
+}
+
+void APuddle::ActivateInputs()
+{
+
 }
 
 
