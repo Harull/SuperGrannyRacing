@@ -8,6 +8,7 @@ APuddle::APuddle()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
 }
 
 void APuddle::BeginPlay()
