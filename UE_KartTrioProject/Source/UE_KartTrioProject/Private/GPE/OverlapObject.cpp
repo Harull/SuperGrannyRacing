@@ -34,6 +34,6 @@ void AOverlapObject::Tick(float DeltaTime)
 void AOverlapObject::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	EnterAction();
+	EnterAction(OtherActor);
 }
 

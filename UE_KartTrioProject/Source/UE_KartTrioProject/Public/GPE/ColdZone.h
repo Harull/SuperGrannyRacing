@@ -3,22 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "OverlapObject.generated.h"
+#include "Engine/TriggerBox.h"
 
-UCLASS(Abstract)
-class UE_KARTTRIOPROJECT_API AOverlapObject : public AActor
+#include "ColdZone.generated.h"
+
+UCLASS()
+class UE_KARTTRIOPROJECT_API AColdZone : public AActor
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> mesh = nullptr;
+	UPROPERTY(EditAnywhere) float ratioSlow = 0.25f;
 	
 public:	
-	// Sets default values for this actor's properties
-	AOverlapObject();
+	AColdZone();
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void EnterAction(AActor* OtherActor) PURE_VIRTUAL(&AOverlapObject::EnterAction, );
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 };
