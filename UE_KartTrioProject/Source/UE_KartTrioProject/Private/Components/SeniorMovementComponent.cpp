@@ -72,7 +72,7 @@ void USeniorMovementComponent::MoveForward(const FInputActionValue& _valuePosFlo
 
 void USeniorMovementComponent::MoveBackward(const FInputActionValue& _valueFloat)
 {
-	if (!canMove || !ownersCharacterMovementComponent) return;
+	if (!canMove || !ownersCharacterMovementComponent || isMovingForward) return;
 	ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * backwardSpeed * GetWorld()->DeltaTimeSeconds);
 	onMovementDone.Broadcast();
 	onMoveBackwardDone.Broadcast();
