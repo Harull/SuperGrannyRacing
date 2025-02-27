@@ -22,7 +22,9 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY() TObjectPtr<USceneComponent> rightFrontWheel;
 
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float forwardSpeed = 20;
+	float initialForwardSpeed;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float backwardSpeed = 10;
+	float initialBackwardSpeed;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float steeringSpeed = 10;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float toForwardRotationLerpSpeed = 50;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float toNormalSteeringAngleLerpSpeed = 25;
@@ -46,6 +48,12 @@ public:
 	FORCEINLINE void SetCanRotate(const bool _value) { canRotate = _value; }
 	FORCEINLINE void SetCanSteerWheels(const bool _value) { canSteerWheels = _value; }
 
+	FORCEINLINE void SetForwardSpeed(const float _value) { forwardSpeed = _value; }
+	FORCEINLINE void SetBackwardSpeed(const float _value) { forwardSpeed = _value; }
+
+	FORCEINLINE void ResetForwardSpeed(const float _value) { forwardSpeed = initialForwardSpeed; }
+	FORCEINLINE void ResetBackwardSpeed(const float _value) { forwardSpeed = initialBackwardSpeed; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -55,6 +63,7 @@ private:
 	void InitFields();
 	void InitEvents();
 	void InitSceneComponents();
+
 public:
 	UFUNCTION() void MoveForward(const FInputActionValue& _valuePosFloat);
 	UFUNCTION() void MoveBackward(const FInputActionValue& _valueNegFloat);

@@ -38,6 +38,8 @@ void USeniorMovementComponent::InitFields()
 {
 	personalOwner = GetOwner();
 	ownersCharacterMovementComponent = personalOwner->GetComponentByClass<UCharacterMovementComponent>();
+	//initialForwardSpeed = forwardSpeed;
+	//initialBackwardSpeed = backwardSpeed;
 }
 
 void USeniorMovementComponent::InitEvents()
@@ -54,7 +56,7 @@ void USeniorMovementComponent::InitSceneComponents()
 		fullCartBody = _playerAsSenior->GetCartCapsuleComponent();
 		leftFrontWheel = _playerAsSenior->GetLeftFrontWheel();
 		rightFrontWheel = _playerAsSenior->GetRightFrontWheel();
-	}
+	}	
 }
 
 void USeniorMovementComponent::MoveForward(const FInputActionValue& _valuePosFloat)
