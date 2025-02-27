@@ -29,24 +29,9 @@ void APuddle::EnterAction(AActor* OtherActor)
 		TObjectPtr<USeniorMovementComponent> _movement =  _player->GetComponentByClass<USeniorMovementComponent>();
 		if (!_movement) return;
 
-		/*FTimerHandle _timer;
-		FTimerDelegate _delegate;
-		_delegate.BindLambda([&]()
-			{
-				_movement->SetCanMove(true);
-				_movement->SetCanRotate(true);
-			});
-		GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, timeStun, false);*/
+		_movement->StopMoveAndRotateTime(timeStun);
 
-		/*_movement->SetCanMove(false);
-		_movement->SetCanRotate(false);
-
-		UKismetSystemLibrary::Delay(this, timeStun * 1000, FLatentActionInfo());
-
-		UKismetSystemLibrary::PrintString(this, "End Stun");
-
-		_movement->SetCanMove(true);
-		_movement->SetCanRotate(true);*/
+		
 	}
 }
 

@@ -86,6 +86,7 @@ public:
 	UFUNCTION() void SteerWheels(const FInputActionValue& _valueFloat);
 	UFUNCTION() void SetIsMovingForward(const FInputActionValue& _valueFloat);
 	UFUNCTION() void SetIsMovingBackward(const FInputActionValue& _valueFloat);
+	void StopMoveAndRotateTime(const float _time);
 
 private:
 	UFUNCTION() void LerpRotationToMatchForward();
@@ -93,7 +94,6 @@ private:
 	UFUNCTION() void LerpRotationToMatchVector(const FVector& _vectorToMatch);
 	UFUNCTION() void LerpSteeringToMatchZero();
 	UFUNCTION() void UpdateMeshRotationYaw();
-
 
 private:
 	void DrawDebugs();

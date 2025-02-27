@@ -130,6 +130,21 @@ void USeniorMovementComponent::UpdateMeshRotationYaw()
 		rightFrontWheel->SetRelativeRotation(FRotator(0, currentSteeringAngle / 2.f, 0));
 }
 
+void USeniorMovementComponent::StopMoveAndRotateTime(const float _time)
+{
+	FTimerHandle _timer;
+	FTimerDelegate _delegate;
+	_delegate.BindLambda([&]()
+		{
+			SetCanMove(true);
+			SetCanRotate(true);
+		});
+	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, _time, false);
+
+	SetCanMove(false);
+	SetCanRotate(false);
+}
+
 void USeniorMovementComponent::DrawDebugs()
 {
 	if (!useDebugs)return;
