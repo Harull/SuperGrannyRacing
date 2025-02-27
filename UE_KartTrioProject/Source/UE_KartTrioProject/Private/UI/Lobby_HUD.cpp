@@ -5,7 +5,7 @@ void ALobby_HUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	lobbyMenu = CreateWidget<ULobbyWidget>(GetWorld(), lobbyMenuRef);
+	lobbyMenu = CreateWidget<USessionListWidget>(GetWorld(), lobbyMenuRef);
 	lobbyMenu->AddToViewport();
 
 	GetOwningPlayerController()->SetShowMouseCursor(true);
