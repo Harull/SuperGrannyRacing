@@ -19,8 +19,3 @@ void ACollectedItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
-void ACollectedItem::EnterAction()
-{
-
-}

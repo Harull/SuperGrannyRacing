@@ -19,6 +19,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void EnterAction() PURE_VIRTUAL(&AOverlapObject::EnterAction, );
+	virtual void EnterAction(AActor* OtherActor) PURE_VIRTUAL(&AOverlapObject::EnterAction, );
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };
