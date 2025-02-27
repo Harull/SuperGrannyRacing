@@ -1,9 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/TriggerBox.h"
+#include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 
 #include "ColdZone.generated.h"
 
@@ -12,6 +11,7 @@ class UE_KARTTRIOPROJECT_API AColdZone : public AActor
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> mesh = nullptr;
+	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 	UPROPERTY(EditAnywhere) float ratioSlow = 0.25f;
 	
 public:	

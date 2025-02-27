@@ -49,10 +49,13 @@ public:
 	FORCEINLINE void SetCanSteerWheels(const bool _value) { canSteerWheels = _value; }
 
 	FORCEINLINE void SetForwardSpeed(const float _value) { forwardSpeed = _value; }
-	FORCEINLINE void SetBackwardSpeed(const float _value) { forwardSpeed = _value; }
+	FORCEINLINE void SetBackwardSpeed(const float _value) { backwardSpeed = _value; }
 
-	FORCEINLINE void ResetForwardSpeed(const float _value) { forwardSpeed = initialForwardSpeed; }
-	FORCEINLINE void ResetBackwardSpeed(const float _value) { forwardSpeed = initialBackwardSpeed; }
+	FORCEINLINE float GetForwardSpeed() const { return forwardSpeed; }
+	FORCEINLINE float GetBackwardSpeed() const { return backwardSpeed; }
+
+	FORCEINLINE void ResetForwardSpeed() { forwardSpeed = initialForwardSpeed; }
+	FORCEINLINE void ResetBackwardSpeed() { backwardSpeed = initialBackwardSpeed; }
 
 protected:
 	virtual void BeginPlay() override;

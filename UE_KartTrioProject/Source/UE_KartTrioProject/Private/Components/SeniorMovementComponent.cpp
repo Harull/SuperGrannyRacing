@@ -38,8 +38,8 @@ void USeniorMovementComponent::InitFields()
 {
 	personalOwner = GetOwner();
 	ownersCharacterMovementComponent = personalOwner->GetComponentByClass<UCharacterMovementComponent>();
-	//initialForwardSpeed = forwardSpeed;
-	//initialBackwardSpeed = backwardSpeed;
+	initialForwardSpeed = forwardSpeed;
+	initialBackwardSpeed = backwardSpeed;
 }
 
 void USeniorMovementComponent::InitEvents()
