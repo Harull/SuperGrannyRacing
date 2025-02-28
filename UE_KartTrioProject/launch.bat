@@ -1,1 +1,0 @@
-"D:\UE_Install\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe" "%cd%\UE_KartTrioProject.uproject" -game -ResX=960 -ResY=540 -log -WINDOWED
