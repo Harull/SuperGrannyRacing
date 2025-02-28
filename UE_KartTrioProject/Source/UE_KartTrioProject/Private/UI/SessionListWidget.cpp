@@ -50,7 +50,7 @@ void USessionListWidget::CreateSession()
 {
 	if (!subsystem) return;
 	
-	subsystem->DestroySession();
+	//subsystem->DestroySession();
 	//subsystem->CreateSession(); // => TODO Move To PC at start level
 	
 	//if(GetWorld()->GetFirstPlayerController()->HasAuthority())
