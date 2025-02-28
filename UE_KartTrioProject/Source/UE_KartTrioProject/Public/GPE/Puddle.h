@@ -14,7 +14,7 @@ class UE_KARTTRIOPROJECT_API APuddle : public AOverlapObject
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere) float timeStun = 2.f;
-	
+
 public:
 	APuddle();
 
@@ -23,4 +23,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void EnterAction(AActor* OtherActor) override;
 
+private:
+	void DeactivateInputs();
+	void ActivateInputs();
 };

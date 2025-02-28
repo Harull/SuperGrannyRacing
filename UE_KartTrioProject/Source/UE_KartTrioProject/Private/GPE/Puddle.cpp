@@ -24,15 +24,26 @@ void APuddle::Tick(float DeltaTime)
 
 void APuddle::EnterAction(AActor* OtherActor)
 {
-	if (ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor))
+	if (TObjectPtr<ASeniorPlayer> _player = Cast<ASeniorPlayer>(OtherActor))
 	{
+		UKismetSystemLibrary::PrintString(this, "Enter action and has a good movemnt component, reseting it");
+
 		TObjectPtr<USeniorMovementComponent> _movement =  _player->GetComponentByClass<USeniorMovementComponent>();
 		if (!_movement) return;
 
 		_movement->StopMoveAndRotateTime(timeStun);
 
-		
 	}
+}
+
+void APuddle::DeactivateInputs()
+{
+
+}
+
+void APuddle::ActivateInputs()
+{
+
 }
 
 

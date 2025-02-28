@@ -71,8 +71,8 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 		UE_LOG(LogTemp, Warning, TEXT("ERROR WHILE INITIALIZING ASeniorPlayer's inputs,  _inputComponent null -> ASeniorPlayer::InitInputs"));
 		return;
 	}
-	_inputComponent->BindAction(forward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::MoveForward);
-	_inputComponent->BindAction(backward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::MoveBackward);
+	_inputComponent->BindAction(forward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::AddVelocity);
+	_inputComponent->BindAction(backward, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::SubstractVelocity);
 	_inputComponent->BindAction(steering, ETriggerEvent::Triggered, seniorMovementcomponent.Get(), &USeniorMovementComponent::SteerWheels);
 
 	_inputComponent->BindAction(forward, ETriggerEvent::Started, seniorMovementcomponent.Get(), &USeniorMovementComponent::SetIsMovingForward);

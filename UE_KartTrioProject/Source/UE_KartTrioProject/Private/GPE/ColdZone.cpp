@@ -38,10 +38,10 @@ void AColdZone::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (!_player) return;
 	TObjectPtr<USeniorMovementComponent> _movement = _player->GetComponentByClass<USeniorMovementComponent>();
 	if (!_movement) return;
-	float _forward = _movement->GetForwardSpeed() * ratioSlow;
-	float _backward = _movement->GetBackwardSpeed() * ratioSlow;
-	_movement->SetForwardSpeed(_forward);
-	_movement->SetBackwardSpeed(_backward);
+	float _forward = _movement->GetForwardMaxSpeed() * ratioSlow;
+	float _backward = _movement->GetBackwardMaxSpeed() * ratioSlow;
+	_movement->SetForwardMaxSpeed(_forward);
+	_movement->SetBackwardMaxSpeed(_backward);
 	UKismetSystemLibrary::PrintString(this, "Slow Start");
 }
 
@@ -53,7 +53,7 @@ void AColdZone::NotifyActorEndOverlap(AActor* OtherActor)
 	if (!_player) return;
 	TObjectPtr<USeniorMovementComponent> _movement = _player->GetComponentByClass<USeniorMovementComponent>();
 	if (!_movement) return;
-	_movement->ResetForwardSpeed();
-	_movement->ResetBackwardSpeed();
+	_movement->ResetForwardMaxSpeed();
+	_movement->ResetBackwardMaxSpeed();
 }
 

@@ -24,6 +24,8 @@ void USeniorMovementComponent::BeginPlay()
 void USeniorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Move();
+	ApplyDeceleration();
 	DrawDebugs();
 	//ownersSkeletalMesh->SetWorldRotation(UKismetMathLibrary::RInterpTo_Constant(ownersSkeletalMesh->GetComponentRotation(), 
 	//	UKismetMathLibrary::FindLookAtRotation(ownersSkeletalMesh->GetComponentLocation(), ownersSkeletalMesh->GetComponentLocation() + )))
@@ -40,8 +42,8 @@ void USeniorMovementComponent::InitFields()
 {
 	personalOwner = GetOwner();
 	ownersCharacterMovementComponent = personalOwner->GetComponentByClass<UCharacterMovementComponent>();
-	initialForwardSpeed = forwardSpeed;
-	initialBackwardSpeed = backwardSpeed;
+	initialForwardMaxSpeed = forwardMaxSpeed;
+	initialBackwardMaxSpeed = backwardMaxSpeed;
 }
 
 void USeniorMovementComponent::InitEvents()
@@ -62,20 +64,47 @@ void USeniorMovementComponent::InitSceneComponents()
 	}	
 }
 
-void USeniorMovementComponent::MoveForward(const FInputActionValue& _valuePosFloat)
+void USeniorMovementComponent::Move()
 {
 	if (!canMove || !ownersCharacterMovementComponent) return;
-	ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * forwardSpeed * GetWorld()->DeltaTimeSeconds);
+
+	if (currentVelocity > 0)
+	{
+		ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * currentVelocity * GetWorld()->DeltaTimeSeconds);
+		onMoveForwardDone.Broadcast();
+	}
+	else if (currentVelocity < 0)
+	{
+		ownersCharacterMovementComponent->AddInputVector(GetSymetricalForwardVectorRotatedBySteerAngle() * currentVelocity * GetWorld()->DeltaTimeSeconds);
+		onMoveBackwardDone.Broadcast();
+	}
+	else
+		return;
 	onMovementDone.Broadcast();
-	onMoveForwardDone.Broadcast();
+	
 }
 
-void USeniorMovementComponent::MoveBackward(const FInputActionValue& _valueFloat)
+void USeniorMovementComponent::ApplyDeceleration()
 {
-	if (!canMove || !ownersCharacterMovementComponent) return;
-	ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * backwardSpeed * GetWorld()->DeltaTimeSeconds);
-	onMovementDone.Broadcast();
-	onMoveBackwardDone.Broadcast();
+	if(!ownersCharacterMovementComponent ||(isMovingForward || isMovingBackward)) return;
+	currentVelocity = FMath::FInterpConstantTo(currentVelocity, 0, GetWorld()->DeltaTimeSeconds, automaticDecelerationSpeed);
+}
+
+void USeniorMovementComponent::AddVelocity(const FInputActionValue& _valuePosFloat)
+{
+	if (!canMove) return;
+	currentVelocity += forwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
+	currentVelocity = FMath::Clamp(currentVelocity, -backwardMaxSpeed, forwardMaxSpeed);
+}
+
+void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _valueFloat)
+{
+	if (!canMove ||  isMovingForward) return;
+	if (currentVelocity > 0)
+		currentVelocity -= brakeSpeed * GetWorld()->DeltaTimeSeconds;
+	else
+		currentVelocity -= backwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
+	currentVelocity = FMath::Clamp(currentVelocity, -backwardMaxSpeed, forwardMaxSpeed);
 }
 
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)

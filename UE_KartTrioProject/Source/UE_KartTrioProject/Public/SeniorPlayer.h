@@ -22,7 +22,7 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 
 
 	UPROPERTY(EditAnywhere) TObjectPtr<UCapsuleComponent> cartCapsuleComponent;
-	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> shoppingCart;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess)) TObjectPtr<UStaticMeshComponent> shoppingCart;
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> backWheels;
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> frontRightWheel;
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> frontLeftWheel;

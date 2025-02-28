@@ -28,10 +28,16 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY() TObjectPtr<USceneComponent> rightFrontWheel;
 	//UPROPERTY() TObjectPtr<USceneComponent> rightFrontWheel;
 
-	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float forwardSpeed = 20;
-	float initialForwardSpeed;
-	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float backwardSpeed = 10;
-	float initialBackwardSpeed;
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float forwardMaxSpeed = 20;
+	float initialForwardMaxSpeed;
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float backwardMaxSpeed = 10;
+	float initialBackwardMaxSpeed;
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float forwardAccelerationSpeed = 100;
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float automaticDecelerationSpeed = 10;
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float brakeSpeed = 70;
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float backwardAccelerationSpeed = 50;
+
+
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float steeringSpeed = 10;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float toForwardRotationLerpSpeed = 50;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters") float toNormalSteeringAngleLerpSpeed = 25;
@@ -40,6 +46,7 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, Category = "Debug") bool useDebugs = true;
 	UPROPERTY(EditAnywhere, Category = "Debug") float arrowWheelDirectionLength = 100.f;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") float currentSteeringAngle = 0;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") float currentVelocity = 0;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canMove = true;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canRotate = true;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Values") bool canSteerWheels = true;
@@ -61,15 +68,16 @@ public:
 	FORCEINLINE void SetCanRotate(const bool _value) { canRotate = _value; }
 	FORCEINLINE void SetCanSteerWheels(const bool _value) { canSteerWheels = _value; }
 
-	FORCEINLINE void SetForwardSpeed(const float _value) { forwardSpeed = _value; }
-	FORCEINLINE void SetBackwardSpeed(const float _value) { backwardSpeed = _value; }
+	FORCEINLINE void SetForwardMaxSpeed(const float _value) { forwardMaxSpeed = _value; }
+	FORCEINLINE void SetBackwardMaxSpeed(const float _value) { backwardMaxSpeed = _value; }
 
-	FORCEINLINE float GetForwardSpeed() const { return forwardSpeed; }
-	FORCEINLINE float GetBackwardSpeed() const { return backwardSpeed; }
+	FORCEINLINE float GetForwardMaxSpeed() const { return forwardMaxSpeed; }
+	FORCEINLINE float GetBackwardMaxSpeed() const { return backwardMaxSpeed; }
 
-	FORCEINLINE void ResetForwardSpeed() { forwardSpeed = initialForwardSpeed; }
-	FORCEINLINE void ResetBackwardSpeed() { backwardSpeed = initialBackwardSpeed; }
+	FORCEINLINE void ResetForwardMaxSpeed() { forwardMaxSpeed = initialForwardMaxSpeed; }
+	FORCEINLINE void ResetBackwardMaxSpeed() { backwardMaxSpeed = initialBackwardMaxSpeed; }
 
+	FORCEINLINE void ResetVelocity() { currentVelocity = 0; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -81,8 +89,10 @@ private:
 	void InitSceneComponents();
 
 public:
-	UFUNCTION() void MoveForward(const FInputActionValue& _valuePosFloat);
-	UFUNCTION() void MoveBackward(const FInputActionValue& _valueFloat);
+	void Move();
+	void ApplyDeceleration();
+	UFUNCTION() void AddVelocity(const FInputActionValue& _valuePosFloat);
+	UFUNCTION() void SubstractVelocity(const FInputActionValue& _valueFloat);
 	UFUNCTION() void SteerWheels(const FInputActionValue& _valueFloat);
 	UFUNCTION() void SetIsMovingForward(const FInputActionValue& _valueFloat);
 	UFUNCTION() void SetIsMovingBackward(const FInputActionValue& _valueFloat);
