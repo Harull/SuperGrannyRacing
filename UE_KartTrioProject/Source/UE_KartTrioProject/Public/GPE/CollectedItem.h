@@ -3,16 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GPE/OverlapObject.h"
+#include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "CollectedItem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class UE_KARTTRIOPROJECT_API ACollectedItem : public AOverlapObject
+class UE_KARTTRIOPROJECT_API ACollectedItem : public AActor
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> mesh = nullptr;
+	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 	
 public:
 	ACollectedItem();
@@ -20,4 +23,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	void Init();
 };
