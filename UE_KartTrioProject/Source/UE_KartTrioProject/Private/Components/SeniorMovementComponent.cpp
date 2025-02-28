@@ -68,21 +68,23 @@ void USeniorMovementComponent::Move()
 {
 	if (!canMove || !ownersCharacterMovementComponent) return;
 
+	float _currentSpeed;
 	if (currentVelocity > 0)
 	{
-		ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * currentVelocity * GetWorld()->DeltaTimeSeconds);
+		_currentSpeed = currentVelocity * GetWorld()->DeltaTimeSeconds;
+		ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);
 		onMoveForwardDone.Broadcast();
 	}
 	else if (currentVelocity < 0)
 	{
-		ownersCharacterMovementComponent->AddInputVector(GetSymetricalForwardVectorRotatedBySteerAngle() * currentVelocity * GetWorld()->DeltaTimeSeconds);
+		_currentSpeed = currentVelocity * GetWorld()->DeltaTimeSeconds;
+		ownersCharacterMovementComponent->AddInputVector(GetSymetricalForwardVectorRotatedBySteerAngle() * _currentSpeed);
 		onMoveBackwardDone.Broadcast();
 	}
 	else
 		return;
-	/*float _currentSpeed = forwardSpeed * GetWorld()->DeltaTimeSeconds;
-	onSpeedUpdate.Broadcast(_currentSpeed);
-	ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);*/
+	onSpeedUpdate.Broadcast(_currentSpeed * 10);
+	//ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);
 	onMovementDone.Broadcast();
 	
 }
@@ -111,9 +113,8 @@ void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _value
 
 	if (!canMove || !ownersCharacterMovementComponent) return;
 
-	float _currentSpeed = backwardSpeed * GetWorld()->DeltaTimeSeconds;
-	onSpeedUpdate.Broadcast(_currentSpeed);
-	ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * _currentSpeed);
+	//onSpeedUpdate.Broadcast(currentVelocity);
+	//ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * _currentSpeed);
 	onMovementDone.Broadcast();
 	onMoveBackwardDone.Broadcast();
 }
