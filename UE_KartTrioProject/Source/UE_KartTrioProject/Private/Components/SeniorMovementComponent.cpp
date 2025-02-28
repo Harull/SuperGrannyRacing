@@ -65,7 +65,9 @@ void USeniorMovementComponent::InitSceneComponents()
 void USeniorMovementComponent::MoveForward(const FInputActionValue& _valuePosFloat)
 {
 	if (!canMove || !ownersCharacterMovementComponent) return;
-	ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * forwardSpeed * GetWorld()->DeltaTimeSeconds);
+	float _currentSpeed = forwardSpeed * GetWorld()->DeltaTimeSeconds;
+	onSpeedUpdate.Broadcast(_currentSpeed);
+	ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);
 	onMovementDone.Broadcast();
 	onMoveForwardDone.Broadcast();
 }
@@ -73,7 +75,9 @@ void USeniorMovementComponent::MoveForward(const FInputActionValue& _valuePosFlo
 void USeniorMovementComponent::MoveBackward(const FInputActionValue& _valueFloat)
 {
 	if (!canMove || !ownersCharacterMovementComponent) return;
-	ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * backwardSpeed * GetWorld()->DeltaTimeSeconds);
+	float _currentSpeed = backwardSpeed * GetWorld()->DeltaTimeSeconds;
+	onSpeedUpdate.Broadcast(_currentSpeed);
+	ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * _currentSpeed);
 	onMovementDone.Broadcast();
 	onMoveBackwardDone.Broadcast();
 }

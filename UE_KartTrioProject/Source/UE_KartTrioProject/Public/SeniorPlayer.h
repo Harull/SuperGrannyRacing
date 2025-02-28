@@ -40,6 +40,7 @@ public:
 	ASeniorPlayer();
 
 public:
+	FORCEINLINE TObjectPtr<USeniorMovementComponent> GetSeniorMovementComponent() const { return seniorMovementcomponent; }
 	FORCEINLINE TObjectPtr<UCapsuleComponent> GetCartCapsuleComponent()const { return cartCapsuleComponent; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetLeftFrontWheel()const { return frontLeftWheel; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }

@@ -23,6 +23,9 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMoveBackwardDone);
 	FOnMoveBackwardDone onMoveBackwardDone;
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSpeedUpdate, float, _speed);
+	FOnSpeedUpdate onSpeedUpdate;
+
 	UPROPERTY() TObjectPtr<USceneComponent> fullCartBody;
 	UPROPERTY() TObjectPtr<USceneComponent> leftFrontWheel;
 	UPROPERTY() TObjectPtr<USceneComponent> rightFrontWheel;
@@ -54,6 +57,8 @@ public:
 	USeniorMovementComponent();
 
 public:
+	FORCEINLINE FOnSpeedUpdate& OnSpeedUpdate() { return onSpeedUpdate; }
+
 	FORCEINLINE FVector GetForwardVectorRotatedBySteerAngle() const { return personalOwner->GetActorForwardVector().RotateAngleAxis(currentSteeringAngle, FVector::UpVector); }
 	FORCEINLINE FVector GetSymetricalForwardVectorRotatedBySteerAngle() const { return personalOwner->GetActorForwardVector().RotateAngleAxis(-currentSteeringAngle, FVector::UpVector); }
 
