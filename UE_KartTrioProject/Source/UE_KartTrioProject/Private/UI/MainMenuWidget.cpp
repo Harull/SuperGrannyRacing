@@ -16,13 +16,22 @@ void UMainMenuWidget::BindButton()
 
 	playButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnPlay);
 	quitButton->OnClicked.AddDynamic(this, &UMainMenuWidget::OnQuit);
+
+	//abonnement bouton back du session list widget a faire 
 }
 
 void UMainMenuWidget::OnPlay()
 {
 	UKismetSystemLibrary::PrintString(this, "PLAY");
 
-	GetWorld()->ServerTravel("/Game/Levels/LVL_JoinLobby?listen");
+	//GetWorld()->ServerTravel("/Game/Levels/LVL_JoinLobby?listen");
+	//Hide MainMenu
+	//Show JoinLobby
+
+	mainMenuLayout->SetVisibility(ESlateVisibility::Hidden);
+	sessionListLayout->SetVisibility(ESlateVisibility::Visible);
+	sessionListLayout->SetIsEnabled(true);
+	sessionListLayout->FindSessions();
 }
 
 void UMainMenuWidget::OnQuit()

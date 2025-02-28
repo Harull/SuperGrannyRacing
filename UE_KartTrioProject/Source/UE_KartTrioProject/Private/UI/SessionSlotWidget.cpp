@@ -17,10 +17,15 @@ void USessionSlotWidget::Bind()
 
 void USessionSlotWidget::OnJoin()
 {
+	//LOG("CLICKED", White);
 	onSelected.Broadcast(FName(serverName->Text.ToString()), levelName.GetName(), index);
 }
 
 void USessionSlotWidget::InitData(const FSessionData& _data, const int& _index)
 {
-
+	serverName->SetText(FText::FromString(_data.serverName));
+	levelName->SetText(FText::FromString(_data.levelName));
+	FText _playersCount = FText::FromString(FString::FromInt(_data.playersCount) + " / " + FString::FromInt(_data.maxPlayersCount));
+	playersCount->SetText(_playersCount);
+	ping->SetText(FText::FromString(FString::FromInt(_data.ping) + "ms"));		
 }

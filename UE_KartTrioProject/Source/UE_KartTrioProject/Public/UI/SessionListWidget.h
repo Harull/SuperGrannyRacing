@@ -12,7 +12,7 @@ class UE_KARTTRIOPROJECT_API USessionListWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	UPROPERTY() TSubclassOf<USessionSlotWidget> sessionSlotRef;
+	UPROPERTY(EditAnywhere) TSubclassOf<USessionSlotWidget> sessionSlotRef;
 
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> createButton;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> refreshButton;
@@ -32,9 +32,10 @@ private:
 private:
 	virtual void NativeConstruct() override;
 	
+public:
+	void FindSessions();
 private:
 	void Bind();
-	void FindSessions();
 	void ClearSessions();
 	TObjectPtr<USessionSlotWidget> CreateSessionSlot(const FSessionData& _data, const int& _index);
 	void RemoveSessionSlot(TObjectPtr<USessionSlotWidget> _slot);

@@ -4,6 +4,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include <Components/Button.h>
+#include <Components/Overlay.h>
+#include "SessionListWidget.h"
 #include "MainMenuWidget.generated.h"
 
 UCLASS()
@@ -13,6 +15,8 @@ class UE_KARTTRIOPROJECT_API UMainMenuWidget : public UUserWidget
 	
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> playButton;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> quitButton;
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<UOverlay> mainMenuLayout;
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<USessionListWidget> sessionListLayout;
 
 protected:
 	virtual void NativeConstruct() override;
