@@ -6,7 +6,7 @@
 UGIS_Online::UGIS_Online()
 {
 	maxPlayersCount = 12;
-	serverName = "GIS_Name";
+	serverName = "KUILLERE";
 	sessionName = "Unknown";
 	levelPath = "Unknown";
 	mainMenuLevelPath = "LVL_MainMenu";
@@ -260,6 +260,7 @@ void UGIS_Online::FindSessions()
 	sessionSearch->MaxSearchResults = 10;
 	sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 	session->FindSessions(0, sessionSearch.ToSharedRef());
+	//session->FindFriendSession(,)
 }
 
 void UGIS_Online::CancelFindSessions()
