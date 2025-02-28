@@ -1,11 +1,12 @@
 
 #include "UI/SessionListWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 void USessionListWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	Bind();
-	FindSessions();
+	//FindSessions();
 }
 
 void USessionListWidget::Bind()
@@ -48,7 +49,21 @@ void USessionListWidget::RemoveSessionSlot(TObjectPtr<USessionSlotWidget> _slot)
 void USessionListWidget::CreateSession()
 {
 	if (!subsystem) return;
-	subsystem->CreateSession();
+	
+	subsystem->DestroySession();
+	//subsystem->CreateSession(); // => TODO Move To PC at start level
+	
+	//if(GetWorld()->GetFirstPlayerController()->HasAuthority())
+	GetWorld()->ServerTravel("/Game/Levels/LVL_Lobby?listen");
+	//startGameButton->SetVisibility(ESlateVisibility::Visible);
+	//FTimerHandle _timer;
+	//FTimerDelegate _delegate;
+	//_delegate.BindLambda([&]() 
+	//	{
+	//		GetWorld()->ServerTravel("/Game/Levels/LVL_Lobby?listen");
+	//		//UGameplayStatics::OpenLevel(GetWorld(), "Game/Levels/LVL_Lobby");
+	//	});
+	//GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 2.0f, false);
 }
 
 void USessionListWidget::OnRefresh()
@@ -70,7 +85,7 @@ void USessionListWidget::OnSessionsFounds(const TArray<FSessionData>& _datas)
 
 void USessionListWidget::OnSessionSelected(const FName& _sessionName, const FString& _levelName, const int& _index)
 {
-	startGameButton->SetIsEnabled(true);
+	startGameButton->SetVisibility(ESlateVisibility::Visible);
 	sessionName = _sessionName;
 	levelName = _levelName;
 	sessionIndex = _index;

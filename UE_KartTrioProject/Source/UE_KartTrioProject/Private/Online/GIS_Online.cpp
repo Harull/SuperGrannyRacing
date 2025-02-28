@@ -5,8 +5,8 @@
 
 UGIS_Online::UGIS_Online()
 {
-	maxPlayersCount = 4;
-	serverName = "HelloWorld";
+	maxPlayersCount = 12;
+	serverName = "GIS_Name";
 	sessionName = "Unknown";
 	levelPath = "Unknown";
 	mainMenuLevelPath = "LVL_MainMenu";
