@@ -9,6 +9,7 @@
 #include <GameFramework/SpringArmComponent.h>
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
+#include "Components/CollectedItemComponent.h"
 
 #include "SeniorPlayer.generated.h"
 
@@ -17,6 +18,7 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere) TObjectPtr<USeniorMovementComponent> seniorMovementcomponent;
+	UPROPERTY(EditAnywhere) TObjectPtr<UCollectedItemComponent> collectedItemComponent;
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
 
@@ -41,6 +43,7 @@ public:
 
 public:
 	FORCEINLINE TObjectPtr<USeniorMovementComponent> GetSeniorMovementComponent() const { return seniorMovementcomponent; }
+	FORCEINLINE TObjectPtr<UCollectedItemComponent> GetCollectedItemComponent() const { return collectedItemComponent; }
 	FORCEINLINE TObjectPtr<UCapsuleComponent> GetCartCapsuleComponent()const { return cartCapsuleComponent; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetLeftFrontWheel()const { return frontLeftWheel; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }

@@ -38,7 +38,8 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor);
 	if (!_player) return;
-	UCollectedItemComponent* _comp =  _player->GetComponentByClass<UCollectedItemComponent>();
+	//UCollectedItemComponent* _comp =  _player->GetComponentByClass<UCollectedItemComponent>();
+	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
 	if (!_comp) return;
 	if (_comp->CanFinish())
 	{

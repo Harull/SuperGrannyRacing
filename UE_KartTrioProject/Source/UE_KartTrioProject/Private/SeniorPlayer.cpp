@@ -11,6 +11,7 @@ ASeniorPlayer::ASeniorPlayer()
 	PrimaryActorTick.bCanEverTick = true;
 
 	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
+	collectedItemComponent = CreateDefaultSubobject<UCollectedItemComponent>("CollectedItem");
 
 	//CAMERA
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
