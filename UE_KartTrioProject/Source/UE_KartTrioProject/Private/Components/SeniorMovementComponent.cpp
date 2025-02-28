@@ -80,6 +80,9 @@ void USeniorMovementComponent::Move()
 	}
 	else
 		return;
+	/*float _currentSpeed = forwardSpeed * GetWorld()->DeltaTimeSeconds;
+	onSpeedUpdate.Broadcast(_currentSpeed);
+	ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);*/
 	onMovementDone.Broadcast();
 	
 }
@@ -105,6 +108,14 @@ void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _value
 	else
 		currentVelocity -= backwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
 	currentVelocity = FMath::Clamp(currentVelocity, -backwardMaxSpeed, forwardMaxSpeed);
+
+	if (!canMove || !ownersCharacterMovementComponent) return;
+
+	float _currentSpeed = backwardSpeed * GetWorld()->DeltaTimeSeconds;
+	onSpeedUpdate.Broadcast(_currentSpeed);
+	ownersCharacterMovementComponent->AddInputVector(-GetSymetricalForwardVectorRotatedBySteerAngle() * _currentSpeed);
+	onMovementDone.Broadcast();
+	onMoveBackwardDone.Broadcast();
 }
 
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)

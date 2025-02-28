@@ -17,6 +17,9 @@ class UE_KARTTRIOPROJECT_API ALobby_HUD : public AHUD
 	UPROPERTY(EditAnywhere) TSubclassOf<ULobbyWidget> lobbyMenuRef;
 	UPROPERTY() TObjectPtr<ULobbyWidget> lobbyMenu;
 
+public:
+	FORCEINLINE TObjectPtr<ULobbyWidget> GetLobbyMenu() const { return lobbyMenu; }
+
 private:
 	virtual void BeginPlay() override;
 };

@@ -7,17 +7,28 @@ void UMainWidget::NativeConstruct()
 
 	speed = 0;
 
-	FTimerHandle _timer;
+	if (playerRef = Cast<ASeniorPlayer>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+	{
+		playerRef->GetSeniorMovementComponent()->OnSpeedUpdate().AddDynamic(this, &UMainWidget::UpdateSpeed);
+	}
+
+	/*FTimerHandle _timer;
 	FTimerDelegate _delegate;
 	_delegate.BindLambda([&]() {
 		DebugSpeed();
 		});
-	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 0.1f, true, 1.0f);
+	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 0.1f, true, 1.0f);*/
+}
+
+void UMainWidget::UpdateSpeed(float _value)
+{
+	speed = _value;
+	DebugSpeed();
 }
 
 void UMainWidget::DebugSpeed()
 {
-	speed++;
+	//speed++;
 	FString _adjust = "";
 	if (speed < 10)
 		_adjust = "00";
