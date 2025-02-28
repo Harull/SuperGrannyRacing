@@ -137,6 +137,7 @@ void UGIS_Online::OnJoinSessionCompleted(FName _sessionName, const EOnJoinSessio
 	{
 		LOG("The client travels on the server: " + levelPath + "!", Green);
 		_playerController->ClientTravel(ipAddress, ETravelType::TRAVEL_Absolute, false);
+
 	}
 }
 

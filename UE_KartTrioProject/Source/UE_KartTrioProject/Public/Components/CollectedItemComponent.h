@@ -17,7 +17,8 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 	UPROPERTY(EditAnywhere) bool canFinish = false;
 
 public:
-	TObjectPtr<ACollectedItem> GetCurrentItem() const { return listItem[nbItemCollected]; }
+	FORCEINLINE TObjectPtr<ACollectedItem> GetCurrentItem() const { return listItem[nbItemCollected]; }
+	FORCEINLINE bool CanFinish() const { return canFinish; }
 
 public:	
 	UCollectedItemComponent();
