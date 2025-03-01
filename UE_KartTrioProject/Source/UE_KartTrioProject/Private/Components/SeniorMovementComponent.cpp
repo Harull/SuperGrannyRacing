@@ -4,12 +4,13 @@
 #include "Components/SeniorMovementComponent.h"
 #include <Kismet/KismetMathLibrary.h>
 #include <Kismet/KismetSystemLibrary.h>
-#include <SeniorPlayer.h>
+#include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
 USeniorMovementComponent::USeniorMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
 }
 
 
@@ -24,6 +25,7 @@ void USeniorMovementComponent::BeginPlay()
 void USeniorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (GetWorld()->GetFirstPlayerController()->GetPawn() != GetOwner())return;
 	Move();
 	ApplyDeceleration();
 	DrawDebugs();
@@ -40,7 +42,7 @@ void USeniorMovementComponent::Init()
 
 void USeniorMovementComponent::InitFields()
 {
-	personalOwner = GetOwner();
+	personalOwner = Cast<ASeniorPlayer>(GetOwner());
 	ownersCharacterMovementComponent = personalOwner->GetComponentByClass<UCharacterMovementComponent>();
 	initialForwardMaxSpeed = forwardMaxSpeed;
 	initialBackwardMaxSpeed = backwardMaxSpeed;
@@ -56,11 +58,11 @@ void USeniorMovementComponent::InitEvents()
 
 void USeniorMovementComponent::InitSceneComponents()
 {
-	if (TObjectPtr<ASeniorPlayer> _playerAsSenior = Cast<ASeniorPlayer>(personalOwner))
+	if (personalOwner)
 	{
-		fullCartBody = _playerAsSenior->GetCartCapsuleComponent();
-		leftFrontWheel = _playerAsSenior->GetLeftFrontWheel();
-		rightFrontWheel = _playerAsSenior->GetRightFrontWheel();
+		fullCartBody = personalOwner->GetCartCapsuleComponent();
+		leftFrontWheel = personalOwner->GetLeftFrontWheel();
+		rightFrontWheel = personalOwner->GetRightFrontWheel();
 	}	
 }
 
@@ -87,30 +89,32 @@ void USeniorMovementComponent::Move()
 void USeniorMovementComponent::ApplyDeceleration()
 {
 	if(!ownersCharacterMovementComponent ||(isMovingForward || isMovingBackward)) return;
-	currentVelocity = FMath::FInterpConstantTo(currentVelocity, 0, GetWorld()->DeltaTimeSeconds, automaticDecelerationSpeed);
+	SetCurrentVelocity(FMath::FInterpConstantTo(currentVelocity, 0, GetWorld()->DeltaTimeSeconds, automaticDecelerationSpeed));
 }
 
 void USeniorMovementComponent::AddVelocity(const FInputActionValue& _valuePosFloat)
 {
 	if (!canMove) return;
-	currentVelocity += forwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
-	currentVelocity = FMath::Clamp(currentVelocity, -backwardMaxSpeed, forwardMaxSpeed);
+	float _newValue = currentVelocity + forwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
+	SetCurrentVelocity(FMath::Clamp(_newValue, -backwardMaxSpeed, forwardMaxSpeed));
 }
 
 void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _valueFloat)
 {
 	if (!canMove ||  isMovingForward) return;
+	float _newValue = 0;
 	if (currentVelocity > 0)
-		currentVelocity -= brakeSpeed * GetWorld()->DeltaTimeSeconds;
+		_newValue = currentVelocity - brakeSpeed * GetWorld()->DeltaTimeSeconds;
 	else
-		currentVelocity -= backwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
-	currentVelocity = FMath::Clamp(currentVelocity, -backwardMaxSpeed, forwardMaxSpeed);
+		_newValue = currentVelocity - backwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
+
+	SetCurrentVelocity(FMath::Clamp(_newValue, -backwardMaxSpeed, forwardMaxSpeed));
 }
 
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 {
 	if (!canSteerWheels || (!isMovingForward && !isMovingBackward)) return;
-	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->GetDeltaSeconds();
+	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds;
 	currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
 }
 
@@ -136,7 +140,7 @@ void USeniorMovementComponent::LerpRotationToMatchSymetricalForward()
 
 void USeniorMovementComponent::LerpRotationToMatchVector(const FVector& _vectorToMatch)
 {
-	if (personalOwner->GetActorForwardVector().Equals(_vectorToMatch, .1f))return;
+	if (!personalOwner || personalOwner->GetActorForwardVector().Equals(_vectorToMatch, .1f))return;
 	const FVector& _personalOwnersLocation = personalOwner->GetActorLocation();
 	const FRotator _targetRotation = UKismetMathLibrary::FindLookAtRotation(_personalOwnersLocation, _vectorToMatch + _personalOwnersLocation);
 	personalOwner->SetActorRotation(UKismetMathLibrary::RInterpTo_Constant(personalOwner->GetActorRotation(), _targetRotation, GetWorld()->DeltaTimeSeconds, toForwardRotationLerpSpeed));
@@ -176,11 +180,22 @@ void USeniorMovementComponent::StopMoveAndRotateTime(const float _time)
 
 void USeniorMovementComponent::DrawDebugs()
 {
-	if (!useDebugs)return;
+	if (!useDebugs || !personalOwner)return;
 	const FVector& _currentLoc = personalOwner->GetActorLocation();
 	const FVector& _rotatedForwardVector = GetForwardVectorRotatedBySteerAngle();
 	DrawDebugDirectionalArrow(GetWorld(), _currentLoc, _currentLoc + _rotatedForwardVector * arrowWheelDirectionLength, 10, FColor::Magenta);
 	const FVector& _rotatedBackwardVector = -GetSymetricalForwardVectorRotatedBySteerAngle();
 	DrawDebugDirectionalArrow(GetWorld(), _currentLoc, _currentLoc + _rotatedBackwardVector * arrowWheelDirectionLength, 10, FColor::Yellow);
+}
+
+void USeniorMovementComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(USeniorMovementComponent, currentVelocity);
+}
+
+void USeniorMovementComponent::SetCurrentVelocityServer_Implementation(const float _value)
+{
+	currentVelocity = _value;
 }
 

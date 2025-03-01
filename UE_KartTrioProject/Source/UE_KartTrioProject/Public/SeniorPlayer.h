@@ -5,17 +5,23 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include <InputMappingContext.h>
-#include <Components/SeniorMovementComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
-
 #include "SeniorPlayer.generated.h"
+
+class USeniorMovementComponent;
 
 UCLASS()
 class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 {
 	GENERATED_BODY()
+
+	//This variable will be used in order to compare ASeniorPlayer when networking
+	// idea here by Jambax https://forums.unrealengine.com/t/unique-id-for-replicated-actor/143254/3
+	UPROPERTY(VisibleAnywhere, Category = "DEBUG ACOTR ID", Replicated) uint32 actorID;
+
+
 	UPROPERTY(EditAnywhere) TObjectPtr<USeniorMovementComponent> seniorMovementcomponent;
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
@@ -44,6 +50,11 @@ public:
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetLeftFrontWheel()const { return frontLeftWheel; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }
 
+	/// <summary>
+	/// Used for network
+	/// </summary>
+	FORCEINLINE uint32 GetActorID()const { return actorID; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -56,5 +67,6 @@ private:
 	void InitInputs(TObjectPtr<UEnhancedInputComponent> _inputComponent);
 
 private:
-
+	void InitUniqueID();
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

@@ -4,11 +4,15 @@
 #include "SeniorPlayer.h"
 #include <EnhancedInputSubsystems.h>
 #include <EnhancedInputComponent.h>
+#include "Net/UnrealNetwork.h"
+#include <Components/SeniorMovementComponent.h>
+#include <Kismet/KismetSystemLibrary.h>
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 
 	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
 
@@ -37,6 +41,7 @@ ASeniorPlayer::ASeniorPlayer()
 void ASeniorPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	InitUniqueID();
 }
 
 // Called every frame
@@ -83,4 +88,16 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 
 	//TODO Implement other bindings
 	}
+
+void ASeniorPlayer::InitUniqueID()
+{
+	if (HasAuthority())
+		actorID = this->GetUniqueID();
+}
+
+void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(ASeniorPlayer, actorID, COND_InitialOnly);
+}
 
