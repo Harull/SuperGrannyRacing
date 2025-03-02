@@ -19,7 +19,8 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 
 	//This variable will be used in order to compare ASeniorPlayer when networking
 	// idea here by Jambax https://forums.unrealengine.com/t/unique-id-for-replicated-actor/143254/3
-	UPROPERTY(VisibleAnywhere, Category = "DEBUG ACOTR ID", Replicated) uint32 actorID;
+	UPROPERTY(VisibleAnywhere, Category = "DEBUG ACTOR ID", Replicated) uint32 repActorID;
+	UPROPERTY(VisibleAnywhere, Category = "DEBUG ACTOR ID") uint32 actorLocalID;
 
 
 	UPROPERTY(EditAnywhere) TObjectPtr<USeniorMovementComponent> seniorMovementcomponent;
@@ -51,9 +52,13 @@ public:
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }
 
 	/// <summary>
-	/// Used for network
+	/// Custom id replicated, used for network
 	/// </summary>
-	FORCEINLINE uint32 GetActorID()const { return actorID; }
+	FORCEINLINE uint32 GetRepActorID()const { return repActorID; }
+	/// <summary>
+	/// Custom id not replicated, used for network
+	/// </summary>
+	FORCEINLINE uint32 GetLocalActorID()const { return actorLocalID; }
 
 protected:
 	virtual void BeginPlay() override;
