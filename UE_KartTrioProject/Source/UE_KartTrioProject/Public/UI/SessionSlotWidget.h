@@ -20,6 +20,7 @@ class UE_KARTTRIOPROJECT_API USessionSlotWidget : public UUserWidget
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> playersCount;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> ping;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> joinButton;
+	FString sessionName;
 	UPROPERTY() int index;
 
 public:
