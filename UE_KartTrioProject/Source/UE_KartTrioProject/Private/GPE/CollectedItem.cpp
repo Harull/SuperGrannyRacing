@@ -30,6 +30,7 @@ void ACollectedItem::Tick(float DeltaTime)
 void ACollectedItem::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	//TODO ADD item to player
+
 }
 
 void ACollectedItem::Init()

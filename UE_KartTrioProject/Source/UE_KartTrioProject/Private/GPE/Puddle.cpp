@@ -4,6 +4,7 @@
 #include "GPE/Puddle.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include "SeniorPlayer.h"
+#include "Components/SeniorMovementComponent.h"
 
 APuddle::APuddle()
 {
@@ -26,12 +27,15 @@ void APuddle::EnterAction(AActor* OtherActor)
 {
 	if (TObjectPtr<ASeniorPlayer> _player = Cast<ASeniorPlayer>(OtherActor))
 	{
-		UKismetSystemLibrary::PrintString(this, "Enter action and has a good movemnt component, reseting it");
+		//UKismetSystemLibrary::PrintString(this, "Enter action and has a good movemnt component, reseting it");
 
-		TObjectPtr<USeniorMovementComponent> _movement =  _player->GetComponentByClass<USeniorMovementComponent>();
+		//TObjectPtr<USeniorMovementComponent> _movement =  _player->GetComponentByClass<USeniorMovementComponent>();
+		TObjectPtr<USeniorMovementComponent> _movement = _player->GetSeniorMovementComponent();
 		if (!_movement) return;
 
+		UKismetSystemLibrary::PrintString(this, "Stun");
 		_movement->StopMoveAndRotateTime(timeStun);
+		SetLifeSpan(timeStun);
 
 	}
 }
