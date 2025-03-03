@@ -32,5 +32,5 @@ protected:
 
 public:
 	UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
-		
+	UFUNCTION(Server, Unreliable) void SpawnItemServer(const FVector& _position);
 };
