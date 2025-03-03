@@ -10,6 +10,11 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API ULobbyWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimerStarted);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimerStoped);
+	UPROPERTY() FOnTimerStarted onTimerStarted;
+	UPROPERTY() FOnTimerStoped onTimerStoped;
 	
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> playersReady;
 	UPROPERTY() int playersReadyCount = 0;

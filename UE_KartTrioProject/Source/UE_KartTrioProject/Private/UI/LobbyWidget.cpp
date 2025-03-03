@@ -48,6 +48,7 @@ void ULobbyWidget::IsMaxPlayer()
 
 void ULobbyWidget::StartTimer()
 {
+	onTimerStarted.Broadcast();
 	timerIsStarted = true;
 	timerToLaunch->SetVisibility(ESlateVisibility::Visible);
 }
@@ -56,6 +57,7 @@ void ULobbyWidget::StopTimer()
 {
 	if (timerIsStarted)
 	{
+		onTimerStoped.Broadcast();
 		ResetTimer();
 	}
 }
