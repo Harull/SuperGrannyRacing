@@ -6,9 +6,9 @@
 UGIS_Online::UGIS_Online()
 {
 	maxPlayersCount = 12;
-	serverName = "KUILLERE";
+	serverName = "Super Granny Racing 2 Deluxe Edition";
 	sessionName = "Unknown";
-	levelPath = "Unknown";
+	levelPath = "LVL_Lobby";
 	mainMenuLevelPath = "LVL_MainMenu";
 	lobbyLevelPath = "LVL_Lobby";
 	ipAddress = "Unknown";
@@ -68,10 +68,11 @@ void UGIS_Online::InitSessionSettings()
 	sessionSettings->bUseLobbiesIfAvailable = true;
 	sessionSettings->bUsesPresence = true;
 	sessionSettings->bShouldAdvertise = true;
-	sessionSettings->NumPrivateConnections = 0;
+	sessionSettings->NumPrivateConnections = 10;
 	sessionSettings->NumPublicConnections = maxPlayersCount;
 	sessionSettings->bIsLANMatch = IS_LAN(online);
 
+	sessionSettings->Set(FName("SESSION_NAME"), sessionName.ToString(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("SERVER_NAME"), serverName.ToString(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("LEVEL_NAME"), levelPath, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("CURRENT_PLAYERS"), FString::FromInt(1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
@@ -89,6 +90,8 @@ void UGIS_Online::OnCreateSessionCompleted(FName _sessionName, bool _wasSuccessf
 		return;
 	}
 	sessionName = _sessionName;
+	LOG("SERVER => OnCreateSessionCompleted : " + sessionName.ToString(), Orange);
+
 	RegisterPlayer();
 }
 
@@ -115,7 +118,7 @@ void UGIS_Online::OnFindSessionCompleted(bool _wasSuccessful)
 	{
 		if (!_result.IsValid())
 			continue;
-		const FSessionData& _data = FSessionData(_result.Session.SessionSettings);
+		const FSessionData& _data = FSessionData(_result.Session.SessionSettings, _result.GetSessionIdStr());
 		LOG("SessionData => " + _data.serverName, Green);
 		_sessionsData.Add(_data);
 	}
@@ -132,6 +135,7 @@ void UGIS_Online::OnJoinSessionCompleted(FName _sessionName, const EOnJoinSessio
 		return;
 	}
 	sessionName = _sessionName;
+	LOG("CLIENT => OnJoinSessionCompleted : " + sessionName.ToString(), Yellow);
 	session->GetResolvedConnectString(sessionName, ipAddress);
 	if (APlayerController* _playerController = GetGameInstance()->GetFirstLocalPlayerController())
 	{
@@ -162,7 +166,6 @@ void UGIS_Online::OnRegisteredCompleted(FName _sessionName, const TArray<FUnique
 			if (_sessionPresence->GetCachedPresence(_netId, _userPresence) == EOnlineCachedResult::Success)
 			{
 				const FPlayerData& _playerData = FPlayerData(_playerName, steamID, *_userPresence);
-				// TODO broadcast
 			}
 		}
 		else
@@ -170,6 +173,9 @@ void UGIS_Online::OnRegisteredCompleted(FName _sessionName, const TArray<FUnique
 			const FPlayerData& _playerData = FPlayerData(_playerName, steamID);
 		}
 	}
+
+
+	
 }
 
 void UGIS_Online::OnStartSessionCompleted(FName _sessionName, bool _wasSuccessful)
@@ -252,13 +258,15 @@ void UGIS_Online::UpdateSession()
 
 void UGIS_Online::FindSessions()
 {
-	LOG("UGIS_Online => FindSessions", Magenta);
-
 	if (serverName.IsNone())
 		return;
+
+	LOG("UGIS_Online => FindSessions", Magenta);
 	sessionSearch = MakeShareable(new FOnlineSessionSearch());
 	sessionSearch->bIsLanQuery = IS_LAN(online);
+	LOG(online->GetSubsystemName().ToString(), Blue);
 	sessionSearch->MaxSearchResults = 10;
+	sessionSearch->TimeoutInSeconds = 20.f;
 	sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 	session->FindSessions(0, sessionSearch.ToSharedRef());
 	//session->FindFriendSession(,)
@@ -272,8 +280,8 @@ void UGIS_Online::CancelFindSessions()
 
 void UGIS_Online::JoinSession(const FName& _sessionName, const FString& _levelPath, const int& _sessionIndex)
 {
-	LOG("UGIS_Online => JoinSession", Magenta);
 	sessionName = _sessionName;
+	LOG("CLIENT => JoinSession : " + sessionName.ToString(), Yellow);
 	levelPath = _levelPath;
 
 	const TArray<FOnlineSessionSearchResult>& _result = sessionSearch->SearchResults;

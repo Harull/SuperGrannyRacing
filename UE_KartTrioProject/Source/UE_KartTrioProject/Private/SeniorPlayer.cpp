@@ -4,11 +4,16 @@
 #include "SeniorPlayer.h"
 #include <EnhancedInputSubsystems.h>
 #include <EnhancedInputComponent.h>
+#include "Net/UnrealNetwork.h"
+#include <Components/SeniorMovementComponent.h>
+#include <Kismet/KismetSystemLibrary.h>
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 
 	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
 	collectedItemComponent = CreateDefaultSubobject<UCollectedItemComponent>("CollectedItem");
@@ -38,6 +43,9 @@ ASeniorPlayer::ASeniorPlayer()
 void ASeniorPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	InitUniqueID();
+	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
+
 }
 
 // Called every frame
@@ -85,4 +93,17 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 	_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, collectedItemComponent.Get(), &UCollectedItemComponent::UseItem);
 	//TODO Implement other bindings
 	}
+
+void ASeniorPlayer::InitUniqueID()
+{
+	if (HasAuthority())
+		repActorID = this->GetUniqueID();
+	actorLocalID = this->GetUniqueID();
+}
+
+void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(ASeniorPlayer, repActorID, COND_InitialOnly);
+}
 

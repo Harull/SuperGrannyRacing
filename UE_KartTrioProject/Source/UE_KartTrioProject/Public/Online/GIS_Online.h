@@ -45,6 +45,7 @@ struct FSessionData
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere) FString sessionName;
 	UPROPERTY(VisibleAnywhere) FString serverName;
 	UPROPERTY(VisibleAnywhere) FString levelName;
 	UPROPERTY(VisibleAnywhere) int32 playersCount;
@@ -53,8 +54,9 @@ struct FSessionData
 	UPROPERTY(VisibleAnywhere) TArray<FPlayerData> allPlayersData;
 
 	FSessionData() = default;
-	FSessionData(const FOnlineSessionSettings& _settings)
+	FSessionData(const FOnlineSessionSettings& _settings, const FString& _sessionID)
 	{
+		_settings.Get(FName("SESSION_NAME"), sessionName);
 		_settings.Get(FName("SERVER_NAME"), serverName);
 		_settings.Get(FName("LEVEL_NAME"), levelName);
 		InitIntValue(_settings, "CURRENT_PLAYERS", playersCount);
