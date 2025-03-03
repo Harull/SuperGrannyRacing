@@ -2,6 +2,7 @@
 
 
 #include "Components/CollectedItemComponent.h"
+#include <Kismet/KismetSystemLibrary.h>
 
 // Sets default values for this component's properties
 UCollectedItemComponent::UCollectedItemComponent()
@@ -30,5 +31,13 @@ void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
+{
+	if (!usableItem) return;
+	UKismetSystemLibrary::PrintString(this, "UseItem");
+	FVector _position = GetOwner()->GetActorLocation();
+	GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
 }
 

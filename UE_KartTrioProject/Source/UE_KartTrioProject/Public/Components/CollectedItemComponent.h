@@ -12,6 +12,9 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere) TSubclassOf<AActor> usableItem = nullptr; // TODO Modify
+
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItem;
 	UPROPERTY(EditAnywhere) int nbItemCollected = 0;
 	UPROPERTY(EditAnywhere) bool canFinish = false;
@@ -27,5 +30,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+public:
+	UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
 		
 };
