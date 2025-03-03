@@ -11,7 +11,7 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 {
 	GENERATED_BODY()
-	UPROPERTY(EditAnywhere) TObjectPtr<UBillboardComponent> billboard = nullptr;
+	//UPROPERTY(EditAnywhere) TObjectPtr<UBillboardComponent> billboard = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 	
 public:	

@@ -13,10 +13,10 @@ AFinishLine::AFinishLine()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
-	billboard = CreateDefaultSubobject<UBillboardComponent>("Billboard");
+	//billboard = CreateDefaultSubobject<UBillboardComponent>("Billboard");
 	box = CreateDefaultSubobject<UBoxComponent>("Box");
 
-	billboard->SetupAttachment(RootComponent);
+	//billboard->SetupAttachment(RootComponent);
 	box->SetupAttachment(RootComponent);
 }
 
