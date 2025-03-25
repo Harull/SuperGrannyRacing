@@ -4,6 +4,7 @@
 
 #include "GPE/CollectedItem.h"
 #include "GIS/GIS_CollectedItem.h"
+#include <SeniorPlayer.h>
 
 ACollectedItem::ACollectedItem()
 {
@@ -30,7 +31,15 @@ void ACollectedItem::Tick(float DeltaTime)
 void ACollectedItem::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	//TODO ADD item to player
+	ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor);
 
+	if (!_player) return;
+
+	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
+
+	if (!_comp) return;
+
+	_comp->UpdateCurrentItem(this);
 }
 
 void ACollectedItem::Init()

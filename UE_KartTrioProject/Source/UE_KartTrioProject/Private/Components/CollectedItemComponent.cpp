@@ -46,6 +46,11 @@ void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 		GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
 }
 
+void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
+{
+	if (_collectItem == GetCurrentItem()) nbItemCollected++;
+}
+
 void UCollectedItemComponent::SpawnItemServer_Implementation(const FVector& _position)
 {
 	GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
