@@ -5,6 +5,7 @@
 #include "GPE/CollectedItem.h"
 #include "GIS/GIS_CollectedItem.h"
 #include <SeniorPlayer.h>
+#include <Kismet/KismetSystemLibrary.h>
 
 ACollectedItem::ACollectedItem()
 {
@@ -39,6 +40,7 @@ void ACollectedItem::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if (!_comp) return;
 
+	//UKismetSystemLibrary::PrintString(this, _comp->GetOwner()->GetName());
 	_comp->UpdateCurrentItem(this);
 }
 

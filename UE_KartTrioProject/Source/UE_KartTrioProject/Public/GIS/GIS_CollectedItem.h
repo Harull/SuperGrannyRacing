@@ -15,9 +15,9 @@ class UE_KARTTRIOPROJECT_API UGIS_CollectedItem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 	UPROPERTY() TArray<TObjectPtr<ACollectedItem>> _allCollectedItem;
-	
 public:
 	FORCEINLINE int GetRange() const { return _allCollectedItem.Num(); }
+	FORCEINLINE TArray<TObjectPtr<ACollectedItem>> GetListCollectedItem() const { return _allCollectedItem; }
 
 public:
 	void AddCollectedItem(TObjectPtr<ACollectedItem> _item);

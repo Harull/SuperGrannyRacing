@@ -3,6 +3,7 @@
 
 #include "Components/CollectedItemComponent.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include <GIS/GIS_CollectedItem.h>
 
 // Sets default values for this component's properties
 UCollectedItemComponent::UCollectedItemComponent()
@@ -20,6 +21,9 @@ void UCollectedItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
+	if (_sub)
+		listItem = _sub->GetListCollectedItem();
 	// ...
 	
 }
@@ -48,7 +52,22 @@ void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 
 void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
 {
-	if (_collectItem == GetCurrentItem()) nbItemCollected++;
+	if (!_collectItem)
+	{
+		UKismetSystemLibrary::PrintString(this, "No CollectItem");
+		return;
+	}
+	if (listItem.Num() == listItemCollected.Num()) return;
+	if(listItem.Num() <= 0)
+		UKismetSystemLibrary::PrintString(this, "Liste de merde a zero");
+
+	if (_collectItem == GetCurrentItem() && !listItemCollected.Contains(_collectItem))
+	{
+		UKismetSystemLibrary::PrintString(this, "Truc de merde recuperer !!");
+		nbItemCollected++;
+		listItemCollected.Add(_collectItem);
+		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
+	}
 }
 
 void UCollectedItemComponent::SpawnItemServer_Implementation(const FVector& _position)
