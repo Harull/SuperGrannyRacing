@@ -53,6 +53,7 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 				_hud->GetMainWidget()->SetWinScreenVisibility();
 			}
 		}
+		onStopRace.Broadcast();
 	}
 	else
 	{
