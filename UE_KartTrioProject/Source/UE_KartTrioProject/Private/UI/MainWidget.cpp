@@ -1,5 +1,6 @@
 
 #include "UI/MainWidget.h"
+#include "Components/SeniorMovementComponent.h"
 
 void UMainWidget::NativeConstruct()
 {

@@ -1,5 +1,6 @@
 
 #include "UI/LobbyWidget.h"
+#include <Online/GIS_Online.h>
 
 void ULobbyWidget::NativeConstruct()
 {
