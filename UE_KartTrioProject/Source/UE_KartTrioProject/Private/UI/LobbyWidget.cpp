@@ -1,5 +1,6 @@
 
 #include "UI/LobbyWidget.h"
+#include <Online/GIS_Online.h>
 
 void ULobbyWidget::NativeConstruct()
 {
@@ -20,8 +21,8 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 			if (timeToLaunchLeft < 0)
 			{
 				timerIsStarted = false;
-				GetWorld()->ServerTravel("/Game/Levels/LVL_Base?listen");
-				// TODO ServerTravel => GameLevel
+				if(GetOwningPlayer()->HasAuthority())
+					GetWorld()->ServerTravel("/Game/Levels/LVL_Base?listen");
 			}
 		}
 	}
