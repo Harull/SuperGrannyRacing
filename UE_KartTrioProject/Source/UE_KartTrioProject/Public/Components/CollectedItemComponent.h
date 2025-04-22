@@ -16,6 +16,7 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 	UPROPERTY(EditAnywhere) TSubclassOf<AActor> usableItem = nullptr; // TODO Modify
 
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItem;
+	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItemCollected;
 	UPROPERTY(EditAnywhere) int nbItemCollected = 0;
 	UPROPERTY(EditAnywhere) bool canFinish = false;
 
