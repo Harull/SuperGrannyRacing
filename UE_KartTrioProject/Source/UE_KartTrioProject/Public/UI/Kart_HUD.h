@@ -18,6 +18,9 @@ class UE_KARTTRIOPROJECT_API AKart_HUD : public AHUD
 	UPROPERTY(EditAnywhere) TSubclassOf<UMainWidget> mainWidgetRef;
 	UPROPERTY() TObjectPtr<UMainWidget> mainWidget;
 
+public:
+	FORCEINLINE TObjectPtr<UMainWidget> GetMainWidget() const { return mainWidget; }
+
 private:
 	virtual void BeginPlay() override;
 };

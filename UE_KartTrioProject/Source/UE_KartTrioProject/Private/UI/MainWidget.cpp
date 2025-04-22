@@ -1,6 +1,7 @@
 
 #include "UI/MainWidget.h"
 #include "Components/SeniorMovementComponent.h"
+#include <GIS/GIS_CollectedItem.h>
 
 void UMainWidget::NativeConstruct()
 {
@@ -25,22 +26,41 @@ void UMainWidget::NativeConstruct()
 
 void UMainWidget::InitShoppingList()
 {
-	TArray<FString> _itemsList = {
-		"Banana",
-		"Chocolate",
-		"Coffee",
-		"Diapers"
-	};
+	TArray<TObjectPtr<ACollectedItem>> _allObjects;
+	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
+	if (_sub)
+		_allObjects = _sub->GetListCollectedItem();
 
-	for (int _i = 0; _i < 4; _i++)
+	const int _count = _allObjects.Num();
+	for (int _i = 0; _i < _count; _i++)
 	{
 		TObjectPtr<UItemToCollectWidget> _shopItem = CreateWidget<UItemToCollectWidget>(shoppingList, itemToCollectWidget);
-		_shopItem->Construct(_itemsList[_i]);
+		_shopItem->Construct(_allObjects[_i]->GetItemName());
 		_shopItem->Padding.Top = paddingValue;
 		_shopItem->Padding.Bottom = paddingValue;
 		shoppingList->AddChild(_shopItem);
 		_shopItem->AddToViewport();
+		allItemsWidget.Add(_shopItem);
 	}
+}
+
+TObjectPtr<UItemToCollectWidget> UMainWidget::FindItemWidget(FString _name)
+{
+	int _count = allItemsWidget.Num();
+	for (int _i = 0; _i < _count; _i++)
+	{
+		if (allItemsWidget[_i]->GetItemName() == _name)
+		{
+			return allItemsWidget[_i];
+		}
+	}
+
+	return nullptr;
+}
+
+void UMainWidget::SetWinScreenVisibility()
+{
+	winScreen->SetVisible();
 }
 
 void UMainWidget::UpdateSpeed(float _value)

@@ -4,6 +4,7 @@
 #include "Components/CollectedItemComponent.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include <GIS/GIS_CollectedItem.h>
+#include <UI/Kart_HUD.h>
 
 // Sets default values for this component's properties
 UCollectedItemComponent::UCollectedItemComponent()
@@ -63,9 +64,17 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 
 	if (_collectItem == GetCurrentItem() && !listItemCollected.Contains(_collectItem))
 	{
-		UKismetSystemLibrary::PrintString(this, "Truc de merde recuperer !!");
+		//UKismetSystemLibrary::PrintString(this, "Truc de merde recuperer !!");
+		_collectItem->GetItemName();
 		nbItemCollected++;
 		listItemCollected.Add(_collectItem);
+
+		if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
+		{
+			TObjectPtr<UItemToCollectWidget> _itemWidget = _hud->GetMainWidget()->FindItemWidget(_collectItem->GetItemName());
+			_itemWidget->CrossItem();
+		}
+
 		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
 	}
 }

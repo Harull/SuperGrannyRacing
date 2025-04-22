@@ -18,6 +18,9 @@ class UE_KARTTRIOPROJECT_API UItemToCollectWidget : public UUserWidget
 	
 
 public:
+	FORCEINLINE const FString& GetItemName() const { return itemName; }
+
+public:
 	virtual void NativeConstruct() override;
 	void Construct(FString _name);
 	void CrossItem();
