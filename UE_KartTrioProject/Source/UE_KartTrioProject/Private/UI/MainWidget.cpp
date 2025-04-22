@@ -13,12 +13,34 @@ void UMainWidget::NativeConstruct()
 		playerRef->GetSeniorMovementComponent()->OnSpeedUpdate().AddDynamic(this, &UMainWidget::UpdateSpeed);
 	}
 
+	InitShoppingList();
+
 	/*FTimerHandle _timer;
 	FTimerDelegate _delegate;
 	_delegate.BindLambda([&]() {
 		DebugSpeed();
 		});
 	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 0.1f, true, 1.0f);*/
+}
+
+void UMainWidget::InitShoppingList()
+{
+	TArray<FString> _itemsList = {
+		"Banana",
+		"Chocolate",
+		"Coffee",
+		"Diapers"
+	};
+
+	for (int _i = 0; _i < 4; _i++)
+	{
+		TObjectPtr<UItemToCollectWidget> _shopItem = CreateWidget<UItemToCollectWidget>(shoppingList, itemToCollectWidget);
+		_shopItem->Construct(_itemsList[_i]);
+		_shopItem->Padding.Top = paddingValue;
+		_shopItem->Padding.Bottom = paddingValue;
+		shoppingList->AddChild(_shopItem);
+		_shopItem->AddToViewport();
+	}
 }
 
 void UMainWidget::UpdateSpeed(float _value)

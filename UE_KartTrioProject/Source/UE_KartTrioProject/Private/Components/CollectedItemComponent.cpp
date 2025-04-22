@@ -37,7 +37,7 @@ void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 {
 	if (!usableItem) return;
 	UKismetSystemLibrary::PrintString(this, "UseItem");
-	FVector _position = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * -2;
+	FVector _position = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * -100.0f;
 
 
 	if(!GetOwner()->HasAuthority())
