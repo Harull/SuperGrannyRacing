@@ -44,6 +44,7 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (_comp->CanFinish())
 	{
 		UKismetSystemLibrary::PrintString(this, "Finish");
+		onStopRace.Broadcast();
 	}
 	else
 	{

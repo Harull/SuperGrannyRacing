@@ -39,7 +39,7 @@ void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
 void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 {
-	if (!usableItem) return;
+	if (!usableItem || isCooldown) return;
 	UKismetSystemLibrary::PrintString(this, "UseItem");
 	FVector _position = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * -2;
 
@@ -48,6 +48,10 @@ void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 		SpawnItemServer(_position);
 	else
 		GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
+
+	isCooldown = true;
+	FTimerHandle _timer;
+	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {UCollectedItemComponent::ResetCooldown(); }, timeCooldown, false);
 }
 
 void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
@@ -68,6 +72,11 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 		listItemCollected.Add(_collectItem);
 		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
 	}
+}
+
+void UCollectedItemComponent::ResetCooldown()
+{
+	isCooldown = false;
 }
 
 void UCollectedItemComponent::SpawnItemServer_Implementation(const FVector& _position)
