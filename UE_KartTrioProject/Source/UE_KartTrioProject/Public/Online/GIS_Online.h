@@ -40,11 +40,12 @@ struct FPlayerData
 	}
 };
 
+
 USTRUCT()
 struct FSessionData
 {
 	GENERATED_BODY()
-
+	FOnlineSessionSettings settings;
 	UPROPERTY(VisibleAnywhere) FString sessionName;
 	UPROPERTY(VisibleAnywhere) FString serverName;
 	UPROPERTY(VisibleAnywhere) FString levelName;
@@ -56,6 +57,7 @@ struct FSessionData
 	FSessionData() = default;
 	FSessionData(const FOnlineSessionSettings& _settings, const FString& _sessionID)
 	{
+		settings = _settings;
 		_settings.Get(FName("SESSION_NAME"), sessionName);
 		_settings.Get(FName("SERVER_NAME"), serverName);
 		_settings.Get(FName("LEVEL_NAME"), levelName);
@@ -71,6 +73,12 @@ private:
 		_settings.Get(FName(_key), _valueText);
 		_value = FCString::Atoi(*_valueText);
 	}
+public:
+	void UpdateCurrentPlayerCount()
+	{
+		InitIntValue(settings, "CURRENT_PLAYERS", playersCount);
+	}
+
 };
 
 UCLASS()
@@ -94,9 +102,17 @@ class UE_KARTTRIOPROJECT_API UGIS_Online : public UGameInstanceSubsystem
 	FUniqueNetIdPtr steamID;
 	TSharedPtr<FOnlineSessionSettings> sessionSettings;
 	TSharedPtr<FOnlineSessionSearch> sessionSearch;
+	FSessionData currentSessionData;
 
 public:
 	FORCEINLINE FOnSessionsFound& OnSessionsFound() { return onSessionsFound; }
+	FORCEINLINE FSessionData& GetCurrentSessionData() { return currentSessionData; }
+	FORCEINLINE int GetPlayerCount()
+	{
+		currentSessionData.UpdateCurrentPlayerCount();
+		return currentSessionData.playersCount; 
+	}
+
 
 public:
 	UGIS_Online();
@@ -119,6 +135,7 @@ protected:
 	void OnDestroySessionCompleted(FName _sessionName, bool _wasSuccessful);
 	void OnSessionFailure(const FUniqueNetId& _id, ESessionFailure::Type _failureType);
 	void OnNetworkFailure(UWorld* _world, UNetDriver* _driver, ENetworkFailure::Type _failureType, const FString& _error);
+	void OnAcceptInvite(const bool _wasSuccessful, const int32 _controllerId, FUniqueNetIdPtr _userId, const FOnlineSessionSearchResult& _inviteResult);
 
 public:
 	UFUNCTION() void CreateSession();
