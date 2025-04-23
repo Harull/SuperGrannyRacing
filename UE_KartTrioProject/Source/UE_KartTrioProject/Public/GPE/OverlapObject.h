@@ -10,6 +10,7 @@ UCLASS(Abstract)
 class UE_KARTTRIOPROJECT_API AOverlapObject : public AActor
 {
 	GENERATED_BODY()
+protected:
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> mesh = nullptr;
 	
 public:	
