@@ -37,6 +37,7 @@ void ULobbyWidget::UpdatePlayersReady(int _value)
 
 void ULobbyWidget::IsMaxPlayer()
 {
+	
 	if (playersReadyCount == 2) // valeur de test
 	{
 		StartTimer();
