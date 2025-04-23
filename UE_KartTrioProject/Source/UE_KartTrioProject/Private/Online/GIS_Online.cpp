@@ -40,6 +40,7 @@ void UGIS_Online::Initialize(FSubsystemCollectionBase& _collection)
 		session->OnUpdateSessionCompleteDelegates.AddUObject(this, &UGIS_Online::OnUpdateSessionCompleted);
 		session->OnEndSessionCompleteDelegates.AddUObject(this, &UGIS_Online::OnEndSessionCompleted);
 		session->OnDestroySessionCompleteDelegates.AddUObject(this, &UGIS_Online::OnDestroySessionCompleted);
+		session->OnSessionUserInviteAcceptedDelegates.AddUObject(this, &UGIS_Online::OnAcceptInvite);
 
 		session->OnSessionFailureDelegates.AddUObject(this, &UGIS_Online::OnSessionFailure);
 		GEngine->OnNetworkFailure().AddUObject(this, &UGIS_Online::OnNetworkFailure);
@@ -231,6 +232,17 @@ void UGIS_Online::OnNetworkFailure(UWorld* _world, UNetDriver* _driver, ENetwork
 	LOG("Error => " + _error + " (" + ENetworkFailure::ToString(_failureType) + ")!", Red);
 }
 
+void UGIS_Online::OnAcceptInvite(const bool _wasSuccessful, const int32 _controllerId, FUniqueNetIdPtr _userId, const FOnlineSessionSearchResult& _inviteResult)
+{
+	bool _isValid = _inviteResult.IsValid();
+	const FString& _inviteText = (_isValid ? "and the session is valid" : "but the session is NOT valid");
+	LOG("OnAcceptInvite broadcasted " + _inviteText, Yellow);
+	if (!_isValid)return;
+
+	currentSessionData = FSessionData(_inviteResult.Session.SessionSettings, _inviteResult.GetSessionIdStr());
+	session->JoinSession(0, FName(currentSessionData.sessionName), _inviteResult);
+}
+
 #pragma endregion
 
 #pragma region Callables
@@ -238,6 +250,7 @@ void UGIS_Online::CreateSession()
 {
 	LOG("UGIS_Online => CreateSession", Magenta);
 	sessionName = FName(serverName.ToString() + "_" + steamID->ToString());
+	if (session->GetNamedSession(sessionName))
 	if (session->GetNamedSession(sessionName))
 	{
 		DestroySession();
@@ -322,3 +335,4 @@ void UGIS_Online::DestroySession()
 	session->DestroySession(sessionName);
 }
 #pragma endregion
+
