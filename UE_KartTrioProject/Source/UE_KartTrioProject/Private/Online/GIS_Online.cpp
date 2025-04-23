@@ -92,7 +92,7 @@ void UGIS_Online::OnCreateSessionCompleted(FName _sessionName, bool _wasSuccessf
 	}
 	sessionName = _sessionName;
 	LOG("SERVER => OnCreateSessionCompleted : " + sessionName.ToString(), Orange);
-
+	currentSessionData = FSessionData(*sessionSettings.Get());
 	RegisterPlayer();
 }
 

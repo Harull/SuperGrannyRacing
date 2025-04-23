@@ -54,8 +54,10 @@ struct FSessionData
 	UPROPERTY(VisibleAnywhere) int32 ping;
 	UPROPERTY(VisibleAnywhere) TArray<FPlayerData> allPlayersData;
 
+	bool isInitialized = false;
+
 	FSessionData() = default;
-	FSessionData(const FOnlineSessionSettings& _settings, const FString& _sessionID)
+	FSessionData(const FOnlineSessionSettings& _settings, const FString& _sessionID = "")
 	{
 		settings = _settings;
 		_settings.Get(FName("SESSION_NAME"), sessionName);
@@ -64,6 +66,7 @@ struct FSessionData
 		InitIntValue(_settings, "CURRENT_PLAYERS", playersCount);
 		InitIntValue(_settings, "MAX_PLAYERS", maxPlayersCount);
 		InitIntValue(_settings, "PING", ping);
+		isInitialized = true;
 	}
 
 private:
@@ -109,6 +112,7 @@ public:
 	FORCEINLINE FSessionData& GetCurrentSessionData() { return currentSessionData; }
 	FORCEINLINE int GetPlayerCount()
 	{
+		if (!currentSessionData.isInitialized) return 1;
 		currentSessionData.UpdateCurrentPlayerCount();
 		return currentSessionData.playersCount; 
 	}
