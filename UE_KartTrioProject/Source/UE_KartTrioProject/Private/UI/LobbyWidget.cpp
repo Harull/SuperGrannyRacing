@@ -37,8 +37,8 @@ void ULobbyWidget::UpdatePlayersReady(int _value)
 
 void ULobbyWidget::IsMaxPlayer()
 {
-	
-	if (playersReadyCount == 2) // valeur de test
+	int _maxPlayers = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetPlayerCount();
+	if (playersReadyCount == _maxPlayers) 
 	{
 		StartTimer();
 	}
