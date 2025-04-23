@@ -57,29 +57,25 @@ void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 
 void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
 {
-	if (!_collectItem)
-	{
-		UKismetSystemLibrary::PrintString(this, "No CollectItem");
-		return;
-	}
+	if (!_collectItem) return;
+	if (!GetOwner()->HasAuthority()) return;
+
 	if (listItem.Num() == listItemCollected.Num()) return;
-	if(listItem.Num() <= 0)
-		UKismetSystemLibrary::PrintString(this, "Liste de merde a zero");
+	if (listItem.Num() <= 0) return;
 
 	if (_collectItem == GetCurrentItem() && !listItemCollected.Contains(_collectItem))
 	{
-		//UKismetSystemLibrary::PrintString(this, "Truc de merde recuperer !!");
-		_collectItem->GetItemName();
 		nbItemCollected++;
 		listItemCollected.Add(_collectItem);
+
+		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
 
 		if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
 		{
 			TObjectPtr<UItemToCollectWidget> _itemWidget = _hud->GetMainWidget()->FindItemWidget(_collectItem->GetItemName());
+			if (!_itemWidget) return;
 			_itemWidget->CrossItem();
 		}
-
-		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
 	}
 }
 

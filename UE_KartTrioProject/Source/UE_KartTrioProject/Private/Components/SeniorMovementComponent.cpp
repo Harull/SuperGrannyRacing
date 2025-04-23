@@ -81,22 +81,19 @@ void USeniorMovementComponent::Move()
 {
 	if (!canMove || !ownersCharacterMovementComponent) return;
 
-	float _currentSpeed;
 	if (currentVelocity > 0)
 	{
-		_currentSpeed = currentVelocity * GetWorld()->DeltaTimeSeconds;
 		ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * (currentVelocity/forwardMaxSpeed) /** GetWorld()->DeltaTimeSeconds*/);
 		onMoveForwardDone.Broadcast();
 	}
 	else if (currentVelocity < 0)
 	{
-		_currentSpeed = currentVelocity * GetWorld()->DeltaTimeSeconds;
 		ownersCharacterMovementComponent->AddInputVector(GetSymetricalForwardVectorRotatedBySteerAngle() * (currentVelocity/backwardMaxSpeed/2)/** GetWorld()->DeltaTimeSeconds*/);
 		onMoveBackwardDone.Broadcast();
 	}
 	else
 		return;
-	onSpeedUpdate.Broadcast(_currentSpeed * 10);
+	onSpeedUpdate.Broadcast(currentVelocity);
 	//ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);
 	onMovementDone.Broadcast();
 	
