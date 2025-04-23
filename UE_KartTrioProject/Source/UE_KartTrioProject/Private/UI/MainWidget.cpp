@@ -2,6 +2,7 @@
 #include "UI/MainWidget.h"
 #include "Components/SeniorMovementComponent.h"
 #include <GIS/GIS_CollectedItem.h>
+#include <Kismet/KismetSystemLibrary.h>
 
 void UMainWidget::NativeConstruct()
 {
@@ -14,7 +15,11 @@ void UMainWidget::NativeConstruct()
 		playerRef->GetSeniorMovementComponent()->OnSpeedUpdate().AddDynamic(this, &UMainWidget::UpdateSpeed);
 	}
 
-	InitShoppingList();
+	FTimerHandle _timer;
+
+	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {UMainWidget::InitShoppingList(); }, 0.1f, false);
+
+	//InitShoppingList();
 
 	/*FTimerHandle _timer;
 	FTimerDelegate _delegate;
@@ -26,10 +31,15 @@ void UMainWidget::NativeConstruct()
 
 void UMainWidget::InitShoppingList()
 {
+
 	TArray<TObjectPtr<ACollectedItem>> _allObjects;
 	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
 	if (_sub)
-		_allObjects = _sub->GetListCollectedItem();
+	{
+		_allObjects = _sub->GetListItem();
+		UKismetSystemLibrary::PrintString(this, FString::FromInt(_sub->GetListItem().Num()));
+
+	}
 
 	const int _count = _allObjects.Num();
 	for (int _i = 0; _i < _count; _i++)

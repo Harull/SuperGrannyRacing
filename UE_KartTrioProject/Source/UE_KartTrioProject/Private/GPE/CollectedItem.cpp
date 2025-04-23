@@ -31,6 +31,7 @@ void ACollectedItem::Tick(float DeltaTime)
 
 void ACollectedItem::NotifyActorBeginOverlap(AActor* OtherActor)
 {
+	if (!isInTheList) return;
 	//TODO ADD item to player
 	ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor);
 

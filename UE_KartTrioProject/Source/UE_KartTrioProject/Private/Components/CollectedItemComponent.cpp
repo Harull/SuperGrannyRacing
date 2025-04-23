@@ -21,10 +21,15 @@ UCollectedItemComponent::UCollectedItemComponent()
 void UCollectedItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	UKismetSystemLibrary::PrintString(this, "Player List");
 
 	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
 	if (_sub)
-		listItem = _sub->GetListCollectedItem();
+	{
+		_sub->GetRandomList(sizeList);
+		_sub->SetAllItemInList();
+		listItem = _sub->GetListItem();
+	}
 	// ...
 	
 }

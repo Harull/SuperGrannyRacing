@@ -17,7 +17,8 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItem;
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItemCollected;
-	UPROPERTY(EditAnywhere) int nbItemCollected = 0;
+	UPROPERTY(VisibleAnywhere) int nbItemCollected = 0;
+	UPROPERTY(EditAnywhere) int sizeList = 4;
 	UPROPERTY(EditAnywhere) bool canFinish = false;
 	UPROPERTY(EditAnywhere) float timeCooldown = 2;
 	UPROPERTY(EditAnywhere) bool isCooldown = false;

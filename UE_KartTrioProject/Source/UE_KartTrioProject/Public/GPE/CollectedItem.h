@@ -17,9 +17,12 @@ class UE_KARTTRIOPROJECT_API ACollectedItem : public AActor
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> mesh = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 	UPROPERTY(EditAnywhere) FString itemName;
+	UPROPERTY(EditAnywhere) bool isInTheList = false;
 	
 public:
 	FORCEINLINE FString GetItemName() const { return itemName; }
+	FORCEINLINE void SetIsInTheList(bool _value) { isInTheList = _value; }
+
 public:
 	ACollectedItem();
 
