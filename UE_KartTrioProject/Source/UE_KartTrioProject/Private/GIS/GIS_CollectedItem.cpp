@@ -8,7 +8,7 @@
 void UGIS_CollectedItem::AddCollectedItem(TObjectPtr<ACollectedItem> _item)
 {
 	if (!_item) return;
-	_allCollectedItem.Add(_item);
+	allCollectedItem.Add(_item);
 	//UKismetSystemLibrary::PrintString(this, "Add Collected Item");;
 	
 }
@@ -16,5 +16,5 @@ void UGIS_CollectedItem::AddCollectedItem(TObjectPtr<ACollectedItem> _item)
 void UGIS_CollectedItem::RemoveCollectedItem(TObjectPtr<ACollectedItem> _item)
 {
 	if (!_item) return;
-	_allCollectedItem.Remove(_item);
+	allCollectedItem.Remove(_item);
 }

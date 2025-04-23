@@ -6,6 +6,7 @@
 #include <SeniorPlayer.h>
 #include <Components/CollectedItemComponent.h>
 #include <Kismet/KismetSystemLibrary.h>
+#include <UI/Kart_HUD.h>
 
 // Sets default values
 AFinishLine::AFinishLine()
@@ -34,9 +35,9 @@ void AFinishLine::Tick(float DeltaTime)
 
 }
 
-void AFinishLine::NotifyActorBeginOverlap(AActor* OtherActor)
+void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 {
-	ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor);
+	ASeniorPlayer* _player = Cast<ASeniorPlayer>(_otherActor);
 	if (!_player) return;
 	//UCollectedItemComponent* _comp =  _player->GetComponentByClass<UCollectedItemComponent>();
 	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
@@ -44,6 +45,15 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* OtherActor)
 	if (_comp->CanFinish())
 	{
 		UKismetSystemLibrary::PrintString(this, "Finish");
+		if(APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
+		{
+			if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(_controller->GetHUD()))
+			{
+				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
+				_hud->GetMainWidget()->SetWinScreenVisibility();
+			}
+		}
+		onStopRace.Broadcast();
 	}
 	else
 	{

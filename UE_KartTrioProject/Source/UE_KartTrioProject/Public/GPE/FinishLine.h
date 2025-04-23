@@ -11,9 +11,16 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 {
 	GENERATED_BODY()
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStopRace);
+	
+	FOnStopRace onStopRace;
+	
 	//UPROPERTY(EditAnywhere) TObjectPtr<UBillboardComponent> billboard = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 	
+public:
+	FOnStopRace& OnStopRace() { return onStopRace; }
+
 public:	
 	AFinishLine();
 

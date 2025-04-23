@@ -14,10 +14,10 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API UGIS_CollectedItem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-	UPROPERTY() TArray<TObjectPtr<ACollectedItem>> _allCollectedItem;
-	
+	UPROPERTY() TArray<TObjectPtr<ACollectedItem>> allCollectedItem;
 public:
-	FORCEINLINE int GetRange() const { return _allCollectedItem.Num(); }
+	FORCEINLINE int GetRange() const { return allCollectedItem.Num(); }
+	FORCEINLINE TArray<TObjectPtr<ACollectedItem>> GetListCollectedItem() const { return allCollectedItem; }
 
 public:
 	void AddCollectedItem(TObjectPtr<ACollectedItem> _item);

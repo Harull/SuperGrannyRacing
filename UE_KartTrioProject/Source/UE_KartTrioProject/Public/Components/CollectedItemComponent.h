@@ -16,8 +16,11 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 	UPROPERTY(EditAnywhere) TSubclassOf<AActor> usableItem = nullptr; // TODO Modify
 
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItem;
+	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItemCollected;
 	UPROPERTY(EditAnywhere) int nbItemCollected = 0;
 	UPROPERTY(EditAnywhere) bool canFinish = false;
+	UPROPERTY(EditAnywhere) float timeCooldown = 2;
+	UPROPERTY(EditAnywhere) bool isCooldown = false;
 
 public:
 	FORCEINLINE TObjectPtr<ACollectedItem> GetCurrentItem() const { return listItem[nbItemCollected]; }
@@ -34,4 +37,5 @@ public:
 	UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
 	UFUNCTION(Server, Unreliable) void SpawnItemServer(const FVector& _position);
 	void UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem);
+	UFUNCTION() void ResetCooldown();
 };

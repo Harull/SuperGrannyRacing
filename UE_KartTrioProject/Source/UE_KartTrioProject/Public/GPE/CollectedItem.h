@@ -16,7 +16,10 @@ class UE_KARTTRIOPROJECT_API ACollectedItem : public AActor
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> mesh = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
+	UPROPERTY(EditAnywhere) FString itemName;
 	
+public:
+	FORCEINLINE FString GetItemName() const { return itemName; }
 public:
 	ACollectedItem();
 
