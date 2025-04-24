@@ -2,6 +2,7 @@
 #include "Lobby/PlayersReadyArea.h"
 #include <UI/Lobby_HUD.h>
 #include <Kismet/KismetSystemLibrary.h>
+#include <SeniorPlayer.h>
 
 APlayersReadyArea::APlayersReadyArea()
 {
@@ -50,14 +51,15 @@ void APlayersReadyArea::Tick(float DeltaTime)
 void APlayersReadyArea::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	UKismetSystemLibrary::PrintString(this, "Enter");
-
-	lobbyMenuRef->UpdatePlayersReady(1);
+	//UKismetSystemLibrary::PrintString(this, "Enter");
+	if(ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor))
+		lobbyMenuRef->UpdatePlayersReady(1);
 }
 
 void APlayersReadyArea::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap(OtherActor);
-	UKismetSystemLibrary::PrintString(this, "Exit");
-	lobbyMenuRef->UpdatePlayersReady(-1);
+	//UKismetSystemLibrary::PrintString(this, "Exit");
+	if (ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor))
+		lobbyMenuRef->UpdatePlayersReady(-1);
 }
