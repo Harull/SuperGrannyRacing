@@ -1,6 +1,8 @@
 
 #include "UI/LobbyWidget.h"
 #include <Online/GIS_Online.h>
+#include <Kismet/GameplayStatics.h>
+#include <SeniorPlayer.h>
 
 void ULobbyWidget::NativeConstruct()
 {
@@ -37,8 +39,8 @@ void ULobbyWidget::UpdatePlayersReady(int _value)
 
 void ULobbyWidget::IsMaxPlayer()
 {
-	int _maxPlayers = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetPlayerCount();
-	if (playersReadyCount == _maxPlayers) 
+	int _totalPlayerConnected = GetPlayerCount();
+	if (playersReadyCount == _totalPlayerConnected) 
 	{
 		StartTimer();
 	}
@@ -78,4 +80,11 @@ void ULobbyWidget::UpdateTimer(float _value)
 	/*FColor _color = FColor(1, 1, 1, _value);
 	timerToLaunch->SetColorAndOpacity(FSlateColor(_color));*/
 	timerToLaunch->SetOpacity(_value);
+}
+
+int ULobbyWidget::GetPlayerCount()
+{
+	TArray<AActor*> _allActors;
+	UGameplayStatics::GetAllActorsOfClass(this, ASeniorPlayer::StaticClass(), _allActors);
+	return _allActors.Num();
 }
