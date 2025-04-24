@@ -5,6 +5,8 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include <GIS/GIS_CollectedItem.h>
 #include <UI/Kart_HUD.h>
+#include <SeniorPlayer.h>
+#include "Components/PlaceArrowSignComponent.h"
 
 // Sets default values for this component's properties
 UCollectedItemComponent::UCollectedItemComponent()
@@ -26,12 +28,12 @@ void UCollectedItemComponent::BeginPlay()
 	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
 	if (_sub)
 	{
-		_sub->GetRandomList(sizeList);
-		_sub->SetAllItemInList();
-		listItem = _sub->GetListItem();
+		/*_sub->GetRandomList(sizeList);
+		_sub->SetAllItemInList();*/
+		listItem = _sub->GetListCollectedItem();
 	}
-	// ...
-	
+
+	seniorPlayerRef = Cast<ASeniorPlayer>(GetOwner());
 }
 
 
@@ -78,9 +80,12 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 		if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
 		{
 			TObjectPtr<UItemToCollectWidget> _itemWidget = _hud->GetMainWidget()->FindItemWidget(_collectItem->GetItemName());
-			if (!_itemWidget) return;
-			_itemWidget->CrossItem();
+			if (_itemWidget)
+				_itemWidget->CrossItem();
 		}
+
+		canFinish ? seniorPlayerRef->GetPlaceArrowSignComponent()->NoMoreItem()
+				  : seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetActorLocation());
 	}
 }
 

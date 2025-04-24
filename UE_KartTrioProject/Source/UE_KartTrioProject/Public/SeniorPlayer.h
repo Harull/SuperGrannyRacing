@@ -12,6 +12,7 @@
 #include "SeniorPlayer.generated.h"
 
 class USeniorMovementComponent;
+class UPlaceArrowSignComponent;
 
 UCLASS()
 class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
@@ -27,6 +28,7 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 	UPROPERTY(EditAnywhere) TObjectPtr<UCollectedItemComponent> collectedItemComponent;
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
+	UPROPERTY(EditAnywhere) TObjectPtr<UPlaceArrowSignComponent> placeArrowSignComponent;
 
 
 	UPROPERTY(EditAnywhere) TObjectPtr<UCapsuleComponent> cartCapsuleComponent;
@@ -53,6 +55,7 @@ public:
 	FORCEINLINE TObjectPtr<UCapsuleComponent> GetCartCapsuleComponent()const { return cartCapsuleComponent; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetLeftFrontWheel()const { return frontLeftWheel; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }
+	FORCEINLINE TObjectPtr<UPlaceArrowSignComponent> GetPlaceArrowSignComponent() const { return placeArrowSignComponent; }
 
 	/// <summary>
 	/// Custom id replicated, used for network

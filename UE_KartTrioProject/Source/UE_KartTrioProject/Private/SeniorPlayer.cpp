@@ -7,6 +7,7 @@
 #include "Net/UnrealNetwork.h"
 #include <Components/SeniorMovementComponent.h>
 #include <Kismet/KismetSystemLibrary.h>
+#include "Components/PlaceArrowSignComponent.h"
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -17,6 +18,7 @@ ASeniorPlayer::ASeniorPlayer()
 
 	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
 	collectedItemComponent = CreateDefaultSubobject<UCollectedItemComponent>("CollectedItem");
+	placeArrowSignComponent = CreateDefaultSubobject<UPlaceArrowSignComponent>("PlaceArrowSign");
 
 	//CAMERA
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
@@ -38,6 +40,8 @@ ASeniorPlayer::ASeniorPlayer()
 	frontLeftWheel->SetupAttachment(shoppingCart);
 
 	AddOwnedComponent(seniorMovementcomponent);
+	AddOwnedComponent(collectedItemComponent);
+	AddOwnedComponent(placeArrowSignComponent);
 }
 
 void ASeniorPlayer::BeginPlay()

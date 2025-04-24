@@ -47,6 +47,7 @@ void ACollectedItem::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void ACollectedItem::Init()
 {
+	if (!isInTheList) return;
 	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
 	_sub->AddCollectedItem(this);
 }

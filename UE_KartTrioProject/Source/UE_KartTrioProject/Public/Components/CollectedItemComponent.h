@@ -7,11 +7,14 @@
 #include <GPE/CollectedItem.h>
 #include "CollectedItemComponent.generated.h"
 
+class ASeniorPlayer;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 {
 	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere) TObjectPtr<ASeniorPlayer> seniorPlayerRef = nullptr;
 
 	UPROPERTY(EditAnywhere) TSubclassOf<AActor> usableItem = nullptr; // TODO Modify
 
