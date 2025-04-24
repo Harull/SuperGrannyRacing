@@ -28,12 +28,13 @@ void UCollectedItemComponent::BeginPlay()
 	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
 	if (_sub)
 	{
-		/*_sub->GetRandomList(sizeList);
-		_sub->SetAllItemInList();*/
-		listItem = _sub->GetListCollectedItem();
+		_sub->GetRandomList(sizeList);
+		_sub->SetAllItemInList();
+		listItem = _sub->GetListItem();
 	}
 
 	seniorPlayerRef = Cast<ASeniorPlayer>(GetOwner());
+	seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
 }
 
 
@@ -85,7 +86,7 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 		}
 
 		canFinish ? seniorPlayerRef->GetPlaceArrowSignComponent()->NoMoreItem()
-				  : seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetActorLocation());
+				  : seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
 	}
 }
 

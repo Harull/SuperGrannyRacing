@@ -1,5 +1,6 @@
 #include "Components/PlaceArrowSignComponent.h"
 #include "UI/ArrowSign.h"
+#include <Kismet/KismetSystemLibrary.h>
 
 UPlaceArrowSignComponent::UPlaceArrowSignComponent()
 {
@@ -21,12 +22,14 @@ void UPlaceArrowSignComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UPlaceArrowSignComponent::PlaceArrowNewPosition(const FVector& _targetPosition)
 {
+	UKismetSystemLibrary::PrintString(this, "TRY PlaceArrow");
 	DestroyCurrentArrow();
 	if (!arrowToSpawn) return;
 
 	// TODO Add offset for up position
-	FVector _position = _targetPosition + FVector(0, 0, zOffset);
+	FVector _position = _targetPosition + offset;
 	currentArrow = GetWorld()->SpawnActor<AArrowSign>(arrowToSpawn, _position, FRotator());
+	UKismetSystemLibrary::PrintString(this, "PlaceArrow");
 }
 
 void UPlaceArrowSignComponent::NoMoreItem()

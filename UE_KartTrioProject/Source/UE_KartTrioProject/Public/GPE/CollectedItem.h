@@ -18,9 +18,12 @@ class UE_KARTTRIOPROJECT_API ACollectedItem : public AActor
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 	UPROPERTY(EditAnywhere) FString itemName;
 	UPROPERTY(EditAnywhere) bool isInTheList = false;
-	
+	UPROPERTY(VisibleAnywhere) FVector boxPosition = FVector();
+
 public:
+	FORCEINLINE const FVector& GetItemPosition() { return boxPosition; }
 	FORCEINLINE FString GetItemName() const { return itemName; }
+	FORCEINLINE bool GetIsInList() const { return isInTheList; }
 	FORCEINLINE void SetIsInTheList(bool _value) { isInTheList = _value; }
 
 public:

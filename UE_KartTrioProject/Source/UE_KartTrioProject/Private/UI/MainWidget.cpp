@@ -37,7 +37,7 @@ void UMainWidget::InitShoppingList()
 	if (_sub)
 	{
 		_allObjects = _sub->GetListItem();
-		UKismetSystemLibrary::PrintString(this, "ItemList " + FString::FromInt(_sub->GetListItem().Num()));
+		UKismetSystemLibrary::PrintString(this, "MAINWIDGET ItemList " + FString::FromInt(_sub->GetListItem().Num()));
 
 	}
 

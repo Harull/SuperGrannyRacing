@@ -23,20 +23,32 @@ TArray<TObjectPtr<ACollectedItem>> UGIS_CollectedItem::GetRandomList(int _sizeTo
 	if (!ItemListIsEmpty()) return allItemToList;
 
 	TArray<TObjectPtr<ACollectedItem>> _allItemToList = allCollectedItem;
+	//UKismetSystemLibrary::PrintString(this, FString::FromInt(allCollectedItem.Num()));
 
-	for (int i = 0; i < _sizeToList; i++)
+	for(ACollectedItem* _item : allCollectedItem)
+	{
+		if (!_item->GetIsInList())
+			_allItemToList.Remove(_item);
+	}
+	allItemToList = _allItemToList;
+
+	/*for (int i = 0; i < _sizeToList; i++)
 	{
 		int _size = _allItemToList.Num();
-		int _value = FMath::RandRange(0,_size);
+		int _value = FMath::RandRange(0,_size - 1);
 		TObjectPtr<ACollectedItem> _item = _allItemToList[_value];
 		_allItemToList.RemoveAt(_value);
-		/*if (allItemToList.Contains(_item))
-		{
-			i--;
-			continue;
-		}*/
+		if (!_item->GetIsInList()) continue;
+
+		//if (allItemToList.Contains(_item))
+		//{
+		//	i--;
+		//	continue;
+		//}
+
 		allItemToList.Add(_item);
-	}
+	}*/
+	//UKismetSystemLibrary::PrintString(this, FString::FromInt(allItemToList.Num()));
 
 	return allItemToList;
 }
