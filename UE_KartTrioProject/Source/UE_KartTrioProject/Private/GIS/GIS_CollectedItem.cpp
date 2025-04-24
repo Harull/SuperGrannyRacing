@@ -27,10 +27,26 @@ TArray<TObjectPtr<ACollectedItem>> UGIS_CollectedItem::GetRandomList(int _sizeTo
 
 	for(ACollectedItem* _item : allCollectedItem)
 	{
+
 		if (!_item->GetIsInList())
 			_allItemToList.Remove(_item);
+		
 	}
-	allItemToList = _allItemToList;
+
+	TArray<TObjectPtr<ACollectedItem>> _newAllItemToList;
+
+
+	for (int i = 0; i < _sizeToList; i++)
+	{
+		int _size = _allItemToList.Num();
+		int _value = FMath::RandRange(0, _size -1);
+		_newAllItemToList.Add(_allItemToList[_value]);
+		_allItemToList.RemoveAt(_value);
+
+	}
+
+
+	allItemToList = _newAllItemToList;
 
 	/*for (int i = 0; i < _sizeToList; i++)
 	{
