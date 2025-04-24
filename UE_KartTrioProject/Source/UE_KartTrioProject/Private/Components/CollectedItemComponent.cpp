@@ -33,6 +33,7 @@ void UCollectedItemComponent::BeginPlay()
 		listItem = _sub->GetListItem();
 	}
 
+	if (listItem.Num() <= 0) return;
 	seniorPlayerRef = Cast<ASeniorPlayer>(GetOwner());
 	seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
 }
