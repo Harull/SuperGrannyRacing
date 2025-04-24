@@ -36,7 +36,8 @@ void UCollectedItemComponent::BeginPlay()
 
 	if (listItem.Num() <= 0) return;
 	seniorPlayerRef = Cast<ASeniorPlayer>(GetOwner());
-	seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
+	if(seniorPlayerRef->IsLocallyControlled())
+		seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
 }
 
 
@@ -68,7 +69,8 @@ void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
 {
 	if (!_collectItem) return;
-	if (!GetOwner()->HasAuthority()) return;
+	if (!seniorPlayerRef->IsLocallyControlled()) return;
+
 
 	if (listItem.Num() == listItemCollected.Num()) return;
 	if (listItem.Num() <= 0) return;
