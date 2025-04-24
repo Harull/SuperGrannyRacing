@@ -28,6 +28,7 @@ void UCollectedItemComponent::BeginPlay()
 	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
 	if (_sub)
 	{
+		if (_sub->GetRange() <= 0) return;
 		_sub->GetRandomList(sizeList);
 		_sub->SetAllItemInList();
 		listItem = _sub->GetListItem();
