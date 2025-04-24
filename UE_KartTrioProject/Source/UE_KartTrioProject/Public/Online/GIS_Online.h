@@ -81,7 +81,7 @@ public:
 	{
 		InitIntValue(settings, "CURRENT_PLAYERS", playersCount);
 	}
-
+	
 };
 
 UCLASS()
@@ -107,12 +107,14 @@ class UE_KARTTRIOPROJECT_API UGIS_Online : public UGameInstanceSubsystem
 	TSharedPtr<FOnlineSessionSearch> sessionSearch;
 	FSessionData currentSessionData;
 
+
 public:
 	FORCEINLINE FOnSessionsFound& OnSessionsFound() { return onSessionsFound; }
 	FORCEINLINE FSessionData& GetCurrentSessionData() { return currentSessionData; }
 	FORCEINLINE int GetPlayerCount()
 	{
 		if (!currentSessionData.isInitialized) return 1;
+		UKismetSystemLibrary::PrintString(this, "is really searching update player count and stuff", true);
 		currentSessionData.UpdateCurrentPlayerCount();
 		return currentSessionData.playersCount; 
 	}

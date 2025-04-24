@@ -38,4 +38,5 @@ private:
 	void StopTimer();
 	void ResetTimer();
 	void UpdateTimer(float _value);
+	int GetPlayerCount();
 };

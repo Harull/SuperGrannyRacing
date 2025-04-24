@@ -69,7 +69,7 @@ void UGIS_Online::InitSessionSettings()
 	sessionSettings->bUseLobbiesIfAvailable = true;
 	sessionSettings->bUsesPresence = true;
 	sessionSettings->bShouldAdvertise = true;
-	sessionSettings->NumPrivateConnections = 10;
+	sessionSettings->NumPrivateConnections = maxPlayersCount;
 	sessionSettings->NumPublicConnections = maxPlayersCount;
 	sessionSettings->bIsLANMatch = IS_LAN(online);
 
@@ -77,7 +77,7 @@ void UGIS_Online::InitSessionSettings()
 	sessionSettings->Set(FName("SERVER_NAME"), serverName.ToString(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("LEVEL_NAME"), levelPath, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("CURRENT_PLAYERS"), FString::FromInt(1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-	sessionSettings->Set(FName("MAX_PLAYERS"), FString::FromInt(4), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+	sessionSettings->Set(FName("MAX_PLAYERS"), FString::FromInt(maxPlayersCount), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("PING_PLAYERS"), FString::FromInt(8), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 }
 
@@ -135,6 +135,22 @@ void UGIS_Online::OnJoinSessionCompleted(FName _sessionName, const EOnJoinSessio
 		LOG("Error => " + FString(LexToString(_result)) + "!", Red);
 		return;
 	}
+
+	if (currentSessionData.isInitialized)
+	{
+		FString _currentPlayerCount;
+		bool _success = currentSessionData.settings.Get("CURRENT_PLAYERS", _currentPlayerCount);
+		if (_success)
+		{
+			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
+			currentSessionData.settings.Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount + 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+			currentSessionData.UpdateCurrentPlayerCount();
+		}
+	}
+	else
+		LOG("currentSessionData NOT INITIALIZED in UGIS_Online::OnJoinSessionCompleted !", Red);
+
+
 	sessionName = _sessionName;
 	LOG("CLIENT => OnJoinSessionCompleted : " + sessionName.ToString(), Yellow);
 	session->GetResolvedConnectString(sessionName, ipAddress);
@@ -207,6 +223,19 @@ void UGIS_Online::OnEndSessionCompleted(FName _sessionName, bool _wasSuccessful)
 		LOG("Error => End session failed!", Red);
 		return;
 	}
+
+	if (currentSessionData.isInitialized)
+	{
+		FString _currentPlayerCount;
+		bool _success = currentSessionData.settings.Get("CURRENT_PLAYERS", _currentPlayerCount);
+		if (_success)
+		{
+			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
+			currentSessionData.settings.Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount - 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		}
+		currentSessionData = FSessionData();
+	}
+
 	GetWorld()->ServerTravel("/Game/Levels/" + lobbyLevelPath + "?listen");
 }
 
@@ -238,7 +267,7 @@ void UGIS_Online::OnAcceptInvite(const bool _wasSuccessful, const int32 _control
 	const FString& _inviteText = (_isValid ? "and the session is valid" : "but the session is NOT valid");
 	LOG("OnAcceptInvite broadcasted " + _inviteText, Yellow);
 	if (!_isValid)return;
-
+	//currentSession = _inviteResult.Session;
 	currentSessionData = FSessionData(_inviteResult.Session.SessionSettings, _inviteResult.GetSessionIdStr());
 	session->JoinSession(0, FName(currentSessionData.sessionName), _inviteResult);
 }

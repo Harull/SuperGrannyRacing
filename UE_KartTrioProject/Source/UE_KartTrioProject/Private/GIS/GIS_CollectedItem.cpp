@@ -24,6 +24,7 @@ TArray<TObjectPtr<ACollectedItem>> UGIS_CollectedItem::GetRandomList(int _sizeTo
 	int _size = allCollectedItem.Num();
 	for (int i = 0; i < _sizeToList; i++)
 	{
+		//TODO put a security here
 		int _value = FMath::RandRange(0,_size);
 		TObjectPtr<ACollectedItem> _item = allCollectedItem[_value];
 		if (allItemToList.Contains(_item)) i--;

@@ -16,7 +16,7 @@ void APlayersReadyArea::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/*FTimerHandle _timer;
+	FTimerHandle _timer;
 	FTimerDelegate _delegate;
 	_delegate.BindLambda([&]() {
 		if (ALobby_HUD* _hud = Cast<ALobby_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
@@ -37,7 +37,7 @@ void APlayersReadyArea::BeginPlay()
 			UKismetSystemLibrary::PrintString(this, "Didnt find HUD");
 		}
 		});
-	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 2.0f, false, 2.0f);*/
+	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 2.0f, false, 2.0f);
 	
 }
 
