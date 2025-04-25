@@ -23,6 +23,7 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 			if (timeToLaunchLeft < 0)
 			{
 				timerIsStarted = false;
+				GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->SetNonSessionRelatedPlayerCount(playersReadyCount);
 				if(GetOwningPlayer()->HasAuthority())
 					GetWorld()->ServerTravel("/Game/Levels/LVL_Base?listen");
 			}
