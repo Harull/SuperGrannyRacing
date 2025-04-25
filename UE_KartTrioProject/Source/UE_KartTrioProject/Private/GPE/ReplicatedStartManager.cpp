@@ -39,8 +39,25 @@ void AReplicatedStartManager::ActivateAllPlayers()
 	{
 		if (TObjectPtr<ASeniorPlayer> _senior = Cast<ASeniorPlayer>(_actor))
 		{
-			//_senior->SetMovementActive();
+			_senior->SetMovementActive(true); //TODO If have time, set a timer or start a countdown UI
 		}
 	}
 }
 
+void AReplicatedStartManager::OnRep_CurrentPlayerReady()
+{
+	if (playerCountToLookFor >= currentPlayerReady)
+		ActivateAllPlayers();
+}
+
+void AReplicatedStartManager::Server_IncrementCurrentPlayerReady_Implementation()
+{
+	currentPlayerReady++;
+}
+
+void AReplicatedStartManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AReplicatedStartManager, currentPlayerReady);
+}

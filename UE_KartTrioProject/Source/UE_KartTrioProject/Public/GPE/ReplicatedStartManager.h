@@ -4,16 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Net/UnrealNetwork.h"
 #include "ReplicatedStartManager.generated.h"
-
 UCLASS()
 class UE_KARTTRIOPROJECT_API AReplicatedStartManager : public AActor
 {
 	GENERATED_BODY()
-	
 	UPROPERTY(VisibleAnywhere) int playerCountToLookFor;
-	UPROPERTY(VisibleAnywhere) int currentPlayerReady;
-	
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_CurrentPlayerReady) int currentPlayerReady;
 
 public:	
 	AReplicatedStartManager();
@@ -27,5 +25,13 @@ private:
 
 private:
 	void ActivateAllPlayers();
+	UFUNCTION() void OnRep_CurrentPlayerReady();
+
+public:
+	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
+
+private:
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps)const;
+
 };
 

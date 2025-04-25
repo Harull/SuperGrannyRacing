@@ -71,6 +71,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	/// <summary>
+	/// This method is used to notify the game that this player is loaded and ready,
+	/// so it's used to know if everybody is ready to start the race
+	/// </summary>
+	virtual void SendNotifyIsReady();
 	void PrintDebug();
 
 public:	

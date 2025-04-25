@@ -9,6 +9,8 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "Components/PlaceArrowSignComponent.h"
 #include <Online/GIS_Online.h>
+#include <GPE/ReplicatedStartManager.h>
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -59,6 +61,22 @@ void ASeniorPlayer::BeginPlay()
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
 	FTimerHandle _handle;
 	GetWorld()->GetTimerManager().SetTimer(_handle, this, &ASeniorPlayer::PrintDebug, 5.F, true);
+
+	SendNotifyIsReady();
+}
+
+void ASeniorPlayer::SendNotifyIsReady()
+{
+	if (GetWorld()->GetFirstPlayerController()->GetCharacter() != this)
+		return;
+	UKismetSystemLibrary::PrintString(this, "This character is possessed, and ASeniorPlayer::SendNotifyIsReady is searching for a AReplicatedStartManager");
+
+	AActor* _actor = UGameplayStatics::GetActorOfClass(this, AReplicatedStartManager::StaticClass());
+	if (TObjectPtr<AReplicatedStartManager> _startManager = Cast<AReplicatedStartManager>(_actor))
+	{
+		UKismetSystemLibrary::PrintString(this, "_startManager found, Calling the server rpc right away");
+		_startManager->Server_IncrementCurrentPlayerReady();
+	}
 }
 
 void ASeniorPlayer::PrintDebug()
