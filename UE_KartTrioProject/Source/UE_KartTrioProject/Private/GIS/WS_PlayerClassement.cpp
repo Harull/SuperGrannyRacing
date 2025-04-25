@@ -15,16 +15,33 @@ void UWS_PlayerClassement::RemovePlayerCollectedItemComponent(TObjectPtr<UCollec
 	allPlayerCollectedItemComponent.Remove(_playerCollectedItemComponent);
 }
 
-int UWS_PlayerClassement::GetPlayerClassement(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent)
+TArray<TObjectPtr<UCollectedItemComponent>> UWS_PlayerClassement::UpdatePlayerClassement()
 {
-	if (!_playerCollectedItemComponent) return -1;
+	if (allPlayerCollectedItemComponent.Num() <= 1) return {};
+	TArray<TObjectPtr<UCollectedItemComponent>> _refList = allPlayerCollectedItemComponent;
+	TArray<TObjectPtr<UCollectedItemComponent>> _newList = {};
+	int _size = _refList.Num();
+	int _currentPos = _refList[0]->GetSizeList();
 
-	int _size = allPlayerCollectedItemComponent.Num();
-	
-	for (size_t i = 1; i < _size +1; i++)
+	while (_newList.Num() < _size || _currentPos < 0)
 	{
-		if (allPlayerCollectedItemComponent[i] == _playerCollectedItemComponent) return i;
+		UCollectedItemComponent* _playerToRemove = nullptr;
+		for (UCollectedItemComponent* _player : _refList)
+		{
+			int _newNum = _player->GetNumItemCollected();
+			if (_newNum == _currentPos)
+			{
+				_newList.Add(_player);
+				_playerToRemove = _player;
+				continue;
+			}
+			else
+			{
+				_currentPos--;
+			}
+		}
+		_refList.Remove(_playerToRemove);
 	}
 
-	return -1;
+	return _newList;
 }
