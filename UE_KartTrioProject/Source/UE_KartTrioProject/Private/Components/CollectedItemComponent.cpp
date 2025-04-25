@@ -7,6 +7,7 @@
 #include <UI/Kart_HUD.h>
 #include <SeniorPlayer.h>
 #include "Components/PlaceArrowSignComponent.h"
+#include <GIS/WS_PlayerClassement.h>
 
 // Sets default values for this component's properties
 UCollectedItemComponent::UCollectedItemComponent()
@@ -24,6 +25,10 @@ void UCollectedItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	UKismetSystemLibrary::PrintString(this, "Player List");
+
+	UWS_PlayerClassement* _subPlayerClassement = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
+	if (_subPlayerClassement)
+		_subPlayerClassement->AddPlayerCollectedItemComponent(this);
 
 	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
 	if (_sub)
