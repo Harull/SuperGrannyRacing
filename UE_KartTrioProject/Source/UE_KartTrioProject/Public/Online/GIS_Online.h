@@ -117,10 +117,9 @@ public:
 	{
 		if (!currentSessionData.isInitialized) return 1;
 		UKismetSystemLibrary::PrintString(this, "is really searching update player count and stuff", true);
-		UKismetSystemLibrary::PrintString(this, currentSessionData.allPlayersData[0].steamID->ToString() + " : " + currentSessionData.allPlayersData[0].playerName);
+		//UKismetSystemLibrary::PrintString(this,/* currentSessionData.allPlayersData[0].steamID->ToString() + " : " +*/ currentSessionData.allPlayersData[0].playerName);
 		return currentSessionData.GetPlayerCount(session); 
 	}
-
 
 public:
 	UGIS_Online();
@@ -157,4 +156,5 @@ public:
 	UFUNCTION() void StartSession();
 	UFUNCTION() void EndSession();
 	UFUNCTION() void DestroySession();
+	UFUNCTION() FString GetSteamUserName();
 };
