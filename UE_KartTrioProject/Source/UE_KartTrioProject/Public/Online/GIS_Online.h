@@ -110,7 +110,6 @@ class UE_KARTTRIOPROJECT_API UGIS_Online : public UGameInstanceSubsystem
 	TSharedPtr<FOnlineSessionSearch> sessionSearch;
 	FSessionData currentSessionData;
 
-
 public:
 	FORCEINLINE FOnSessionsFound& OnSessionsFound() { return onSessionsFound; }
 	FORCEINLINE FSessionData& GetCurrentSessionData() { return currentSessionData; }
@@ -118,6 +117,7 @@ public:
 	{
 		if (!currentSessionData.isInitialized) return 1;
 		UKismetSystemLibrary::PrintString(this, "is really searching update player count and stuff", true);
+		UKismetSystemLibrary::PrintString(this, currentSessionData.allPlayersData[0].steamID->ToString() + " : " + currentSessionData.allPlayersData[0].playerName);
 		return currentSessionData.GetPlayerCount(session); 
 	}
 
