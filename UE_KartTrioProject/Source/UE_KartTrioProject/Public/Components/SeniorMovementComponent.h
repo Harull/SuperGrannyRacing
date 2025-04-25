@@ -70,9 +70,9 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, Category = "Debug") bool useDebugs = true;
 	UPROPERTY(EditAnywhere, Category = "Debug") float arrowWheelDirectionLength = 100.f;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement") float currentSteeringAngle = 0;
-	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement") bool canMove = true;
-	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement") bool canRotate = true;
-	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement") bool canSteerWheels = true;
+	UPROPERTY(EditAnywhere, Category = "Debug|Movement") bool canMove = true;
+	UPROPERTY(EditAnywhere, Category = "Debug|Movement") bool canRotate = true;
+	UPROPERTY(EditAnywhere, Category = "Debug|Movement") bool canSteerWheels = true;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement") bool isMovingForward = false;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement") bool isMovingBackward = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Debug|Movement", meta = (AllowPrivateAccess), Replicated) float currentVelocity = 0;
