@@ -411,15 +411,20 @@ void UGIS_Online::DestroySession()
 	LOG("UGIS_Online => DestroySession", Magenta);
 	session->DestroySession(sessionName);
 }
-FString UGIS_Online::GetSteamUserName()
+FString UGIS_Online::GetSteamUserName(const uint32& _id)
 {
 	if (!online) return "";
 
 	IOnlineIdentityPtr _identity = online->GetIdentityInterface();
 	if (_identity.IsValid())
 	{
-		FUniqueNetIdPtr _userId = _identity->GetUniquePlayerId(0);
-		if (_userId.IsValid()) return _identity->GetPlayerNickname(*_userId);
+		FUniqueNetIdPtr _userId = _identity->GetUniquePlayerId(_id);
+		if (_userId.IsValid())
+		{
+			FString _steamName = _identity->GetPlayerNickname(*_userId);
+			onNewSteamUserName.Broadcast(_steamName);
+			return _steamName;
+		}
 	}
 
 	return FString();

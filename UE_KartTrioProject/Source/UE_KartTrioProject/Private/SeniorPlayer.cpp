@@ -52,7 +52,8 @@ void ASeniorPlayer::BeginPlay()
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
 	FTimerHandle _handle;
 	GetWorld()->GetTimerManager().SetTimer(_handle, this, &ASeniorPlayer::PrintDebug, 5.F, true);
-	FString _steamName = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName();
+	//UKismetSystemLibrary::PrintString(this, FString::FromInt(repActorID), true, true, FLinearColor::Gray, 10.0f); // TODO Remove
+	FString _steamName = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName(actorLocalID);
 	UKismetSystemLibrary::PrintString(this, _steamName); // TODO Remove
 }
 
