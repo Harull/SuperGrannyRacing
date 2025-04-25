@@ -29,6 +29,8 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 public:
 	FORCEINLINE TObjectPtr<ACollectedItem> GetCurrentItem() const { return listItem[nbItemCollected]; }
 	FORCEINLINE bool CanFinish() const { return canFinish; }
+	FORCEINLINE int GetNumItemCollected() const { return nbItemCollected; }
+	FORCEINLINE int GetSizeList() const { return sizeList; }
 
 public:	
 	UCollectedItemComponent();
