@@ -75,7 +75,7 @@ void UMainWidget::SetWinScreenVisibility()
 
 void UMainWidget::UpdateSpeed(float _value)
 {
-	speed = _value;
+	speed = FMath::Abs(_value);
 	DebugSpeed();
 }
 
