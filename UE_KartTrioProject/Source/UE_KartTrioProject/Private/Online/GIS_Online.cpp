@@ -395,21 +395,26 @@ void UGIS_Online::DestroySession()
 	LOG("UGIS_Online => DestroySession", Magenta);
 	session->DestroySession(sessionName);
 }
-FString UGIS_Online::GetSteamUserName(const uint32& _id)
+FString UGIS_Online::GetSteamUserName()
 {
 	if (!online) return "";
-
+	int _index = 0;
+	FString _steamName = "";
 	IOnlineIdentityPtr _identity = online->GetIdentityInterface();
 	if (_identity.IsValid())
 	{
-		FUniqueNetIdPtr _userId = _identity->GetUniquePlayerId(_id);
+		FUniqueNetIdPtr _userId = _identity->GetUniquePlayerId(2);
 		if (_userId.IsValid())
 		{
-			FString _steamName = _identity->GetPlayerNickname(*_userId);
+			_steamName = _identity->GetPlayerNickname(*_userId);
 			onNewSteamUserName.Broadcast(_steamName);
-			return _steamName;
+			if (_steamName.Contains("       "))
+				UKismetSystemLibrary::PrintString(this, "Effectively 7 empty");
+			
+			//return _steamName;
 		}
 	}
+	_index++;
 
 	return FString();
 }

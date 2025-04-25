@@ -60,7 +60,8 @@ void ASeniorPlayer::BeginPlay()
 	FTimerHandle _handle;
 	GetWorld()->GetTimerManager().SetTimer(_handle, this, &ASeniorPlayer::PrintDebug, 5.F, true);
 	//UKismetSystemLibrary::PrintString(this, FString::FromInt(repActorID), true, true, FLinearColor::Gray, 10.0f); // TODO Remove
-	FString _steamName = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName(actorLocalID);
+	
+	FString _steamName = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName();
 	UKismetSystemLibrary::PrintString(this, _steamName); // TODO Remove
 }
 

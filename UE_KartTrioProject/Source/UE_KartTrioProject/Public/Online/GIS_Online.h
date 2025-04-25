@@ -169,5 +169,5 @@ public:
 	UFUNCTION() void StartSession();
 	UFUNCTION() void EndSession();
 	UFUNCTION() void DestroySession();
-	UFUNCTION() FString GetSteamUserName(const uint32& _id);
+	UFUNCTION() FString GetSteamUserName();
 };
