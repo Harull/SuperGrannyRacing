@@ -5,7 +5,7 @@
 
 UGIS_Online::UGIS_Online()
 {
-	maxPlayersCount = 12;
+	maxPlayersCount = 16;
 	serverName = "Super Granny Racing 2 Deluxe Edition";
 	sessionName = "Unknown";
 	levelPath = "LVL_Lobby";
@@ -394,6 +394,19 @@ void UGIS_Online::DestroySession()
 {
 	LOG("UGIS_Online => DestroySession", Magenta);
 	session->DestroySession(sessionName);
+}
+FString UGIS_Online::GetSteamUserName()
+{
+	if (!online) return "";
+
+	IOnlineIdentityPtr _identity = online->GetIdentityInterface();
+	if (_identity.IsValid())
+	{
+		FUniqueNetIdPtr _userId = _identity->GetUniquePlayerId(0);
+		if (_userId.IsValid()) return _identity->GetPlayerNickname(*_userId);
+	}
+
+	return FString();
 }
 #pragma endregion
 

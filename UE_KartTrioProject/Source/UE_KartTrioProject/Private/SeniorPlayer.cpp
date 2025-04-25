@@ -61,7 +61,6 @@ void ASeniorPlayer::BeginPlay()
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
 	FTimerHandle _handle;
 	GetWorld()->GetTimerManager().SetTimer(_handle, this, &ASeniorPlayer::PrintDebug, 5.F, true);
-
 	SendNotifyIsReady();
 }
 
@@ -77,6 +76,7 @@ void ASeniorPlayer::SendNotifyIsReady()
 		UKismetSystemLibrary::PrintString(this, "_startManager found, Calling the server rpc right away");
 		_startManager->Server_IncrementCurrentPlayerReady();
 	}
+
 }
 
 void ASeniorPlayer::PrintDebug()
