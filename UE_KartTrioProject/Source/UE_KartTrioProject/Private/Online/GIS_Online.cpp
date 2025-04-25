@@ -41,8 +41,9 @@ void UGIS_Online::Initialize(FSubsystemCollectionBase& _collection)
 		session->OnEndSessionCompleteDelegates.AddUObject(this, &UGIS_Online::OnEndSessionCompleted);
 		session->OnDestroySessionCompleteDelegates.AddUObject(this, &UGIS_Online::OnDestroySessionCompleted);
 		session->OnSessionUserInviteAcceptedDelegates.AddUObject(this, &UGIS_Online::OnAcceptInvite);
-
 		session->OnSessionFailureDelegates.AddUObject(this, &UGIS_Online::OnSessionFailure);
+		session->OnSessionParticipantJoinedDelegates.AddUObject(this, &UGIS_Online::OnParticipantJoined);
+		session->OnSessionParticipantLeftDelegates.AddUObject(this, &UGIS_Online::OnParticipantLeft);
 		GEngine->OnNetworkFailure().AddUObject(this, &UGIS_Online::OnNetworkFailure);
 	}
 
@@ -136,21 +137,6 @@ void UGIS_Online::OnJoinSessionCompleted(FName _sessionName, const EOnJoinSessio
 		return;
 	}
 
-	if (currentSessionData.isInitialized)
-	{
-		FString _currentPlayerCount;
-		bool _success = currentSessionData.settings.Get("CURRENT_PLAYERS", _currentPlayerCount);
-		if (_success)
-		{
-			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
-			currentSessionData.settings.Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount + 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-			currentSessionData.UpdateCurrentPlayerCount();
-		}
-	}
-	else
-		LOG("currentSessionData NOT INITIALIZED in UGIS_Online::OnJoinSessionCompleted !", Red);
-
-
 	sessionName = _sessionName;
 	LOG("CLIENT => OnJoinSessionCompleted : " + sessionName.ToString(), Yellow);
 	session->GetResolvedConnectString(sessionName, ipAddress);
@@ -160,10 +146,29 @@ void UGIS_Online::OnJoinSessionCompleted(FName _sessionName, const EOnJoinSessio
 		_playerController->ClientTravel(ipAddress, ETravelType::TRAVEL_Absolute, false);
 
 	}
+
+
+	if (currentSessionData.isInitialized)
+	{
+		FOnlineSessionSettings* _settings = session->GetSessionSettings(FName(currentSessionData.sessionName));
+		FString _currentPlayerCount;
+		bool _success = _settings->Get("CURRENT_PLAYERS", _currentPlayerCount);
+		if (_success)
+		{
+			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
+			_settings->Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount + 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+			session->UpdateSession(FName(currentSessionData.sessionName), *_settings, true);
+		}
+	}
+	else
+		LOG("currentSessionData NOT INITIALIZED in UGIS_Online::OnParticipantJoined !", Red);
+
 }
 
 void UGIS_Online::OnRegisteredCompleted(FName _sessionName, const TArray<FUniqueNetIdRef>& _allIDs, bool _wasSuccessful)
 {
+	LOG("GIS ONLINE => OnRegisteredCompleted", Yellow);
+
 	if (!_wasSuccessful)
 	{
 		LOG("Error => The registration failed!", Red);
@@ -190,9 +195,6 @@ void UGIS_Online::OnRegisteredCompleted(FName _sessionName, const TArray<FUnique
 			const FPlayerData& _playerData = FPlayerData(_playerName, steamID);
 		}
 	}
-
-
-	
 }
 
 void UGIS_Online::OnStartSessionCompleted(FName _sessionName, bool _wasSuccessful)
@@ -224,17 +226,23 @@ void UGIS_Online::OnEndSessionCompleted(FName _sessionName, bool _wasSuccessful)
 		return;
 	}
 
+	
+	currentSessionData = FSessionData();
+	
 	if (currentSessionData.isInitialized)
 	{
+		FOnlineSessionSettings* _settings = session->GetSessionSettings(FName(currentSessionData.sessionName));
 		FString _currentPlayerCount;
-		bool _success = currentSessionData.settings.Get("CURRENT_PLAYERS", _currentPlayerCount);
+		bool _success = _settings->Get("CURRENT_PLAYERS", _currentPlayerCount);
 		if (_success)
 		{
 			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
-			currentSessionData.settings.Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount - 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+			_settings->Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount - 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+			session->UpdateSession(FName(currentSessionData.sessionName), *_settings, true);
 		}
-		currentSessionData = FSessionData();
 	}
+	else
+		LOG("currentSessionData NOT INITIALIZED in UGIS_Online::OnParticipantJoined !", Red);
 
 	GetWorld()->ServerTravel("/Game/Levels/" + lobbyLevelPath + "?listen");
 }
@@ -270,6 +278,46 @@ void UGIS_Online::OnAcceptInvite(const bool _wasSuccessful, const int32 _control
 	//currentSession = _inviteResult.Session;
 	currentSessionData = FSessionData(_inviteResult.Session.SessionSettings, _inviteResult.GetSessionIdStr());
 	session->JoinSession(0, FName(currentSessionData.sessionName), _inviteResult);
+}
+
+void UGIS_Online::OnParticipantJoined(FName _sessionName, const FUniqueNetId& _participantID)
+{
+	LOG("GIS ONLINE => OnParticipantJoined", Yellow);
+
+	if (currentSessionData.isInitialized)
+	{
+		FOnlineSessionSettings* _settings = session->GetSessionSettings(FName(currentSessionData.sessionName));
+		FString _currentPlayerCount;
+		bool _success = _settings->Get("CURRENT_PLAYERS", _currentPlayerCount);
+		if (_success)
+		{
+			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
+			_settings->Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount + 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+			session->UpdateSession(FName(currentSessionData.sessionName), *_settings, true);
+		}
+	}
+	else
+		LOG("currentSessionData NOT INITIALIZED in UGIS_Online::OnParticipantJoined !", Red);
+}
+
+void UGIS_Online::OnParticipantLeft(FName _sessionName, const FUniqueNetId& _participantID, EOnSessionParticipantLeftReason _reason)
+{
+	LOG("GIS ONLINE => OnParticipantRemoved", Yellow);
+
+	if (currentSessionData.isInitialized)
+	{
+		FOnlineSessionSettings* _settings = session->GetSessionSettings(FName(currentSessionData.sessionName));
+		FString _currentPlayerCount;
+		bool _success = _settings->Get("CURRENT_PLAYERS", _currentPlayerCount);
+		if (_success)
+		{
+			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
+			_settings->Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount - 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+			session->UpdateSession(FName(currentSessionData.sessionName), *_settings, true);
+		}
+	}
+	else
+		LOG("currentSessionData NOT INITIALIZED in UGIS_Online::OnParticipantJoined !", Red);
 }
 
 #pragma endregion
