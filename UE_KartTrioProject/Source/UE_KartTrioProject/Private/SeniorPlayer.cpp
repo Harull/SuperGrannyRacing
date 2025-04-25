@@ -45,6 +45,13 @@ ASeniorPlayer::ASeniorPlayer()
 	AddOwnedComponent(placeArrowSignComponent);
 }
 
+void ASeniorPlayer::SetMovementActive(bool _isActive)
+{
+	seniorMovementcomponent->SetCanMove(_isActive);
+	seniorMovementcomponent->SetCanRotate(_isActive);
+	seniorMovementcomponent->SetCanSteerWheels(_isActive);
+}
+
 void ASeniorPlayer::BeginPlay()
 {
 	Super::BeginPlay();
@@ -56,8 +63,8 @@ void ASeniorPlayer::BeginPlay()
 
 void ASeniorPlayer::PrintDebug()
 {
-	UKismetSystemLibrary::PrintString(this, "Current Player count from GIS online: " +
-		FString::FromInt(GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetPlayerCount()));
+	//UKismetSystemLibrary::PrintString(this, "Current Player count from GIS online: " +
+	//	FString::FromInt(GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetPlayerCount()));
 }
 
 // Called every frame

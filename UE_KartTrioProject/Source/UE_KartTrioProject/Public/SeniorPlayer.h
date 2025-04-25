@@ -66,6 +66,9 @@ public:
 	/// </summary>
 	FORCEINLINE uint32 GetLocalActorID()const { return actorLocalID; }
 
+	void SetMovementActive(bool _isActive);
+	
+
 protected:
 	virtual void BeginPlay() override;
 	void PrintDebug();

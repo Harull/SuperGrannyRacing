@@ -147,22 +147,6 @@ void UGIS_Online::OnJoinSessionCompleted(FName _sessionName, const EOnJoinSessio
 
 	}
 
-
-	if (currentSessionData.isInitialized)
-	{
-		FOnlineSessionSettings* _settings = session->GetSessionSettings(FName(currentSessionData.sessionName));
-		FString _currentPlayerCount;
-		bool _success = _settings->Get("CURRENT_PLAYERS", _currentPlayerCount);
-		if (_success)
-		{
-			int _intPlayerCount = FCString::Atoi(*_currentPlayerCount);
-			_settings->Set("CURRENT_PLAYERS", FString::FromInt(_intPlayerCount + 1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
-			session->UpdateSession(FName(currentSessionData.sessionName), *_settings, true);
-		}
-	}
-	else
-		LOG("currentSessionData NOT INITIALIZED in UGIS_Online::OnParticipantJoined !", Red);
-
 }
 
 void UGIS_Online::OnRegisteredCompleted(FName _sessionName, const TArray<FUniqueNetIdRef>& _allIDs, bool _wasSuccessful)
