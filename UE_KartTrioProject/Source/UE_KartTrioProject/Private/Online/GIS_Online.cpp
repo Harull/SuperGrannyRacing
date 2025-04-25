@@ -5,7 +5,7 @@
 
 UGIS_Online::UGIS_Online()
 {
-	maxPlayersCount = 12;
+	maxPlayersCount = 16;
 	serverName = "Super Granny Racing 2 Deluxe Edition";
 	sessionName = "Unknown";
 	levelPath = "LVL_Lobby";
