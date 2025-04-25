@@ -45,21 +45,21 @@ USTRUCT()
 struct FSessionData
 {
 	GENERATED_BODY()
-	FOnlineSessionSettings settings;
 	UPROPERTY(VisibleAnywhere) FString sessionName;
 	UPROPERTY(VisibleAnywhere) FString serverName;
 	UPROPERTY(VisibleAnywhere) FString levelName;
-	UPROPERTY(VisibleAnywhere) int32 playersCount;
+	UPROPERTY(VisibleAnywhere) int32 playersCount; //Ps should be accessed through the GetPlayerCount function
 	UPROPERTY(VisibleAnywhere) int32 maxPlayersCount;
 	UPROPERTY(VisibleAnywhere) int32 ping;
 	UPROPERTY(VisibleAnywhere) TArray<FPlayerData> allPlayersData;
 
 	bool isInitialized = false;
 
+public:
 	FSessionData() = default;
 	FSessionData(const FOnlineSessionSettings& _settings, const FString& _sessionID = "")
 	{
-		settings = _settings;
+		//settings = _settings;
 		_settings.Get(FName("SESSION_NAME"), sessionName);
 		_settings.Get(FName("SERVER_NAME"), serverName);
 		_settings.Get(FName("LEVEL_NAME"), levelName);
@@ -77,11 +77,14 @@ private:
 		_value = FCString::Atoi(*_valueText);
 	}
 public:
-	void UpdateCurrentPlayerCount()
+	int32 GetPlayerCount(IOnlineSessionPtr _session)
 	{
-		InitIntValue(settings, "CURRENT_PLAYERS", playersCount);
+		FOnlineSessionSettings* _settings = _session->GetSessionSettings(FName(sessionName));
+		FString _valueText;
+		_settings->Get(FName("CURRENT_PLAYERS"), _valueText);
+		playersCount = FCString::Atoi(*_valueText);
+		return playersCount;
 	}
-	
 };
 
 UCLASS()
@@ -115,8 +118,7 @@ public:
 	{
 		if (!currentSessionData.isInitialized) return 1;
 		UKismetSystemLibrary::PrintString(this, "is really searching update player count and stuff", true);
-		currentSessionData.UpdateCurrentPlayerCount();
-		return currentSessionData.playersCount; 
+		return currentSessionData.GetPlayerCount(session); 
 	}
 
 
@@ -142,6 +144,8 @@ protected:
 	void OnSessionFailure(const FUniqueNetId& _id, ESessionFailure::Type _failureType);
 	void OnNetworkFailure(UWorld* _world, UNetDriver* _driver, ENetworkFailure::Type _failureType, const FString& _error);
 	void OnAcceptInvite(const bool _wasSuccessful, const int32 _controllerId, FUniqueNetIdPtr _userId, const FOnlineSessionSearchResult& _inviteResult);
+	void OnParticipantJoined(FName _sessionName, const FUniqueNetId& _participantID);
+	void OnParticipantLeft(FName _sessionName, const FUniqueNetId& _participantID, EOnSessionParticipantLeftReason _reason);
 
 public:
 	UFUNCTION() void CreateSession();

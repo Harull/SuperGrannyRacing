@@ -8,6 +8,7 @@
 #include <Components/SeniorMovementComponent.h>
 #include <Kismet/KismetSystemLibrary.h>
 #include "Components/PlaceArrowSignComponent.h"
+#include <Online/GIS_Online.h>
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -49,7 +50,14 @@ void ASeniorPlayer::BeginPlay()
 	Super::BeginPlay();
 	InitUniqueID();
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
+	FTimerHandle _handle;
+	GetWorld()->GetTimerManager().SetTimer(_handle, this, &ASeniorPlayer::PrintDebug, 5.F, true);
+}
 
+void ASeniorPlayer::PrintDebug()
+{
+	UKismetSystemLibrary::PrintString(this, "Current Player count from GIS online: " +
+		FString::FromInt(GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetPlayerCount()));
 }
 
 // Called every frame

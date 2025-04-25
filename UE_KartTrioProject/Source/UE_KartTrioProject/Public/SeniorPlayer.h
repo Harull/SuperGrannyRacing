@@ -68,6 +68,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	void PrintDebug();
 
 public:	
 	virtual void Tick(float DeltaTime) override;
