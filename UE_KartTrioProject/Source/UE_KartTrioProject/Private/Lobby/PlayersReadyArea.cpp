@@ -45,16 +45,18 @@ void APlayersReadyArea::BeginPlay()
 void APlayersReadyArea::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APlayersReadyArea::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	//UKismetSystemLibrary::PrintString(this, "Enter");
+	if (!lobbyMenuRef) return;
 	if(ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor))
 		lobbyMenuRef->UpdatePlayersReady(1);
 }
+
+
 
 void APlayersReadyArea::NotifyActorEndOverlap(AActor* OtherActor)
 {
