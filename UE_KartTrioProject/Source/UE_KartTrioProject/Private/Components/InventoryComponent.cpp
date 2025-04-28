@@ -42,9 +42,10 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 		_spawnParams.Owner = _owner;
 		//_spawnParams.Instigator = Cast<APawn>(_owner);
 		_spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		FVector _position = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * -100.0f;
+		FVector _position = _owner->GetActorLocation() + _owner->GetActorForwardVector() * -150.0f;
+		FRotator _rotation = _owner->GetActorRotation();
 
-		AItem* _item = GetWorld()->SpawnActor<AItem>(items[0], _position, FRotator(0), _spawnParams);
+		AItem* _item = GetWorld()->SpawnActor<AItem>(items[0], _position, _rotation, _spawnParams);
 		//AItem* _item = GetWorld()->SpawnActor<AItem>(items[0], _position, _owner->GetActorRotation(), _spawnParams);
 
 		if (_item)
