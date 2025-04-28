@@ -1,6 +1,5 @@
 
 #include "Lobby/PlayersReadyArea.h"
-#include <UI/Lobby_HUD.h>
 #include <Kismet/KismetSystemLibrary.h>
 #include <SeniorPlayer.h>
 
@@ -16,29 +15,6 @@ APlayersReadyArea::APlayersReadyArea()
 void APlayersReadyArea::BeginPlay()
 {
 	Super::BeginPlay();
-
-	FTimerHandle _timer;
-	FTimerDelegate _delegate;
-	_delegate.BindLambda([&]() {
-		if (ALobby_HUD* _hud = Cast<ALobby_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
-		{
-			UKismetSystemLibrary::PrintString(this, "Find HUD");
-
-			if (lobbyMenuRef = _hud->GetLobbyMenu())
-			{
-				UKismetSystemLibrary::PrintString(this, "Find widget");
-			}
-			else
-			{
-				UKismetSystemLibrary::PrintString(this, "Didnt find widget");
-			}
-		}
-		else
-		{
-			UKismetSystemLibrary::PrintString(this, "Didnt find HUD");
-		}
-		});
-	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 2.0f, false, 2.0f);
 	
 }
 
@@ -52,14 +28,49 @@ void APlayersReadyArea::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	//UKismetSystemLibrary::PrintString(this, "Enter");
-	if(ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor))
-		lobbyMenuRef->UpdatePlayersReady(1);
+	OnOverlap(OtherActor);
 }
 
 void APlayersReadyArea::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap(OtherActor);
 	//UKismetSystemLibrary::PrintString(this, "Exit");
+	OnEndOverlap(OtherActor);
+
+}
+
+void APlayersReadyArea::OnOverlap(AActor* OtherActor)
+{
+	if(ASeniorPlayer * _player = Cast<ASeniorPlayer>(OtherActor))
+	{
+		if (GetLobbyMenuRef())
+			lobbyMenuRef->UpdatePlayersReady(1);
+		else
+		{
+			FTimerHandle _timer;
+			FTimerDelegate _delegate;
+			_delegate.BindLambda([&]() {
+				OnOverlap(OtherActor);
+				});
+			GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, .1f, false, .1f);
+		}
+	}
+}
+
+void APlayersReadyArea::OnEndOverlap(AActor* OtherActor)
+{
 	if (ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor))
-		lobbyMenuRef->UpdatePlayersReady(-1);
+	{
+		if (GetLobbyMenuRef())
+			lobbyMenuRef->UpdatePlayersReady(-1);
+		else
+		{
+			FTimerHandle _timer;
+			FTimerDelegate _delegate;
+			_delegate.BindLambda([&]() {
+				OnEndOverlap(OtherActor);
+				});
+			GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, .1f, false, .1f);
+		}
+	}
 }

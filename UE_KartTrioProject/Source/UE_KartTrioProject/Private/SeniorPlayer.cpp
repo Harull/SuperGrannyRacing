@@ -67,15 +67,15 @@ void ASeniorPlayer::BeginPlay()
 void ASeniorPlayer::SendNotifyIsReady()
 {
 	if (GetWorld()->GetFirstPlayerController()->GetCharacter() != this)
-		return;
-	UKismetSystemLibrary::PrintString(this, "This character is possessed, and ASeniorPlayer::SendNotifyIsReady is searching for a AReplicatedStartManager");
-
-	AActor* _actor = UGameplayStatics::GetActorOfClass(this, AReplicatedStartManager::StaticClass());
-	if (TObjectPtr<AReplicatedStartManager> _startManager = Cast<AReplicatedStartManager>(_actor))
 	{
-		UKismetSystemLibrary::PrintString(this, "_startManager found, Calling the server rpc right away");
-		_startManager->Server_IncrementCurrentPlayerReady();
+		UKismetSystemLibrary::PrintString(this, "ASeniorPlayer::SendNotifyIsReady early return", true, true, FLinearColor::Yellow, 30);
+		return;
 	}
+	UKismetSystemLibrary::PrintString(this, "This character is possessed, and ASeniorPlayer::SendNotifyIsReady is searching for a AReplicatedStartManager", true, true, FLinearColor::Yellow, 30);
+
+	UKismetSystemLibrary::PrintString(this, "Calling the server rpc right away", true, true, FLinearColor::Yellow, 30);
+	Server_IncrementCurrentPlayerReady();
+
 
 }
 
@@ -138,9 +138,20 @@ void ASeniorPlayer::InitUniqueID()
 	actorLocalID = this->GetUniqueID();
 }
 
+void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
+{
+	UKismetSystemLibrary::PrintString(this, "THE SERVER RPC IS CALLED", true, true, FLinearColor::Yellow, 30);
+	AActor* _actor = UGameplayStatics::GetActorOfClass(this, AReplicatedStartManager::StaticClass());
+	if (TObjectPtr<AReplicatedStartManager> _startManager = Cast<AReplicatedStartManager>(_actor))
+	{
+		_startManager->IncrementCurrentPlayerReady();
+	}
+}
+
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ASeniorPlayer, repActorID, COND_InitialOnly);
+
 }
 

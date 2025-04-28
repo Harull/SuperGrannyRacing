@@ -34,7 +34,7 @@ public:
 	void SetWinScreenVisibility();
 
 private:
-	UFUNCTION() void UpdateSpeed(float _value);
+	UFUNCTION() void UpdateSpeed(float _speed);
 
 	void DebugSpeed();	
 };

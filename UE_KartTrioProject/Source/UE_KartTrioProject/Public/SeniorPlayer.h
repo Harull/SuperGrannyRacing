@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
 #include "Components/CollectedItemComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "SeniorPlayer.generated.h"
 
 class USeniorMovementComponent;
@@ -89,5 +90,10 @@ private:
 
 private:
 	void InitUniqueID();
+private:
+
+	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+
 };

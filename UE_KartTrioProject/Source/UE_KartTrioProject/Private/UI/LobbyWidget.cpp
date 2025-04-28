@@ -24,6 +24,15 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 			{
 				timerIsStarted = false;
 				GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->SetNonSessionRelatedPlayerCount(playersReadyCount);
+
+				if (loadingScreenWidget)
+				{
+					RemoveFromViewport();
+					CreateWidget<UUserWidget>(GetWorld(), loadingScreenWidget)->AddToViewport();
+				}
+				else
+					UKismetSystemLibrary::PrintString(this, "ERROR loadingScreenWidget subclassof not set in ULobbyWidget::NativeTick", true, true, FLinearColor::Red);
+				
 				if(GetOwningPlayer()->HasAuthority())
 					GetWorld()->ServerTravel("/Game/Levels/LVL_Base?listen");
 			}
@@ -34,7 +43,8 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 void ULobbyWidget::UpdatePlayersReady(int _value)
 {
 	playersReadyCount += _value;
-	playersReady->SetText(FText::FromString(FString::FromInt(playersReadyCount)));
+	if(playersReady)
+		playersReady->SetText(FText::FromString(FString::FromInt(playersReadyCount)));
 	IsMaxPlayer();
 }
 

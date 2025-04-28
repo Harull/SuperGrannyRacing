@@ -19,6 +19,14 @@ void AReplicatedStartManager::BeginPlay()
 {
 	Super::BeginPlay();
 	Init();
+
+	FTimerHandle _handle;
+	GetWorld()->GetTimerManager().SetTimer(_handle, this, &AReplicatedStartManager::Debug, 5, true);
+}
+
+void AReplicatedStartManager::Debug()
+{
+	UKismetSystemLibrary::PrintString(this, FString::FromInt(currentPlayerReady) + " / " + FString::FromInt(playerCountToLookFor), true, true, FLinearColor::Red, 5);
 }
 
 void AReplicatedStartManager::Init()
@@ -46,13 +54,16 @@ void AReplicatedStartManager::ActivateAllPlayers()
 
 void AReplicatedStartManager::OnRep_CurrentPlayerReady()
 {
-	if (playerCountToLookFor >= currentPlayerReady)
+	if (currentPlayerReady >= playerCountToLookFor)
 		ActivateAllPlayers();
 }
 
-void AReplicatedStartManager::Server_IncrementCurrentPlayerReady_Implementation()
+void AReplicatedStartManager::IncrementCurrentPlayerReady()
 {
+	if (!HasAuthority())return;
 	currentPlayerReady++;
+	OnRep_CurrentPlayerReady();
+
 }
 
 void AReplicatedStartManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

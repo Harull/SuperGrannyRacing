@@ -18,17 +18,17 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	void Debug();
 private:
 	void Init();
 	void InitFields();
-
+	
 private:
 	void ActivateAllPlayers();
 	UFUNCTION() void OnRep_CurrentPlayerReady();
 
 public:
-	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
+	void IncrementCurrentPlayerReady();
 
 private:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps)const;

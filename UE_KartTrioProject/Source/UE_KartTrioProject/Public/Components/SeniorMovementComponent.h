@@ -97,6 +97,8 @@ public:
 	FORCEINLINE void SetCanRotate(const bool _value) { canRotate = _value; }
 	FORCEINLINE void SetCanSteerWheels(const bool _value) { canSteerWheels = _value; }
 
+	FORCEINLINE bool GetCanSteerWheels()const { return canSteerWheels; }
+
 	FORCEINLINE void SetForwardMaxSpeed(const float _value) { forwardMaxSpeed = _value; }
 	FORCEINLINE void SetBackwardMaxSpeed(const float _value) { backwardMaxSpeed = _value; }
 
