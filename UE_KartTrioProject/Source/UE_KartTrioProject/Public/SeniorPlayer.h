@@ -14,6 +14,7 @@
 
 class USeniorMovementComponent;
 class UPlaceArrowSignComponent;
+class UInventoryComponent;
 
 UCLASS()
 class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
@@ -30,6 +31,7 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
 	UPROPERTY(EditAnywhere) TObjectPtr<UPlaceArrowSignComponent> placeArrowSignComponent;
+	UPROPERTY(EditAnywhere) TObjectPtr<UInventoryComponent> inventory;
 
 
 	UPROPERTY(EditAnywhere) TObjectPtr<UCapsuleComponent> cartCapsuleComponent;
@@ -57,6 +59,7 @@ public:
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetLeftFrontWheel()const { return frontLeftWheel; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }
 	FORCEINLINE TObjectPtr<UPlaceArrowSignComponent> GetPlaceArrowSignComponent() const { return placeArrowSignComponent; }
+	FORCEINLINE TObjectPtr<UInventoryComponent> GetInventoryComponent() const { return inventory; }
 
 	/// <summary>
 	/// Custom id replicated, used for network
