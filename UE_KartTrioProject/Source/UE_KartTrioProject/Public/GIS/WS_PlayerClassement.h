@@ -18,7 +18,7 @@ class UE_KARTTRIOPROJECT_API UWS_PlayerClassement : public UWorldSubsystem
 
 public:
 	FORCEINLINE TArray<TObjectPtr<UCollectedItemComponent>> GetAllPlayerCollectedItemComponent() const { return allPlayerCollectedItemComponent; }
-	
+	FORCEINLINE int GetRange() const { return allPlayerCollectedItemComponent.Num(); }
 public:
 	void AddPlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent);
 	void RemovePlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent);

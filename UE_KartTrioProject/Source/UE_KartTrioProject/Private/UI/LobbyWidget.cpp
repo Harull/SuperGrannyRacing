@@ -3,14 +3,34 @@
 #include <Online/GIS_Online.h>
 #include <Kismet/GameplayStatics.h>
 #include <SeniorPlayer.h>
+#include <GIS/WS_PlayerClassement.h>
 
 void ULobbyWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	//GetWorld()->GetTimerManager().SetTimer(timer, [&]() { maxPlayers->SetText(FText::FromString(FString::FromInt(GetPlayerCount()))); }, 0.4f, true);
+
+	int _maxPLayers = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
+
+	maxPlayers->SetText(FText::FromString(FString::FromInt(_maxPLayers)));
 }
+
+
 
 void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 {
+	currentTimeMaxPlayers += _DeltaTime;
+
+	if (currentTimeMaxPlayers >= 2.f)
+	{
+		currentTimeMaxPlayers = 0;
+		int _maxPLayers = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
+
+		maxPlayers->SetText(FText::FromString(FString::FromInt(_maxPLayers)));
+	}
+
+
+
 	if (timerIsStarted)
 	{
 		currentTime += _DeltaTime;
@@ -23,18 +43,10 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 			if (timeToLaunchLeft < 0)
 			{
 				timerIsStarted = false;
-				GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->SetNonSessionRelatedPlayerCount(playersReadyCount);
-
-				if (loadingScreenWidget)
-				{
-					RemoveFromViewport();
-					CreateWidget<UUserWidget>(GetWorld(), loadingScreenWidget)->AddToViewport();
-				}
-				else
-					UKismetSystemLibrary::PrintString(this, "ERROR loadingScreenWidget subclassof not set in ULobbyWidget::NativeTick", true, true, FLinearColor::Red);
-				
 				if(GetOwningPlayer()->HasAuthority())
 					GetWorld()->ServerTravel("/Game/Levels/LVL_Base?listen");
+				/*if (timer.IsValid())
+					GetWorld()->GetTimerManager().ClearTimer(timer);*/
 			}
 		}
 	}
@@ -42,15 +54,19 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 
 void ULobbyWidget::UpdatePlayersReady(int _value)
 {
+	if (!playersReady) return;
 	playersReadyCount += _value;
-	if(playersReady)
-		playersReady->SetText(FText::FromString(FString::FromInt(playersReadyCount)));
+	if (playersReadyCount <= -1)
+		playersReadyCount = 0;
+	
+
+	playersReady->SetText(FText::FromString(FString::FromInt(playersReadyCount)));
 	IsMaxPlayer();
 }
 
 void ULobbyWidget::IsMaxPlayer()
 {
-	int _totalPlayerConnected = GetPlayerCount();
+	int _totalPlayerConnected = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
 	if (playersReadyCount == _totalPlayerConnected) 
 	{
 		StartTimer();

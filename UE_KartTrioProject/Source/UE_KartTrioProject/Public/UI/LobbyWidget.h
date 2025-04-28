@@ -18,13 +18,17 @@ class UE_KARTTRIOPROJECT_API ULobbyWidget : public UUserWidget
 	UPROPERTY() FOnTimerStoped onTimerStoped;
 	
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> playersReady;
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> maxPlayers;
 	UPROPERTY() int playersReadyCount = 0;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> timerToLaunch;
 
 	UPROPERTY() bool timerIsStarted = false;
 	UPROPERTY() int timeToLaunchLeft = 3;
 	UPROPERTY() float currentTime = 0.0f;
+	UPROPERTY() float currentTimeMaxPlayers = 0.0f;
 	UPROPERTY() float timeMax = 2.0f;
+
+	FTimerHandle timer;
 
 private:
 	virtual void NativeConstruct() override;
