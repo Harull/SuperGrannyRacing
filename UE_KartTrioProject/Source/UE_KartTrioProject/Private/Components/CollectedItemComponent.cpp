@@ -54,22 +54,22 @@ void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// ...
 }
 
-void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
-{
-	if (!usableItem || isCooldown) return;
-	UKismetSystemLibrary::PrintString(this, "UseItem");
-	FVector _position = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * -100.0f;
-
-
-	if(!GetOwner()->HasAuthority())
-		SpawnItemServer(_position);
-	else
-		GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
-
-	isCooldown = true;
-	FTimerHandle _timer;
-	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {UCollectedItemComponent::ResetCooldown(); }, timeCooldown, false);
-}
+//void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
+//{
+//	if (!usableItem || isCooldown) return;
+//	UKismetSystemLibrary::PrintString(this, "UseItem");
+//	FVector _position = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * -100.0f;
+//
+//
+//	if(!GetOwner()->HasAuthority())
+//		SpawnItemServer(_position);
+//	else
+//		GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
+//
+//	isCooldown = true;
+//	FTimerHandle _timer;
+//	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {UCollectedItemComponent::ResetCooldown(); }, timeCooldown, false);
+//}
 
 void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
 {
@@ -104,7 +104,7 @@ void UCollectedItemComponent::ResetCooldown()
 	isCooldown = false;
 }
 
-void UCollectedItemComponent::SpawnItemServer_Implementation(const FVector& _position)
-{
-	GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
-}
+//void UCollectedItemComponent::SpawnItemServer_Implementation(const FVector& _position)
+//{
+//	GetWorld()->SpawnActor<AActor>(usableItem, _position, FRotator(0));
+//}

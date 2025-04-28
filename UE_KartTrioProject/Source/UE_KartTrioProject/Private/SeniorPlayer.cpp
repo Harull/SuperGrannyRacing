@@ -9,6 +9,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "Components/PlaceArrowSignComponent.h"
 #include <Online/GIS_Online.h>
+#include "Components/InventoryComponent.h"
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -20,6 +21,7 @@ ASeniorPlayer::ASeniorPlayer()
 	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
 	collectedItemComponent = CreateDefaultSubobject<UCollectedItemComponent>("CollectedItem");
 	placeArrowSignComponent = CreateDefaultSubobject<UPlaceArrowSignComponent>("PlaceArrowSign");
+	inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 
 	//CAMERA
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
@@ -43,6 +45,7 @@ ASeniorPlayer::ASeniorPlayer()
 	AddOwnedComponent(seniorMovementcomponent);
 	AddOwnedComponent(collectedItemComponent);
 	AddOwnedComponent(placeArrowSignComponent);
+	AddOwnedComponent(inventory);
 }
 
 void ASeniorPlayer::SetMovementActive(bool _isActive)
@@ -113,7 +116,8 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 	_inputComponent->BindAction(backward, ETriggerEvent::Started, seniorMovementcomponent.Get(), &USeniorMovementComponent::SetIsMovingBackward);
 	_inputComponent->BindAction(backward, ETriggerEvent::Completed, seniorMovementcomponent.Get(), &USeniorMovementComponent::SetIsMovingBackward);
 
-	_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, collectedItemComponent.Get(), &UCollectedItemComponent::UseItem);
+	//_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, collectedItemComponent.Get(), &UCollectedItemComponent::UseItem);
+	_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::UseItem);
 	//TODO Implement other bindings
 	}
 

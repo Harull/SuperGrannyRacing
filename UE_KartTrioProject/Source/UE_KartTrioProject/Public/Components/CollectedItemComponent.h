@@ -40,8 +40,8 @@ protected:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
-	UFUNCTION(Server, Unreliable) void SpawnItemServer(const FVector& _position);
+	//UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
+	//UFUNCTION(Server, Unreliable) void SpawnItemServer(const FVector& _position);
 	void UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem);
 	UFUNCTION() void ResetCooldown();
 };
