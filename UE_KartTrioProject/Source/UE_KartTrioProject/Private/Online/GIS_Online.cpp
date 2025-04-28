@@ -370,6 +370,7 @@ void UGIS_Online::JoinSession(const FName& _sessionName, const FString& _levelPa
 
 void UGIS_Online::RegisterPlayer()
 {
+
 	if (!steamID)
 	{
 		LOG("UGIS_Online => RegisterPlayer failed! " + steamID->ToString(), Red);

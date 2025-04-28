@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include <Camera/CameraComponent.h>
 #include "Components/CollectedItemComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "SeniorPlayer.generated.h"
 
 class USeniorMovementComponent;
@@ -71,6 +72,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	/// <summary>
+	/// This method is used to notify the game that this player is loaded and ready,
+	/// so it's used to know if everybody is ready to start the race
+	/// </summary>
+	virtual void SendNotifyIsReady();
 	void PrintDebug();
 
 public:	
@@ -83,5 +90,10 @@ private:
 
 private:
 	void InitUniqueID();
+private:
+
+	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+
 };

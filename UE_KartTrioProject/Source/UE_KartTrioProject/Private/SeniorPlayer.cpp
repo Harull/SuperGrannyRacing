@@ -9,6 +9,8 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "Components/PlaceArrowSignComponent.h"
 #include <Online/GIS_Online.h>
+#include <GPE/ReplicatedStartManager.h>
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -58,11 +60,28 @@ void ASeniorPlayer::BeginPlay()
 	InitUniqueID();
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
 	FTimerHandle _handle;
-	GetWorld()->GetTimerManager().SetTimer(_handle, this, &ASeniorPlayer::PrintDebug, 5.F, true);
+	SendNotifyIsReady();
+
+
 	//UKismetSystemLibrary::PrintString(this, FString::FromInt(repActorID), true, true, FLinearColor::Gray, 10.0f); // TODO Remove
 	
 	FString _steamName = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName();
 	UKismetSystemLibrary::PrintString(this, _steamName); // TODO Remove
+}
+
+void ASeniorPlayer::SendNotifyIsReady()
+{
+	if (GetWorld()->GetFirstPlayerController()->GetCharacter() != this)
+	{
+		UKismetSystemLibrary::PrintString(this, "ASeniorPlayer::SendNotifyIsReady early return", true, true, FLinearColor::Yellow, 30);
+		return;
+	}
+	UKismetSystemLibrary::PrintString(this, "This character is possessed, and ASeniorPlayer::SendNotifyIsReady is searching for a AReplicatedStartManager", true, true, FLinearColor::Yellow, 30);
+
+	UKismetSystemLibrary::PrintString(this, "Calling the server rpc right away", true, true, FLinearColor::Yellow, 30);
+	Server_IncrementCurrentPlayerReady();
+
+
 }
 
 void ASeniorPlayer::PrintDebug()
@@ -124,9 +143,20 @@ void ASeniorPlayer::InitUniqueID()
 	actorLocalID = this->GetUniqueID();
 }
 
+void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
+{
+	UKismetSystemLibrary::PrintString(this, "THE SERVER RPC IS CALLED", true, true, FLinearColor::Yellow, 30);
+	AActor* _actor = UGameplayStatics::GetActorOfClass(this, AReplicatedStartManager::StaticClass());
+	if (TObjectPtr<AReplicatedStartManager> _startManager = Cast<AReplicatedStartManager>(_actor))
+	{
+		_startManager->IncrementCurrentPlayerReady();
+	}
+}
+
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ASeniorPlayer, repActorID, COND_InitialOnly);
+
 }
 

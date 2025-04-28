@@ -13,6 +13,7 @@ class UE_KARTTRIOPROJECT_API ULobbyWidget : public UUserWidget
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimerStarted);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimerStoped);
+	UPROPERTY(EditAnywhere) TSubclassOf<UUserWidget> loadingScreenWidget;
 	UPROPERTY() FOnTimerStarted onTimerStarted;
 	UPROPERTY() FOnTimerStoped onTimerStoped;
 	
