@@ -95,6 +95,9 @@ class UE_KARTTRIOPROJECT_API UGIS_Online : public UGameInstanceSubsystem
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionsFound, const TArray<FSessionData>&, _sessionData);
 	UPROPERTY() FOnSessionsFound onSessionsFound;
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewSteamUserName, const FString&, _steamName);
+	UPROPERTY() FOnNewSteamUserName onNewSteamUserName;
+
 	UPROPERTY(EditAnywhere) int32 maxPlayersCount;
 	UPROPERTY(EditAnywhere) FName serverName;
 	UPROPERTY(EditAnywhere) FName sessionName;
@@ -114,6 +117,7 @@ class UE_KARTTRIOPROJECT_API UGIS_Online : public UGameInstanceSubsystem
 
 public:
 	FORCEINLINE FOnSessionsFound& OnSessionsFound() { return onSessionsFound; }
+	FORCEINLINE FOnNewSteamUserName& OnNewSteamUserName() { return onNewSteamUserName; }
 	FORCEINLINE FSessionData& GetCurrentSessionData() { return currentSessionData; }
 	//FORCEINLINE int GetPlayerCount()
 	//{
