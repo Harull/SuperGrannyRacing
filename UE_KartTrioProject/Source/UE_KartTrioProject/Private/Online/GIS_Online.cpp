@@ -2,6 +2,7 @@
 
 
 #include "Online/GIS_Online.h"
+#include <Kismet/KismetStringLibrary.h>
 
 UGIS_Online::UGIS_Online()
 {
@@ -12,6 +13,7 @@ UGIS_Online::UGIS_Online()
 	mainMenuLevelPath = "LVL_MainMenu";
 	lobbyLevelPath = "LVL_Lobby";
 	ipAddress = "Unknown";
+	gameSessionID = "SupGranRace";
 	online = nullptr;
 	session = nullptr;
 	steamID = nullptr;
@@ -61,7 +63,7 @@ void UGIS_Online::Deinitialize()
 void UGIS_Online::InitSessionSettings()
 {
 	if (!sessionSettings)
-		return;
+	return;
 	sessionSettings->bAllowInvites = true;
 	sessionSettings->bAllowJoinInProgress = true;
 	sessionSettings->bAllowJoinViaPresence = true;
@@ -73,6 +75,8 @@ void UGIS_Online::InitSessionSettings()
 	sessionSettings->NumPrivateConnections = maxPlayersCount;
 	sessionSettings->NumPublicConnections = maxPlayersCount;
 	sessionSettings->bIsLANMatch = IS_LAN(online);
+	sessionSettings->BuildUniqueId = UKismetStringLibrary::Conv_StringToInt(UKismetSystemLibrary::GetBuildVersion());
+	sessionSettings->Set(FName("GameSessionID"), gameSessionID, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
 	sessionSettings->Set(FName("SESSION_NAME"), sessionName.ToString(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("SERVER_NAME"), serverName.ToString(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
@@ -343,9 +347,11 @@ void UGIS_Online::FindSessions()
 	sessionSearch = MakeShareable(new FOnlineSessionSearch());
 	sessionSearch->bIsLanQuery = IS_LAN(online);
 	LOG(online->GetSubsystemName().ToString(), Blue);
-	sessionSearch->MaxSearchResults = 10;
+	sessionSearch->MaxSearchResults = 50;
 	sessionSearch->TimeoutInSeconds = 20.f;
 	sessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+	sessionSearch->QuerySettings.Set(FName("GameSessionID"), gameSessionID, EOnlineComparisonOp::Equals);
+
 	session->FindSessions(0, sessionSearch.ToSharedRef());
 	//session->FindFriendSession(,)
 }
