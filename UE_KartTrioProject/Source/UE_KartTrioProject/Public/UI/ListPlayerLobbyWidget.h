@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include <Components/ScrollBox.h>
+#include "PlayerSlotLobbyWidget.h"
+#include <Online/GIS_Online.h>
 #include "ListPlayerLobbyWidget.generated.h"
 
 /**
@@ -13,6 +16,13 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API UListPlayerLobbyWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	//UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> playersReady;
+	UPROPERTY(EditAnywhere) TSubclassOf<UPlayerSlotLobbyWidget> playerSlotRef;
 
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<UScrollBox> playerList;
+
+private:
+	void NativeConstruct() override;
+
+public:
+	void AddPlayer(FPlayerData _data);
 };
