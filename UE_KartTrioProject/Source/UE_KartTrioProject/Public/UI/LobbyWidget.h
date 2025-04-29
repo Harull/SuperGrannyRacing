@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include <Components/TextBlock.h>
+#include "ListPlayerLobbyWidget.h"
 #include "LobbyWidget.generated.h"
 
 UCLASS()
@@ -17,6 +18,7 @@ class UE_KARTTRIOPROJECT_API ULobbyWidget : public UUserWidget
 	UPROPERTY() FOnTimerStarted onTimerStarted;
 	UPROPERTY() FOnTimerStoped onTimerStoped;
 	
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<UListPlayerLobbyWidget> listPlayerLobbyWidget;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> playersReady;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> maxPlayers;
 	UPROPERTY() int playersReadyCount = 0;

@@ -415,7 +415,7 @@ FString UGIS_Online::GetSteamUserName()
 	IOnlineIdentityPtr _identity = online->GetIdentityInterface();
 	if (_identity.IsValid())
 	{
-		FUniqueNetIdPtr _userId = _identity->GetUniquePlayerId(2);
+		FUniqueNetIdPtr _userId = _identity->GetUniquePlayerId(0);
 		if (_userId.IsValid())
 		{
 			_steamName = _identity->GetPlayerNickname(*_userId);
@@ -426,7 +426,7 @@ FString UGIS_Online::GetSteamUserName()
 			}
 				//UKismetSystemLibrary::PrintString(this, "Effectively 7 empty");
 			
-			//return _steamName;
+			return _steamName;
 		}
 	}
 	_index++;
