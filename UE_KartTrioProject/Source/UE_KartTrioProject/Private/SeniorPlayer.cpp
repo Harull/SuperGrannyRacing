@@ -33,7 +33,7 @@ ASeniorPlayer::ASeniorPlayer()
 	springArm->SetupAttachment(RootComponent);
 
 	//COMPOSED MESH OF CART
-	cartCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("Capsule");
+	cartCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CartCapsule");
 	shoppingCart = CreateDefaultSubobject<UStaticMeshComponent>("ShoppingCart");
 	backWheels = CreateDefaultSubobject<UStaticMeshComponent>("BackWheels");
 	frontRightWheel = CreateDefaultSubobject<UStaticMeshComponent>("FrontRightWheel");
@@ -85,8 +85,6 @@ void ASeniorPlayer::SendNotifyIsReady()
 
 	UKismetSystemLibrary::PrintString(this, "Calling the server rpc right away", true, true, FLinearColor::Yellow, 30);
 	Server_IncrementCurrentPlayerReady();
-
-
 }
 
 void ASeniorPlayer::PrintDebug()

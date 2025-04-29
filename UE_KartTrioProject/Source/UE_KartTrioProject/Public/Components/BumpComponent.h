@@ -12,7 +12,7 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_KARTTRIOPROJECT_API UBumpComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	UPROPERTY(EditAnywhere) TArray<TObjectPtr<UBoxComponent>> bumpBoxes; 
+	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<UBoxComponent>> bumpBoxes;
 	UPROPERTY(EditAnywhere) TArray<TEnumAsByte<EObjectTypeQuery>> bumpableLayers;
 	UPROPERTY(EditAnywhere) float bumpStrength = 10.f;
 
@@ -27,4 +27,7 @@ private:
 	void DesactivatedBoxes();
 	TArray<FHitResult> BoxCastAll();
 	void ApplyBumpToAll(const TArray<FHitResult>& _results);
+
+public:
+	UFUNCTION(BlueprintCallable) void AddBoxToBumpBoxes(UBoxComponent* _box);
 };

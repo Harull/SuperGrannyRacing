@@ -33,7 +33,7 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
 	UPROPERTY(EditAnywhere) TObjectPtr<UPlaceArrowSignComponent> placeArrowSignComponent;
 	UPROPERTY(EditAnywhere) TObjectPtr<UInventoryComponent> inventory;
-	UPROPERTY(EditAnywhere) TObjectPtr<UBumpComponent> bumpComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess=True)) TObjectPtr<UBumpComponent> bumpComponent;
 
 
 	UPROPERTY(EditAnywhere) TObjectPtr<UCapsuleComponent> cartCapsuleComponent;
