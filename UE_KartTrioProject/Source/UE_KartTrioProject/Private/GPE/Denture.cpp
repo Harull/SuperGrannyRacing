@@ -28,7 +28,7 @@ void ADenture::Use(ASeniorPlayer* _player)
 {
 	if (!_player)return;
 	UKismetSystemLibrary::PrintString(this, "Spawn", true, true, FLinearColor::Red, 10.0f);
-	FVector _position = _player->GetActorLocation() + _player->GetActorForwardVector() * 100.0f;
+	FVector _position = _player->GetActorLocation() + _player->GetActorForwardVector() * 200.0f;
 
 	FVector _newPos = FVector(_position.X , _position.Y, _position.Z);
 	mesh->IgnoreActorWhenMoving(_player, true);
