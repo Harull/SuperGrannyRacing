@@ -5,6 +5,7 @@
 #include "LootBox.generated.h"
 
 class AItem;
+class ALootBoxSpawnPoint;
 
 UCLASS()
 class UE_KARTTRIOPROJECT_API ALootBox : public AActor
@@ -17,6 +18,8 @@ class UE_KARTTRIOPROJECT_API ALootBox : public AActor
 	UPROPERTY(EditAnywhere) float levitateAmplitude = 250.0f;
 
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AItem>> availablesItems;
+	UPROPERTY(EditAnywhere)TWeakObjectPtr<ALootBoxSpawnPoint> owningSpawnPoint;
+
 
 	float runningTime = 0.0f;
 
@@ -37,5 +40,7 @@ private:
 	void Rotate(float _delta);
 	TSubclassOf<AItem> GiveRandomItem();
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+public:
+	void SetOwningSpawnPoint(ALootBoxSpawnPoint* _spawnPoint);
 
 };

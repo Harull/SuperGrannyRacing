@@ -1,6 +1,8 @@
 #include "GPE/LootBox.h"
 #include "GPE/Item.h"
 #include "Components/InventoryComponent.h"
+#include "GPE/ULootBoxSpawnPointSubsystem.h"
+#include "GPE/LootBoxSpawnPoint.h"
 
 ALootBox::ALootBox()
 {
@@ -67,8 +69,20 @@ void ALootBox::NotifyActorBeginOverlap(AActor* OtherActor)
 		UInventoryComponent* _inventory = _player->GetComponentByClass<UInventoryComponent>();
 		if (!_inventory)return;
 		_inventory->AddItem(GiveRandomItem());
+
+		if (UULootBoxSpawnPointSubsystem* _subsystem = GetWorld()->GetGameInstance()->GetSubsystem< UULootBoxSpawnPointSubsystem>())
+			_subsystem->LootBoxCollected();
+
+		if(owningSpawnPoint.IsValid())
+			owningSpawnPoint->SetIsOccupied(false);
+
 		Destroy();
 
 	}
+}
+
+void ALootBox::SetOwningSpawnPoint(ALootBoxSpawnPoint* _spawnPoint)
+{
+	owningSpawnPoint = _spawnPoint;
 }
 

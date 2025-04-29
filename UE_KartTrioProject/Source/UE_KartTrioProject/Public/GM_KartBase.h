@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "GM_KartBase.generated.h"
 
+class ALootBox;
+
 /**
  * 
  */
@@ -13,5 +15,9 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API AGM_KartBase : public AGameModeBase
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere) TSubclassOf<ALootBox> lootBox;
+
+protected:
+	virtual void BeginPlay()override;
 	
 };

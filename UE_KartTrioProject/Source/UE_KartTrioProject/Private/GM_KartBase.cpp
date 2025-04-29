@@ -2,4 +2,13 @@
 
 
 #include "GM_KartBase.h"
+#include "GPE/LootBox.h"
+#include "GPE/ULootBoxSpawnPointSubsystem.h"
 
+void AGM_KartBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (UULootBoxSpawnPointSubsystem* _subsystem = GetWorld()->GetGameInstance()->GetSubsystem< UULootBoxSpawnPointSubsystem>())
+		_subsystem->SetLootBoxToSpawn(lootBox);
+}
