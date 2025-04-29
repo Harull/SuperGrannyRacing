@@ -48,7 +48,7 @@ TArray<FHitResult> UBumpComponent::BoxCastAll()
 
 		if (_localResult.Num() > 0)
 		{
-			UKismetSystemLibrary::PrintString(this, "The boxtrace wasnt empty", true, true, FLinearColor::Gray);
+			//UKismetSystemLibrary::PrintString(this, "The boxtrace wasnt empty", true, true, FLinearColor::Gray);
 			_toReturn.Append(_localResult);
 		}
 	}
@@ -60,18 +60,18 @@ void UBumpComponent::ApplyBumpToAll(const TArray<FHitResult>& _results)
 {
 	for (auto& _result : _results)
 	{
-		UKismetSystemLibrary::PrintString(this, "Trying to apply bump", true, true, FLinearColor::Gray);
+		//UKismetSystemLibrary::PrintString(this, "Trying to apply bump", true, true, FLinearColor::Gray);
 
 		//_result.GetActor()->GetComponentByClass<UPawnMovementComponent>()
 		if (TObjectPtr<UCharacterMovementComponent> _characterMovementCmpnt = _result.GetActor()->GetComponentByClass<UCharacterMovementComponent>())
 		{
-			UKismetSystemLibrary::PrintString(this, "DID apply bump", true, true, FLinearColor::Gray);
+			//UKismetSystemLibrary::PrintString(this, "DID apply bump", true, true, FLinearColor::Gray);
 			_characterMovementCmpnt->AddForce(FVector(9999,9999,9999)/*-_result.ImpactNormal * bumpStrength*/); //TODO (lerp by owners velocity if have the corresponding component)
 		}
 		//else if (TObjectPtr<UPawnMovementComponent> _pawnMovementCmpnt = _result.GetActor()->GetComponentByClass<UPawnMovementComponent>())
 			//_pawnMovementCmpnt->AddRadialImpulse(_result .-_result.ImpactNormal * bumpStrength);
-		else
-			UKismetSystemLibrary::PrintString(this, "Error, trying to apply a bump to an actor not in the possession of a character movement component. => UBumpComponent::ApplyBumpToAll", true, true, FLinearColor::Red);
+		//else
+			//UKismetSystemLibrary::PrintString(this, "Error, trying to apply a bump to an actor not in the possession of a character movement component. => UBumpComponent::ApplyBumpToAll", true, true, FLinearColor::Red);
 		//if(_result.GetActor())
 	}
 }
