@@ -24,6 +24,7 @@ ASeniorPlayer::ASeniorPlayer()
 	collectedItemComponent = CreateDefaultSubobject<UCollectedItemComponent>("CollectedItem");
 	placeArrowSignComponent = CreateDefaultSubobject<UPlaceArrowSignComponent>("PlaceArrowSign");
 	inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
+	bumpComponent = CreateDefaultSubobject<UBumpComponent>("Bump");
 
 	//CAMERA
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
@@ -32,7 +33,7 @@ ASeniorPlayer::ASeniorPlayer()
 	springArm->SetupAttachment(RootComponent);
 
 	//COMPOSED MESH OF CART
-	cartCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("CartCapsule");
+	cartCapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("Capsule");
 	shoppingCart = CreateDefaultSubobject<UStaticMeshComponent>("ShoppingCart");
 	backWheels = CreateDefaultSubobject<UStaticMeshComponent>("BackWheels");
 	frontRightWheel = CreateDefaultSubobject<UStaticMeshComponent>("FrontRightWheel");
@@ -48,6 +49,7 @@ ASeniorPlayer::ASeniorPlayer()
 	AddOwnedComponent(collectedItemComponent);
 	AddOwnedComponent(placeArrowSignComponent);
 	AddOwnedComponent(inventory);
+	AddOwnedComponent(bumpComponent);
 }
 
 void ASeniorPlayer::SetMovementActive(bool _isActive)
