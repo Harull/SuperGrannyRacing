@@ -80,26 +80,29 @@ void UGIS_Online::InitSessionSettings()
 	sessionSettings->Set(FName("CURRENT_PLAYERS"), FString::FromInt(1), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("MAX_PLAYERS"), FString::FromInt(maxPlayersCount), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 	sessionSettings->Set(FName("PING_PLAYERS"), FString::FromInt(8), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+
+	
 }
 
 #pragma region Handlers
 
 void UGIS_Online::OnCreateSessionCompleted(FName _sessionName, bool _wasSuccessful)
 {
+	LOG("UGIS_Online => OnCreateSessionCompleted : " + sessionName.ToString(), Yellow);
+
 	if (!_wasSuccessful)
 	{
 		LOG("Error => " + _sessionName.ToString() + " wasn't created successfully!", Red);
 		return;
 	}
 	sessionName = _sessionName;
-	LOG("SERVER => OnCreateSessionCompleted : " + sessionName.ToString(), Orange);
 	currentSessionData = FSessionData(*sessionSettings.Get());
 	RegisterPlayer();
 }
 
 void UGIS_Online::OnFindSessionCompleted(bool _wasSuccessful)
 {
-	LOG("UGIS_Online => OnFindSessionCompleted", Green);
+	LOG("UGIS_Online => OnFindSessionCompleted : ", Yellow);
 
 	if (!_wasSuccessful)
 	{
@@ -129,7 +132,7 @@ void UGIS_Online::OnFindSessionCompleted(bool _wasSuccessful)
 
 void UGIS_Online::OnJoinSessionCompleted(FName _sessionName, const EOnJoinSessionCompleteResult::Type _result)
 {
-	LOG("UGIS_Online => OnJoinSessionCompleted", Green);
+	LOG("UGIS_Online => OnJoinSessionCompleted", Yellow);
 
 	if (_result != EOnJoinSessionCompleteResult::Success)
 	{
@@ -183,7 +186,7 @@ void UGIS_Online::OnRegisteredCompleted(FName _sessionName, const TArray<FUnique
 
 void UGIS_Online::OnStartSessionCompleted(FName _sessionName, bool _wasSuccessful)
 {
-	LOG("UGIS_Online => OnStartSessionCompleted", Green);
+	LOG("UGIS_Online => OnStartSessionCompleted", Yellow);
 
 	if (!_wasSuccessful)
 	{
@@ -197,19 +200,18 @@ void UGIS_Online::OnStartSessionCompleted(FName _sessionName, bool _wasSuccessfu
 
 void UGIS_Online::OnUpdateSessionCompleted(FName _sessionName, bool _wasSuccessful)
 {
-	LOG("UGIS_Online => OnUpdateSessionCompleted", Green);
+	LOG("UGIS_Online => OnUpdateSessionCompleted", Yellow);
 }
 
 void UGIS_Online::OnEndSessionCompleted(FName _sessionName, bool _wasSuccessful)
 {
-	LOG("UGIS_Online => OnEndSessionCompleted", Green);
+	LOG("UGIS_Online => OnEndSessionCompleted", Yellow);
 
 	if (!_wasSuccessful)
 	{
 		LOG("Error => End session failed!", Red);
 		return;
 	}
-
 	
 	currentSessionData = FSessionData();
 	
@@ -233,7 +235,7 @@ void UGIS_Online::OnEndSessionCompleted(FName _sessionName, bool _wasSuccessful)
 
 void UGIS_Online::OnDestroySessionCompleted(FName _sessionName, bool _wasSuccessful)
 {
-	LOG("UGIS_Online => OnDestroySessionCompleted", Green);
+	LOG("UGIS_Online => OnDestroySessionCompleted", Yellow);
 
 	if (!_wasSuccessful)
 	{
@@ -255,6 +257,8 @@ void UGIS_Online::OnNetworkFailure(UWorld* _world, UNetDriver* _driver, ENetwork
 
 void UGIS_Online::OnAcceptInvite(const bool _wasSuccessful, const int32 _controllerId, FUniqueNetIdPtr _userId, const FOnlineSessionSearchResult& _inviteResult)
 {
+	LOG("UGIS_Online => OnAcceptInvite", Yellow);
+
 	bool _isValid = _inviteResult.IsValid();
 	const FString& _inviteText = (_isValid ? "and the session is valid" : "but the session is NOT valid");
 	LOG("OnAcceptInvite broadcasted " + _inviteText, Yellow);
@@ -286,7 +290,7 @@ void UGIS_Online::OnParticipantJoined(FName _sessionName, const FUniqueNetId& _p
 
 void UGIS_Online::OnParticipantLeft(FName _sessionName, const FUniqueNetId& _participantID, EOnSessionParticipantLeftReason _reason)
 {
-	LOG("GIS ONLINE => OnParticipantRemoved", Yellow);
+	LOG("GIS ONLINE => OnParticipantLeft", Yellow);
 
 	if (currentSessionData.isInitialized)
 	{
@@ -309,7 +313,7 @@ void UGIS_Online::OnParticipantLeft(FName _sessionName, const FUniqueNetId& _par
 #pragma region Callables
 void UGIS_Online::CreateSession()
 {
-	LOG("UGIS_Online => CreateSession", Magenta);
+	LOG("UGIS_Online => CreateSession", Green);
 	sessionName = FName(serverName.ToString() + "_" + steamID->ToString());
 	if (session->GetNamedSession(sessionName))
 	if (session->GetNamedSession(sessionName))
@@ -324,7 +328,7 @@ void UGIS_Online::CreateSession()
 
 void UGIS_Online::UpdateSession()
 {
-	LOG("UGIS_Online => UpdateSession", Magenta);
+	LOG("UGIS_Online => UpdateSession", Green);
 	FOnlineSessionSettings _newSettings = *sessionSettings.Get();
 	session->UpdateSession(sessionName, _newSettings);
 	sessionSettings = MakeShared<FOnlineSessionSettings>(_newSettings);
@@ -335,7 +339,7 @@ void UGIS_Online::FindSessions()
 	if (serverName.IsNone())
 		return;
 
-	LOG("UGIS_Online => FindSessions", Magenta);
+	LOG("UGIS_Online => FindSessions", Green);
 	sessionSearch = MakeShareable(new FOnlineSessionSearch());
 	sessionSearch->bIsLanQuery = IS_LAN(online);
 	LOG(online->GetSubsystemName().ToString(), Blue);
@@ -348,12 +352,13 @@ void UGIS_Online::FindSessions()
 
 void UGIS_Online::CancelFindSessions()
 {
-	LOG("UGIS_Online => CancelFindSessions", Magenta);
+	LOG("UGIS_Online => CancelFindSessions", Green);
 	session->CancelFindSessions();
 }
 
 void UGIS_Online::JoinSession(const FName& _sessionName, const FString& _levelPath, const int& _sessionIndex)
 {
+	LOG("UGIS_Online => JoinSession", Green);
 	sessionName = _sessionName;
 	LOG("CLIENT => JoinSession : " + sessionName.ToString(), Yellow);
 	levelPath = _levelPath;
@@ -370,7 +375,7 @@ void UGIS_Online::JoinSession(const FName& _sessionName, const FString& _levelPa
 
 void UGIS_Online::RegisterPlayer()
 {
-
+	LOG("UGIS_Online RegisterPlayer", Green);
 	if (!steamID)
 	{
 		LOG("UGIS_Online => RegisterPlayer failed! " + steamID->ToString(), Red);
@@ -381,19 +386,19 @@ void UGIS_Online::RegisterPlayer()
 
 void UGIS_Online::StartSession()
 {
-	LOG("UGIS_Online => StartSession", Magenta);
+	LOG("UGIS_Online => StartSession", Green);
 	session->StartSession(sessionName);
 }
 
 void UGIS_Online::EndSession()
 {
-	LOG("UGIS_Online => EndSession", Magenta);
+	LOG("UGIS_Online => EndSession", Green);
 	session->EndSession(sessionName);
 }
 
 void UGIS_Online::DestroySession()
 {
-	LOG("UGIS_Online => DestroySession", Magenta);
+	LOG("UGIS_Online => DestroySession", Green);
 	session->DestroySession(sessionName);
 }
 FString UGIS_Online::GetSteamUserName()
@@ -410,7 +415,10 @@ FString UGIS_Online::GetSteamUserName()
 			_steamName = _identity->GetPlayerNickname(*_userId);
 			onNewSteamUserName.Broadcast(_steamName);
 			if (_steamName.Contains("       "))
-				UKismetSystemLibrary::PrintString(this, "Effectively 7 empty");
+			{
+
+			}
+				//UKismetSystemLibrary::PrintString(this, "Effectively 7 empty");
 			
 			//return _steamName;
 		}

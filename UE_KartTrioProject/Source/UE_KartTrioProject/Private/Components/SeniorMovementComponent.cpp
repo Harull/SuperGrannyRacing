@@ -4,6 +4,7 @@
 #include "Components/SeniorMovementComponent.h"
 #include <Kismet/KismetMathLibrary.h>
 #include <Kismet/KismetSystemLibrary.h>
+#include <Kismet/KismetMathLibrary.h>
 #include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
@@ -28,6 +29,8 @@ void USeniorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	//if (GetWorld()->GetFirstPlayerController()->GetPawn() != GetOwner())return;
 	Move();
 	ApplyDeceleration();
+	ApplyFovModificationsBasedOnSpeed();
+	ApplyCameraSpringArmRotationBasedOnSteer();
 	DrawDebugs();
 }
 
@@ -44,8 +47,13 @@ void USeniorMovementComponent::InitFields()
 	InitSceneComponents();
 	initialForwardMaxSpeed = forwardMaxSpeed;
 	initialBackwardMaxSpeed = backwardMaxSpeed;
+
 	if (!personalOwner)return;
+	ownersCameraComponent = personalOwner->GetComponentByClass<UCameraComponent>();
+	ownersSpringArmComponent = personalOwner->GetComponentByClass<USpringArmComponent>();
 	ownersCharacterMovementComponent = personalOwner->GetComponentByClass<UCharacterMovementComponent>();
+
+	initialCameraFov = ownersCameraComponent->FieldOfView;
 	if (!fullCartBody || !leftFrontWheel || !rightFrontWheel)return;
 	currentPackageNetwork = FPersonalPackageNetwork(personalOwner->GetTransform(), fullCartBody->GetRelativeRotation(), leftFrontWheel->GetRelativeRotation(), rightFrontWheel->GetRelativeRotation(),
 		personalOwner->GetLocalActorID());
@@ -105,11 +113,25 @@ void USeniorMovementComponent::ApplyDeceleration()
 	SetCurrentVelocity(FMath::FInterpConstantTo(currentVelocity, 0, GetWorld()->DeltaTimeSeconds, automaticDecelerationSpeed));
 }
 
+void USeniorMovementComponent::ApplyFovModificationsBasedOnSpeed()
+{
+	ownersCameraComponent->SetFieldOfView(currentVelocity <= 0 ? initialCameraFov : FMath::Lerp(initialCameraFov, initialCameraFov + cameraFovMaximumIncrement, currentVelocity / forwardMaxSpeed));
+}
+
+void USeniorMovementComponent::ApplyCameraSpringArmRotationBasedOnSteer()
+{
+	if (!ownersSpringArmComponent)return;
+
+	// Lerp 0 to cameraAngleOnMaxSteering 
+	ownersSpringArmComponent->SetRelativeRotation(FRotator(0, 1, 0) * FMath::Lerp(0, cameraAngleOnMaxSteering, currentSteeringAngle / maxFrontWheelSteeringAngle), false);
+}
+
 void USeniorMovementComponent::AddVelocity(const FInputActionValue& _valuePosFloat)
 {
 	if (!canMove) return;
 	float _newValue = currentVelocity + forwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
 	SetCurrentVelocity(FMath::Clamp(_newValue, -backwardMaxSpeed, forwardMaxSpeed));
+
 }
 
 void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _valueFloat)
@@ -130,6 +152,7 @@ void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 
 	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds;
 	currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
+
 }
 
 void USeniorMovementComponent::SetIsMovingForward(const FInputActionValue& _valueFloat)
