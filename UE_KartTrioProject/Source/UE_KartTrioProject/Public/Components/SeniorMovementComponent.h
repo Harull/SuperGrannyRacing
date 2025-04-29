@@ -67,6 +67,14 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "10", UIMin = 10), Category = "Parameters|Movement") float maxFrontWheelSteeringAngle = 45;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "10", UIMin = 10, Units ="ms"), Category = "Parameters|NetWork") float networkUpdateTimerMS = 45;
 
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters|Camera") float cameraAngleOnMaxSteering = 20;
+	// Which means, at high speed, gain fov
+	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters|Camera") float cameraFovMaximumIncrement = 20; 
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Camera") float initialCameraFov = 0;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Camera") TObjectPtr<UCameraComponent> ownersCameraComponent;
+	UPROPERTY(VisibleAnywhere, Category = "Debug|Camera") TObjectPtr<USpringArmComponent> ownersSpringArmComponent;
+
+
 	UPROPERTY(EditAnywhere, Category = "Debug") bool useDebugs = true;
 	UPROPERTY(EditAnywhere, Category = "Debug") float arrowWheelDirectionLength = 100.f;
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement") float currentSteeringAngle = 0;
@@ -131,6 +139,8 @@ private:
 private:
 	void Move();
 	void ApplyDeceleration();
+	void ApplyFovModificationsBasedOnSpeed();
+	void ApplyCameraSpringArmRotationBasedOnSteer();
 
 public:
 	//Binded externaly to inputs

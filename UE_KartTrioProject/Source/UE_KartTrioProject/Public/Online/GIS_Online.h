@@ -105,6 +105,7 @@ class UE_KARTTRIOPROJECT_API UGIS_Online : public UGameInstanceSubsystem
 	UPROPERTY(EditAnywhere) FString mainMenuLevelPath;
 	UPROPERTY(EditAnywhere) FString lobbyLevelPath;
 	UPROPERTY(EditAnywhere) FString ipAddress;
+	UPROPERTY(EditAnywhere) FString gameSessionID;
 
 	IOnlineSubsystem* online;
 	IOnlineSessionPtr session;

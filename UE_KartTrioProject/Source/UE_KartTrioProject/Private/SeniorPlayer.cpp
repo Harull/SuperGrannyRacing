@@ -24,6 +24,7 @@ ASeniorPlayer::ASeniorPlayer()
 	collectedItemComponent = CreateDefaultSubobject<UCollectedItemComponent>("CollectedItem");
 	placeArrowSignComponent = CreateDefaultSubobject<UPlaceArrowSignComponent>("PlaceArrowSign");
 	inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
+	bumpComponent = CreateDefaultSubobject<UBumpComponent>("Bump");
 
 	//CAMERA
 	camera = CreateDefaultSubobject<UCameraComponent>("Camera");
@@ -48,6 +49,7 @@ ASeniorPlayer::ASeniorPlayer()
 	AddOwnedComponent(collectedItemComponent);
 	AddOwnedComponent(placeArrowSignComponent);
 	AddOwnedComponent(inventory);
+	AddOwnedComponent(bumpComponent);
 }
 
 void ASeniorPlayer::SetMovementActive(bool _isActive)
@@ -83,8 +85,6 @@ void ASeniorPlayer::SendNotifyIsReady()
 
 	UKismetSystemLibrary::PrintString(this, "Calling the server rpc right away", true, true, FLinearColor::Yellow, 30);
 	Server_IncrementCurrentPlayerReady();
-
-
 }
 
 void ASeniorPlayer::PrintDebug()
