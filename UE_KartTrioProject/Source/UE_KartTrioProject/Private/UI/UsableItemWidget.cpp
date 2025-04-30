@@ -8,7 +8,7 @@ void UUsableItemWidget::SetItemImage(TObjectPtr<UImage> _image, UTexture2D* _new
 		_image->SetBrushFromTexture(_newImage, true);
 }
 
-void UUsableItemWidget::UpdateItemsDashboard(const TArray<TSubclassOf<AItem>>& _items)
+void UUsableItemWidget::UpdateItemsImage(const TArray<TSubclassOf<AItem>>& _items)
 {
 	itemAvailableImage->SetBrushFromTexture(nullptr);
 	int _count = _items.Num();

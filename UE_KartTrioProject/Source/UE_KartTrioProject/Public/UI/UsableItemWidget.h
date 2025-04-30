@@ -16,7 +16,7 @@ class UE_KARTTRIOPROJECT_API UUsableItemWidget : public UUserWidget
 
 public:
 	void SetItemImage(TObjectPtr<UImage> _image, UTexture2D* _newImage);
-	void UpdateItemsDashboard(const TArray<TSubclassOf<AItem>>& _items);
+	void UpdateItemsImage(const TArray<TSubclassOf<AItem>>& _items);
 
 private:
 	virtual void NativeConstruct() override;

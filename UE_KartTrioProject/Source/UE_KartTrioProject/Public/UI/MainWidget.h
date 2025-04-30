@@ -8,6 +8,7 @@
 #include <SeniorPlayer.h>
 #include "ItemToCollectWidget.h"
 #include "WinScreenWidget.h"
+#include "UI/UsableItemWidget.h"
 #include "MainWidget.generated.h"
 
 UCLASS()
@@ -17,6 +18,7 @@ class UE_KARTTRIOPROJECT_API UMainWidget : public UUserWidget
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> speedDisplayer;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UVerticalBox> shoppingList;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UWinScreenWidget> winScreen;
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<UUsableItemWidget> usableItemWidget;
 	UPROPERTY() int speed;
 
 	UPROPERTY() TObjectPtr<ASeniorPlayer> playerRef = nullptr;
@@ -24,6 +26,9 @@ class UE_KARTTRIOPROJECT_API UMainWidget : public UUserWidget
 	UPROPERTY() TArray<TObjectPtr<UItemToCollectWidget>> allItemsWidget;
 
 	UPROPERTY() float paddingValue = -10.0f;
+
+public:
+	FORCEINLINE TObjectPtr<UUsableItemWidget> GetUsableItemWidget() { return usableItemWidget; }
 
 protected:
 	virtual void NativeConstruct() override;
