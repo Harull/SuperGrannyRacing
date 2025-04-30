@@ -149,9 +149,11 @@ void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _value
 
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 {
-	if (!canSteerWheels || (!isMovingForward && !isMovingBackward)) return;
-
-	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds;
+	if (!canSteerWheels || (currentVelocity == 0)) return;
+	fsdfs;
+	//TOOD modify this causing issue down vv bellow (minimumSteeringSpeed)
+	currentSteeringAngle += FMath::Lerp(minimumSteeringSpeed,_valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds, currentVelocity /
+		(isMovingBackward ? backwardMaxSpeed : forwardMaxSpeed) * (isMovingBackward ? -1 : 1));
 	currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
 
 }
@@ -186,7 +188,7 @@ void USeniorMovementComponent::LerpRotationToMatchVector(const FVector& _vectorT
 
 void USeniorMovementComponent::LerpSteeringToMatchZero()
 {
-	if (UKismetMathLibrary::Abs(currentSteeringAngle) <= 0.1)return;
+	if (!isMovingForward && !isMovingBackward ||UKismetMathLibrary::Abs(currentSteeringAngle) <= 0.1)return;
 	currentSteeringAngle = UKismetMathLibrary::FInterpTo_Constant(currentSteeringAngle, 0, GetWorld()->DeltaTimeSeconds, toNormalSteeringAngleLerpSpeed);
 }
 
