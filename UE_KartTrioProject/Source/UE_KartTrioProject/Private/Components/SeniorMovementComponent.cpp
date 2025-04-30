@@ -121,9 +121,10 @@ void USeniorMovementComponent::ApplyFovModificationsBasedOnSpeed()
 void USeniorMovementComponent::ApplyCameraSpringArmRotationBasedOnSteer()
 {
 	if (!ownersSpringArmComponent)return;
-
+	FRotator _currentRelRot = ownersSpringArmComponent->GetRelativeRotation();
 	// Lerp 0 to cameraAngleOnMaxSteering 
-	ownersSpringArmComponent->SetRelativeRotation(FRotator(0, 1, 0) * FMath::Lerp(0, cameraAngleOnMaxSteering, currentSteeringAngle / maxFrontWheelSteeringAngle), false);
+	ownersSpringArmComponent->SetRelativeRotation(FRotator(_currentRelRot.Pitch, 0, _currentRelRot.Roll) + 
+		FRotator(0, 1, 0) * FMath::Lerp(0, cameraAngleOnMaxSteering, currentSteeringAngle / maxFrontWheelSteeringAngle), false);
 }
 
 void USeniorMovementComponent::AddVelocity(const FInputActionValue& _valuePosFloat)
