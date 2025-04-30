@@ -8,6 +8,7 @@
 #include <SeniorPlayer.h>
 #include "Components/PlaceArrowSignComponent.h"
 #include "Components/BillboardComponent.h"
+#include "Algo/Sort.h"
 #include <GIS/WS_PlayerClassement.h>
 
 // Sets default values for this component's properties
@@ -68,6 +69,23 @@ TArray<TObjectPtr<UBillboardComponent>> UCollectedItemComponent::GetAllBillBoard
 			_result.Add(_billboardComponent);
 		}
 	}
+	for (int _i = 0; _i < _result.Num() - 1; _i++)
+	{
+		int _minIndex = _i;
+		for (int j = _i + 1; j < _result.Num(); j++)
+		{
+			if (_result[j]->GetName() < _result[_minIndex]->GetName())
+			{
+				_minIndex = j;
+			}
+		}
+
+		if (_minIndex != _i)
+		{
+			_result.Swap(_i, _minIndex);
+		}
+	}
+	
 	UKismetSystemLibrary::PrintString(this, FString::FromInt(_result.Num()), true, true, FLinearColor::Red, 10.0f);
 	return _result;
 }
