@@ -13,7 +13,8 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_KARTTRIOPROJECT_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUse, TSubclassOf<AItem>, _item, ASeniorPlayer*, _player);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnUse, TSubclassOf<AItem>, _item, ASeniorPlayer*, _player, FVector, _pos);
+	//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUse, TSubclassOf<AItem>, _item, FTransform, _transform);
 	UPROPERTY() FOnUse onUse;
 
 	UPROPERTY(EditAnywhere)bool canUse = true;
