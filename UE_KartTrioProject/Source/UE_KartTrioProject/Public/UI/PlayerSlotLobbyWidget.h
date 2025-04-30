@@ -17,7 +17,7 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API UPlayerSlotLobbyWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	FPlayerData playerData;
+	UPROPERTY() TObjectPtr<AActor> playerRef;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UTextBlock> playerName;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UBorder> borderButton;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> kickButton;
@@ -29,5 +29,5 @@ private:
 	UFUNCTION() void KickPlayer();
 
 public:
-	void SetPlayerData(FPlayerData _data);
+	void Init(TObjectPtr<AActor> _playerRef, FString _name);
 };

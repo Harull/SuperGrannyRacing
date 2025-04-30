@@ -24,5 +24,5 @@ private:
 	void NativeConstruct() override;
 
 public:
-	void AddPlayer(FPlayerData _data);
+	void AddPlayer(TObjectPtr<AActor> _playerRef, FString _name);
 };

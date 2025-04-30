@@ -24,8 +24,10 @@ void UPlayerSlotLobbyWidget::KickPlayer()
 	UKismetSystemLibrary::PrintString(this, "Kick Button");
 }
 
-void UPlayerSlotLobbyWidget::SetPlayerData(FPlayerData _data)
+void UPlayerSlotLobbyWidget::Init(TObjectPtr<AActor> _playerRef, FString _name)
 {
-	playerData = _data;
-	playerName->Text = FText::FromString(playerData.playerName);
+	playerRef = _playerRef;
+	playerName->SetText(FText::FromString(_name));
 }
+
+
