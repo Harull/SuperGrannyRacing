@@ -36,13 +36,14 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 	ASeniorPlayer* _owner = Cast<ASeniorPlayer>(GetOwner());
 	if (!_owner)return;
 
+	FVector _position = _owner->GetActorLocation() + _owner->GetActorForwardVector() * -150.0f;
 	if (_owner->HasAuthority())
 	{
 		FActorSpawnParameters _spawnParams;
 		_spawnParams.Owner = _owner;
 		//_spawnParams.Instigator = Cast<APawn>(_owner);
 		_spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		FVector _position = _owner->GetActorLocation() + _owner->GetActorForwardVector() * -150.0f;
+		//FVector _position = _owner->GetActorLocation() + _owner->GetActorForwardVector() * -150.0f;
 		FRotator _rotation = _owner->GetActorRotation();
 
 		AItem* _item = GetWorld()->SpawnActor<AItem>(items[0], _position, _rotation, _spawnParams);
@@ -57,7 +58,8 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 	}
 	else
 	{
-		onUse.Broadcast(items[0], _owner);
+		onUse.Broadcast(items[0], _owner, _position);
+		//onUse.Broadcast(items[0], _owner->GetTransform());
 	}
 
 	items.RemoveAt(0);

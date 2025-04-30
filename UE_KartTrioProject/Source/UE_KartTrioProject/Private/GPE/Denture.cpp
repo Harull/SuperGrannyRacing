@@ -10,6 +10,7 @@ ADenture::ADenture()
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 
 	mesh->SetupAttachment(RootComponent);
+	//mesh->SetIsReplicated(true);
 }
 
 void ADenture::BeginPlay()
@@ -26,6 +27,7 @@ void ADenture::Tick(float DeltaTime)
 
 void ADenture::Use(ASeniorPlayer* _player)
 {
+	UKismetSystemLibrary::PrintString(this, "ADenture => Use Before", true, true, FLinearColor::Green, 5.0f);
 	if (!_player)return;
 	UKismetSystemLibrary::PrintString(this, "Spawn", true, true, FLinearColor::Red, 10.0f);
 	FVector _position = _player->GetActorLocation() + _player->GetActorForwardVector() * 200.0f;
