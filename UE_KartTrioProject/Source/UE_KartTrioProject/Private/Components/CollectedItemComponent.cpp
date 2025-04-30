@@ -7,6 +7,7 @@
 #include <UI/Kart_HUD.h>
 #include <SeniorPlayer.h>
 #include "Components/PlaceArrowSignComponent.h"
+#include "Components/BillboardComponent.h"
 #include <GIS/WS_PlayerClassement.h>
 
 // Sets default values for this component's properties
@@ -15,6 +16,7 @@ UCollectedItemComponent::UCollectedItemComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+
 
 	// ...
 }
@@ -25,6 +27,14 @@ void UCollectedItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	UKismetSystemLibrary::PrintString(this, "Player List");
+
+
+	TArray<TObjectPtr<UBillboardComponent>> _allBillboard = GetAllBillBoardComponents();
+	for (UBillboardComponent* _billboardComponent : _allBillboard)
+	{
+		shoppingKartContentLocation.Add({ _billboardComponent, false });
+	}
+
 
 	UWS_PlayerClassement* _subPlayerClassement = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
 	if (_subPlayerClassement)
@@ -41,17 +51,30 @@ void UCollectedItemComponent::BeginPlay()
 
 	if (listItem.Num() <= 0) return;
 	seniorPlayerRef = Cast<ASeniorPlayer>(GetOwner());
-	if(seniorPlayerRef->IsLocallyControlled())
+	if (seniorPlayerRef->IsLocallyControlled())
 		seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
 }
 
+TArray<TObjectPtr<UBillboardComponent>> UCollectedItemComponent::GetAllBillBoardComponents()
+{
+	TArray<TObjectPtr<UBillboardComponent>> _result;
 
-// Called every frame
+	TSet<UActorComponent*> _allActorComponent = GetOwner()->GetComponents();
+
+	for (UActorComponent* _component : _allActorComponent)
+	{
+		if (UBillboardComponent* _billboardComponent = Cast<UBillboardComponent>(_component))
+		{
+			_result.Add(_billboardComponent);
+		}
+	}
+	UKismetSystemLibrary::PrintString(this, FString::FromInt(_result.Num()), true, true, FLinearColor::Red, 10.0f);
+	return _result;
+}
+
 void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 //void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
@@ -73,17 +96,24 @@ void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType
 
 void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
 {
+	//UKismetSystemLibrary::PrintString(this, "Hello1", true, true, FLinearColor::Blue, 10.0f);
+
 	if (!_collectItem) return;
+	//UKismetSystemLibrary::PrintString(this, "Hello2", true, true, FLinearColor::Blue, 10.0f);
+
 	if (!seniorPlayerRef->IsLocallyControlled()) return;
 
 
 	if (listItem.Num() == listItemCollected.Num()) return;
 	if (listItem.Num() <= 0) return;
 
+	//UKismetSystemLibrary::PrintString(this, "Hello3", true, true, FLinearColor::Blue, 10.0f);
+
 	if (_collectItem == GetCurrentItem() && !listItemCollected.Contains(_collectItem))
 	{
 		nbItemCollected++;
 		listItemCollected.Add(_collectItem);
+		AddCollectedItemMeshToShoppingKart(_collectItem);
 
 		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
 
@@ -95,14 +125,58 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 		}
 
 		canFinish ? seniorPlayerRef->GetPlaceArrowSignComponent()->NoMoreItem()
-				  : seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
+			: seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
 	}
+}
+
+void UCollectedItemComponent::AddCollectedItemMeshToShoppingKart(TObjectPtr<ACollectedItem> _collectItem)
+{
+	int _meshIndex = GetAvailableShoppingKartPosition();
+	UKismetSystemLibrary::PrintString(this, FString::FromInt(_meshIndex), true, true, FLinearColor::Blue, 10.0f);
+	if (_meshIndex == -1) return;
+	if (_collectItem->GetItemMesh())
+	{
+		ServerRPC_PlaceItemInShoppingCart(_collectItem, _meshIndex);
+		PlaceItemInShoppingCart(_collectItem, _meshIndex);
+	}
+}
+
+int UCollectedItemComponent::GetAvailableShoppingKartPosition()
+{
+	// - 1 = not found
+	for (int _i = 0; _i < shoppingKartContentLocation.Num(); _i++)
+	{
+		if (!shoppingKartContentLocation[_i].Value)
+		{
+			return _i;
+		}
+	}
+	return -1;
 }
 
 void UCollectedItemComponent::ResetCooldown()
 {
 	isCooldown = false;
 }
+
+void UCollectedItemComponent::PlaceItemInShoppingCart(ACollectedItem* _collectItem, const int _meshIndex)
+{
+	// place mesh at a available place
+	TObjectPtr<UStaticMeshComponent> _itemMesh = NewObject<UStaticMeshComponent>(this);
+	_itemMesh->SetStaticMesh(_collectItem->GetItemMesh());
+	_itemMesh->RegisterComponent();
+	_itemMesh->AttachToComponent(shoppingKartContentLocation[_meshIndex].Key, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	_itemMesh->SetIsReplicated(true);
+
+	shoppingKartContentLocation[_meshIndex].Value = true;
+}
+
+void UCollectedItemComponent::ServerRPC_PlaceItemInShoppingCart_Implementation(ACollectedItem* _collectItem, const int _meshIndex)
+{
+	PlaceItemInShoppingCart(_collectItem, _meshIndex);
+}
+
+
 
 //void UCollectedItemComponent::SpawnItemServer_Implementation(const FVector& _position)
 //{
