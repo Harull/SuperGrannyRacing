@@ -2,6 +2,7 @@
 
 
 #include "Components/BumpComponent.h"
+#include "Components/SeniorMovementComponent.h"
 #include <Kismet/KismetSystemLibrary.h>
 #include "GameFramework/PawnMovementComponent.h"
 #include <GameFramework/CharacterMovementComponent.h>
@@ -20,13 +21,24 @@ UBumpComponent::UBumpComponent()
 void UBumpComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	DesactivatedBoxes();
+	Init();
 	
 }
 
 void UBumpComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	ApplyBumpToAll(BoxCastAll());
+}
+
+void UBumpComponent::Init()
+{
+	InitFields();
+	DesactivatedBoxes();
+}
+
+void UBumpComponent::InitFields()
+{
+	personalMovementComponent = GetOwner()->GetComponentByClass<USeniorMovementComponent>();
 }
 
 void UBumpComponent::DesactivatedBoxes()
@@ -44,7 +56,7 @@ TArray<FHitResult> UBumpComponent::BoxCastAll()
 		if (!_box)continue;
 		TArray<FHitResult> _localResult;
 		UKismetSystemLibrary::BoxTraceMultiForObjects(this, _box->GetComponentLocation(), _box->GetComponentLocation(), _box->GetScaledBoxExtent(), _box->GetComponentRotation(),
-			bumpableLayers, false, {}, EDrawDebugTrace::ForOneFrame, _localResult, true);
+			bumpableLayers, false, {}, EDrawDebugTrace::None, _localResult, true);
 
 		if (_localResult.Num() > 0)
 		{
@@ -61,12 +73,14 @@ void UBumpComponent::ApplyBumpToAll(const TArray<FHitResult>& _results)
 	for (auto& _result : _results)
 	{
 		//UKismetSystemLibrary::PrintString(this, "Trying to apply bump", true, true, FLinearColor::Gray);
-
 		//_result.GetActor()->GetComponentByClass<UPawnMovementComponent>()
 		if (TObjectPtr<UCharacterMovementComponent> _characterMovementCmpnt = _result.GetActor()->GetComponentByClass<UCharacterMovementComponent>())
 		{
 			//UKismetSystemLibrary::PrintString(this, "DID apply bump", true, true, FLinearColor::Gray);
-			_characterMovementCmpnt->AddForce(FVector(9999,9999,9999)/*-_result.ImpactNormal * bumpStrength*/); //TODO (lerp by owners velocity if have the corresponding component)
+			//_characterMovementCmpnt->/*-_result.ImpactNormal * bumpStrength*/); //TODO (lerp by owners velocity if have the corresponding component)
+			//_characterMovementCmpnt->Launch()
+			_characterMovementCmpnt->AddForce((- _result.ImpactNormal + FVector::UpVector).GetSafeNormal() * 
+				FMath::Lerp(0, bumpStrength, (personalMovementComponent ? personalMovementComponent->GetCurrentVelocity() / personalMovementComponent->GetMaxVelocity() : 1))); 
 		}
 		//else if (TObjectPtr<UPawnMovementComponent> _pawnMovementCmpnt = _result.GetActor()->GetComponentByClass<UPawnMovementComponent>())
 			//_pawnMovementCmpnt->AddRadialImpulse(_result .-_result.ImpactNormal * bumpStrength);

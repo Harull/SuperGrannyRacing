@@ -116,6 +116,9 @@ public:
 	FORCEINLINE void ResetForwardMaxSpeed() { forwardMaxSpeed = initialForwardMaxSpeed; }
 	FORCEINLINE void ResetBackwardMaxSpeed() { backwardMaxSpeed = initialBackwardMaxSpeed; }
 	
+	FORCEINLINE float GetMaxVelocity()const { return forwardMaxSpeed; }
+
+	FORCEINLINE float GetCurrentVelocity()const { return currentVelocity; }
 	FORCEINLINE void SetCurrentVelocity(const float _value) 
 	{
 		currentVelocity = _value;
