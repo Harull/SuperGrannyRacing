@@ -7,6 +7,8 @@
 
 class AItem;
 class ASeniorPlayer;
+class UMainWidget;
+class UUsableItemWidget;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -36,6 +38,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void AddItem(TSubclassOf<AItem> _item);
 	void UseItem(const FInputActionValue& _value);
+
+private:
+	UMainWidget* GetMainWidget()const;
+	void UpdateItemIcon();
 
 		
 };

@@ -2,6 +2,9 @@
 #include "GPE/Item.h"
 #include "SeniorPlayer.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include "UI/MainWidget.h"
+#include "UI/UsableItemWidget.h"
+#include "UI/Kart_HUD.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -12,6 +15,7 @@ UInventoryComponent::UInventoryComponent()
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	UpdateItemIcon();
 }
 
 
@@ -24,6 +28,7 @@ void UInventoryComponent::AddItem(TSubclassOf<AItem> _item)
 {
 	if (items.Num() >= maxCount)return;
 	items.Add(_item);
+	UpdateItemIcon();
 }
 
 void UInventoryComponent::UseItem(const FInputActionValue& _value)
@@ -63,5 +68,25 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 	}
 
 	items.RemoveAt(0);
+	UpdateItemIcon();
+}
+
+UMainWidget* UInventoryComponent::GetMainWidget() const
+{
+	APlayerController* _playerController = Cast<APlayerController>(Cast<APawn>(GetOwner())->GetController());
+	if (!_playerController) return nullptr;
+
+	AKart_HUD* _HUD = Cast< AKart_HUD>(_playerController->GetHUD());
+	if (!_HUD)return nullptr;
+	return _HUD->GetMainWidget();
+}
+
+void UInventoryComponent::UpdateItemIcon()
+{
+	UMainWidget* _mainWidget = GetMainWidget();
+	if (!_mainWidget)return;
+	UUsableItemWidget* _usableItemsWidget = _mainWidget->GetUsableItemWidget();
+	if (!_usableItemsWidget)return;
+	_usableItemsWidget->UpdateItemsImage(items);
 }
 
