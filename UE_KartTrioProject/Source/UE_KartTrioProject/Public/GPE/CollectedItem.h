@@ -19,8 +19,12 @@ class UE_KARTTRIOPROJECT_API ACollectedItem : public AActor
 	UPROPERTY(EditAnywhere) FString itemName;
 	UPROPERTY(EditAnywhere) bool isInTheList = false;
 	UPROPERTY(VisibleAnywhere) FVector boxPosition = FVector();
+	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMesh> itemMesh = nullptr;
+
+
 
 public:
+	FORCEINLINE TObjectPtr<UStaticMesh> GetItemMesh() { return itemMesh; }
 	FORCEINLINE const FVector& GetItemPosition() { return boxPosition; }
 	FORCEINLINE FString GetItemName() const { return itemName; }
 	FORCEINLINE bool GetIsInList() const { return isInTheList; }

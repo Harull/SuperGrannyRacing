@@ -31,17 +31,22 @@ void ACollectedItem::Tick(float DeltaTime)
 
 void ACollectedItem::NotifyActorBeginOverlap(AActor* OtherActor)
 {
+	//UKismetSystemLibrary::PrintString(this, "Hi1", true, true, FLinearColor::Blue, 10.0f);
 	if (!isInTheList) return;
 	//TODO ADD item to player
 	ASeniorPlayer* _player = Cast<ASeniorPlayer>(OtherActor);
+	//UKismetSystemLibrary::PrintString(this, "Hi2", true, true, FLinearColor::Blue, 10.0f);
 
 	if (!_player) return;
 
 	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
+	//UKismetSystemLibrary::PrintString(this, "Hi3", true, true, FLinearColor::Blue, 10.0f);
 
 	if (!_comp) return;
 
 	//UKismetSystemLibrary::PrintString(this, _comp->GetOwner()->GetName());
+	//UKismetSystemLibrary::PrintString(this, "Hi4", true, true, FLinearColor::Blue, 10.0f);
+
 	_comp->UpdateCurrentItem(this);
 }
 
