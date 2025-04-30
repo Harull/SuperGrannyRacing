@@ -65,6 +65,7 @@ void ASeniorPlayer::BeginPlay()
 	InitUniqueID();
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
 	FTimerHandle _handle;
+	onInitializationDone.Broadcast();
 	SendNotifyIsReady();
 
 

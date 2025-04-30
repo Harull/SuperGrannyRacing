@@ -50,6 +50,9 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> interact;
 	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> usePowerup;
 
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitializationDone);
+	UPROPERTY(BlueprintAssignable, meta = (AllowPrivateAccess = True)) FOnInitializationDone onInitializationDone;
 	
 public:
 	ASeniorPlayer();
