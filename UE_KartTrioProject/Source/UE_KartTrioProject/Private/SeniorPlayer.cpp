@@ -12,6 +12,7 @@
 #include <GPE/ReplicatedStartManager.h>
 #include <Kismet/GameplayStatics.h>
 #include "Components/InventoryComponent.h"
+#include <GIS/WS_PlayerClassement.h>
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -65,6 +66,7 @@ void ASeniorPlayer::BeginPlay()
 	InitUniqueID();
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
 	FTimerHandle _handle;
+	onInitializationDone.Broadcast();
 	SendNotifyIsReady();
 
 
@@ -72,6 +74,14 @@ void ASeniorPlayer::BeginPlay()
 	
 	FString _steamName = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName();
 	UKismetSystemLibrary::PrintString(this, _steamName); // TODO Remove
+
+	if (IsLocallyControlled())
+	{
+		UWS_PlayerClassement* _sub = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
+		_sub->AddPlayerInMap(this, _steamName);
+	
+	}
+
 }
 
 void ASeniorPlayer::SendNotifyIsReady()
@@ -116,6 +126,8 @@ void ASeniorPlayer::InitSubsystem()
 		return;
 	}
 	_subsys->AddMappingContext(mapping, 0);
+
+	
 }
 
 void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputComponent)

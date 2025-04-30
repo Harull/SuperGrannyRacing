@@ -8,6 +8,7 @@
 #include "CollectedItemComponent.generated.h"
 
 class ASeniorPlayer;
+class UBillboardComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
@@ -17,6 +18,8 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere) TObjectPtr<ASeniorPlayer> seniorPlayerRef = nullptr;
 
 	UPROPERTY(EditAnywhere) TSubclassOf<AActor> usableItem = nullptr; // TODO Modify
+
+	TArray<TPair<TObjectPtr<UBillboardComponent>, bool>> shoppingKartContentLocation;
 
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItem;
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItemCollected;
@@ -42,6 +45,11 @@ protected:
 public:
 	//UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
 	//UFUNCTION(Server, Unreliable) void SpawnItemServer(const FVector& _position);
+	TArray<TObjectPtr<UBillboardComponent>> GetAllBillBoardComponents();
 	void UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem);
+	void AddCollectedItemMeshToShoppingKart(TObjectPtr<ACollectedItem> _collectItem);
+	int GetAvailableShoppingKartPosition();
 	UFUNCTION() void ResetCooldown();
+	UFUNCTION(Server, Reliable) void ServerRPC_PlaceItemInShoppingCart(ACollectedItem* _collectItem, const int _meshIndex);
+	void PlaceItemInShoppingCart(ACollectedItem* _collectItem, const int _meshIndex);
 };

@@ -20,7 +20,9 @@ public:
 	FORCEINLINE TArray<TObjectPtr<UCollectedItemComponent>> GetAllPlayerCollectedItemComponent() const { return allPlayerCollectedItemComponent; }
 	FORCEINLINE int GetRange() const { return allPlayerCollectedItemComponent.Num(); }
 public:
+	void AddPlayerInMap(TObjectPtr<AActor> _actor, FString _playerName);
 	void AddPlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent);
 	void RemovePlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent);
 	TArray<TObjectPtr<UCollectedItemComponent>> UpdatePlayerClassement();
+
 };

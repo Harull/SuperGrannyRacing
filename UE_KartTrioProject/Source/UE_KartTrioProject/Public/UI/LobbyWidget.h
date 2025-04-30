@@ -32,6 +32,9 @@ class UE_KARTTRIOPROJECT_API ULobbyWidget : public UUserWidget
 
 	FTimerHandle timer;
 
+public:
+	FORCEINLINE TObjectPtr<UListPlayerLobbyWidget> GetListPlayerLobbyWidget() const { return listPlayerLobbyWidget; }
+
 private:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry&, float _DeltaTime) override;

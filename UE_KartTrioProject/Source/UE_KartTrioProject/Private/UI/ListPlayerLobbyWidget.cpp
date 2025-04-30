@@ -9,9 +9,9 @@ void UListPlayerLobbyWidget::NativeConstruct()
 	Super::NativeConstruct();
 }
 
-void UListPlayerLobbyWidget::AddPlayer(FPlayerData _data)
+void UListPlayerLobbyWidget::AddPlayer(TObjectPtr<AActor> _playerRef, FString _name)
 {
 	TObjectPtr<UPlayerSlotLobbyWidget> _playerSlot = CreateWidget<UPlayerSlotLobbyWidget>(GetWorld(), playerSlotRef);
-	_playerSlot->SetPlayerData(_data);
+	_playerSlot->Init(_playerRef, _name);
 	playerList->AddChild(_playerSlot);
 }

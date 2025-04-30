@@ -2,6 +2,22 @@
 
 
 #include "GIS/WS_PlayerClassement.h"
+#include <UI/Lobby_HUD.h>
+#include <SeniorPlayer.h>
+
+void UWS_PlayerClassement::AddPlayerInMap(TObjectPtr<AActor> _actor, FString _playerName)
+{
+	/*
+	if (allPlayer.Contains(_actor)) return;
+	allPlayer.Add(_actor, _playerName);
+	AHUD* _hud = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController()->GetHUD();
+
+	if (ALobby_HUD* _newHUD = Cast<ALobby_HUD>(_hud))
+	{
+		_newHUD->GetLobbyMenu()->GetListPlayerLobbyWidget()->AddPlayer(_actor, _playerName);
+	}
+	*/
+}
 
 void UWS_PlayerClassement::AddPlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent)
 {
