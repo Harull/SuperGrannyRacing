@@ -9,6 +9,7 @@
 #include "Components/PlaceArrowSignComponent.h"
 #include "Components/BillboardComponent.h"
 #include "Algo/Sort.h"
+#include "Components/InventoryComponent.h"
 #include <GIS/WS_PlayerClassement.h>
 
 // Sets default values for this component's properties
@@ -157,6 +158,7 @@ void UCollectedItemComponent::AddCollectedItemMeshToShoppingKart(TObjectPtr<ACol
 		ServerRPC_PlaceItemInShoppingCart(_collectItem, _meshIndex);
 		PlaceItemInShoppingCart(_collectItem, _meshIndex);
 	}
+	seniorPlayerRef->GetInventoryComponent()->Reward();
 }
 
 int UCollectedItemComponent::GetAvailableShoppingKartPosition()

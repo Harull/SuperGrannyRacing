@@ -19,6 +19,7 @@ class UE_KARTTRIOPROJECT_API UMainWidget : public UUserWidget
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UVerticalBox> shoppingList;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UWinScreenWidget> winScreen;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UUsableItemWidget> usableItemWidget;
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<UUsableItemWidget> usableSpecialItemWidget;
 	UPROPERTY() int speed;
 
 	UPROPERTY() TObjectPtr<ASeniorPlayer> playerRef = nullptr;
@@ -29,6 +30,7 @@ class UE_KARTTRIOPROJECT_API UMainWidget : public UUserWidget
 
 public:
 	FORCEINLINE TObjectPtr<UUsableItemWidget> GetUsableItemWidget() { return usableItemWidget; }
+	FORCEINLINE TObjectPtr<UUsableItemWidget> GetUsableSpecialItemWidget() { return usableSpecialItemWidget; }
 
 protected:
 	virtual void NativeConstruct() override;
