@@ -4,6 +4,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "UI/MainWidget.h"
 #include "UI/UsableItemWidget.h"
+#include "UI/ObtainItemWidget.h"
 #include "UI/Kart_HUD.h"
 
 UInventoryComponent::UInventoryComponent()
@@ -112,6 +113,13 @@ void UInventoryComponent::Reward()
 	int _rand = FMath::RandRange(0,_count);
 	TSubclassOf<AItem> _rewardItem = rewardItems[_rand];
 	AddItem(_rewardItem);
+
+	/*UObtainItemWidget* _obtainItemWidget = GetMainWidget()->GetObtainItemWidget();
+	_obtainItemWidget->SetText(rewardItems[_rand]->GetName());
+	TWeakObjectPtr<UObtainItemWidget> _weakWidget = _obtainItemWidget;
+
+	FTimerHandle _timer;
+	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {if(_weakWidget.IsValid())_weakWidget->ResetText(); }, 2.0f, false);*/
 }
 
 UMainWidget* UInventoryComponent::GetMainWidget() const
