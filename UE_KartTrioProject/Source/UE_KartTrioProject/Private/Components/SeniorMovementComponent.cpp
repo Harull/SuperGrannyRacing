@@ -150,11 +150,13 @@ void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _value
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 {
 	if (!canSteerWheels || (currentVelocity == 0)) return;
-	fsdfs;
-	//TOOD modify this causing issue down vv bellow (minimumSteeringSpeed)
-	currentSteeringAngle += FMath::Lerp(minimumSteeringSpeed,_valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds, currentVelocity /
-		(isMovingBackward ? backwardMaxSpeed : forwardMaxSpeed) * (isMovingBackward ? -1 : 1));
+	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds;
 	currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
+
+	////fsdfs;
+	//FMath::Lerp(minimumSteeringSpeed * (currentVelocity< 0 ? -1 : 1) ,_valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds, currentVelocity /
+	//	(currentVelocity < 0 ? (backwardMaxSpeed * -1) : forwardMaxSpeed));
+	//currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
 
 }
 
