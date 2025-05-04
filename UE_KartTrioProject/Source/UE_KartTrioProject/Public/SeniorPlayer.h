@@ -26,8 +26,9 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 	UPROPERTY(VisibleAnywhere, Category = "DEBUG ACTOR ID", Replicated) uint32 repActorID;
 	UPROPERTY(VisibleAnywhere, Category = "DEBUG ACTOR ID") uint32 actorLocalID;
 
-
-	UPROPERTY(EditAnywhere) TObjectPtr<USeniorMovementComponent> seniorMovementcomponent;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<USeniorMovementComponent> seniorMovementcomponent;
+private:
 	UPROPERTY(EditAnywhere) TObjectPtr<UCollectedItemComponent> collectedItemComponent;
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
