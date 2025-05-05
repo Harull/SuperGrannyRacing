@@ -30,6 +30,8 @@ void UInventoryComponent::AddItem(TSubclassOf<AItem> _item)
 	if (items.Num() >= maxCount)return;
 	items.Add(_item);
 	UpdateItemIcon();
+
+	//ToggleText();
 }
 
 void UInventoryComponent::UseItem(const FInputActionValue& _value)
@@ -114,12 +116,7 @@ void UInventoryComponent::Reward()
 	TSubclassOf<AItem> _rewardItem = rewardItems[_rand];
 	AddItem(_rewardItem);
 
-	/*UObtainItemWidget* _obtainItemWidget = GetMainWidget()->GetObtainItemWidget();
-	_obtainItemWidget->SetText(rewardItems[_rand]->GetName());
-	TWeakObjectPtr<UObtainItemWidget> _weakWidget = _obtainItemWidget;
-
-	FTimerHandle _timer;
-	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {if(_weakWidget.IsValid())_weakWidget->ResetText(); }, 2.0f, false);*/
+	ToggleText();
 }
 
 UMainWidget* UInventoryComponent::GetMainWidget() const
@@ -139,5 +136,24 @@ void UInventoryComponent::UpdateItemIcon()
 	UUsableItemWidget* _usableItemsWidget = _mainWidget->GetUsableItemWidget();
 	if (!_usableItemsWidget)return;
 	_usableItemsWidget->UpdateItemsImage(items);
+}
+
+void UInventoryComponent::ToggleText()
+{
+	UObtainItemWidget* _obtainItemWidget = GetMainWidget()->GetObtainItemWidget();
+	_obtainItemWidget->SetVisibility(ESlateVisibility::Visible);
+
+	TWeakObjectPtr<UObtainItemWidget> _weakWidget = _obtainItemWidget;
+
+	FTimerHandle _timer;
+	GetWorld()->GetTimerManager().SetTimer(_timer, [_weakWidget]()
+		{
+			if (_weakWidget.IsValid())
+			{
+				_weakWidget->SetVisibility(ESlateVisibility::Hidden);
+			}
+
+
+		}, 2.0f, false);
 }
 

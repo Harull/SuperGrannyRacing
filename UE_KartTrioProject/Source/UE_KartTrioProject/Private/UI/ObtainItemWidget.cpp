@@ -1,4 +1,5 @@
 #include "UI/ObtainItemWidget.h"
+#include <Kismet/KismetSystemLibrary.h>
 
 void UObtainItemWidget::NativeConstruct()
 {
@@ -13,8 +14,10 @@ void UObtainItemWidget::SetText(const FString& _text)
 
 void UObtainItemWidget::ResetText()
 {
+	UKismetSystemLibrary::PrintString(this, "Reset");
 	if (itemText && itemText->IsValidLowLevel())
 	{
+		UKismetSystemLibrary::PrintString(this, "Empty", true, true, FLinearColor::Yellow, 2.0f);
 		itemText->SetText(FText::GetEmpty());
 	}
 }

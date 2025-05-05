@@ -10,6 +10,7 @@ ALiquidFlac::ALiquidFlac()
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 
 	mesh->SetupAttachment(RootComponent);
+	name = "Liquid Flac";
 }
 
 void ALiquidFlac::BeginPlay()

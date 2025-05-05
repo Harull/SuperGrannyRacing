@@ -8,6 +8,7 @@ AToiletPaper::AToiletPaper()
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 
 	mesh->SetupAttachment(RootComponent);
+	name = "Toilet Paper";
 
 }
 

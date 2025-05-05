@@ -47,6 +47,7 @@ public:
 private:
 	UMainWidget* GetMainWidget()const;
 	void UpdateItemIcon();
+	void ToggleText();
 
 		
 };

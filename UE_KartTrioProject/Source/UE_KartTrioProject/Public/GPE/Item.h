@@ -14,9 +14,11 @@ class UE_KARTTRIOPROJECT_API AItem : public AActor
 protected:
 	UPROPERTY(EditAnywhere)TObjectPtr<UStaticMeshComponent> mesh = nullptr;
 	UPROPERTY(EditAnywhere)TObjectPtr<UTexture2D> itemImage = nullptr;
+	UPROPERTY(VisibleAnywhere) FString name = "";
 
 public:
 	FORCEINLINE TObjectPtr<UTexture2D> GetItemImage() { return itemImage; }
+	FORCEINLINE FString GetItemName()const { return name; }
 	
 public:	
 	AItem();
