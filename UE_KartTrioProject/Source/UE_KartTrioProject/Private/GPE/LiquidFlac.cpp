@@ -28,7 +28,7 @@ void ALiquidFlac::Tick(float DeltaTime)
 void ALiquidFlac::Use(ASeniorPlayer* _player)
 {
 	if (!_player)return;
-	FVector _position = _player->GetActorLocation() + _player->GetActorForwardVector() * -100.0f;
+	FVector _position = _player->GetActorLocation() + _player->GetActorForwardVector() * -150.0f;
 
 	FVector _newPos = FVector(_position.X, _position.Y, 0.0f);
 	SetActorLocation(_newPos);
