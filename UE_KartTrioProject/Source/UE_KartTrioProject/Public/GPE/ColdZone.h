@@ -13,6 +13,7 @@ class UE_KARTTRIOPROJECT_API AColdZone : public AActor
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> mesh = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 	UPROPERTY(EditAnywhere) float ratioSlow = 0.25f;
+	UPROPERTY(EditAnywhere) float slowTime = 2.0f;
 	
 public:	
 	AColdZone();

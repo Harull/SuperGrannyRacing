@@ -4,6 +4,7 @@
 #include "GPE/ColdZone.h"
 #include "SeniorPlayer.h"
 #include <Kismet/KismetSystemLibrary.h>
+#include "Components/SeniorMovementComponent.h"
 
 AColdZone::AColdZone()
 {
@@ -53,7 +54,14 @@ void AColdZone::NotifyActorEndOverlap(AActor* OtherActor)
 	if (!_player) return;
 	TObjectPtr<USeniorMovementComponent> _movement = _player->GetComponentByClass<USeniorMovementComponent>();
 	if (!_movement) return;
-	_movement->ResetForwardMaxSpeed();
-	_movement->ResetBackwardMaxSpeed();
+	/*_movement->ResetForwardMaxSpeed();
+	_movement->ResetBackwardMaxSpeed();*/
+	FTimerHandle _timer;
+	GetWorld()->GetTimerManager().SetTimer(_timer, [_movement]()
+		{
+			_movement->ResetForwardMaxSpeed();
+			_movement->ResetBackwardMaxSpeed();
+
+		}, slowTime, false);
 }
 
