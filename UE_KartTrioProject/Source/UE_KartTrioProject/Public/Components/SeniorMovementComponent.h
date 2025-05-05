@@ -62,6 +62,7 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 
 
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters|Movement") float steeringSpeed = 10;
+	//UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters|Movement") float minimumSteeringAngle = 5;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters|Movement") float toForwardRotationLerpSpeed = 50;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "0", UIMin = 0), Category = "Parameters|Movement") float toNormalSteeringAngleLerpSpeed = 25;
 	UPROPERTY(EditAnywhere, meta = (ClampMin = "10", UIMin = 10), Category = "Parameters|Movement") float maxFrontWheelSteeringAngle = 45;

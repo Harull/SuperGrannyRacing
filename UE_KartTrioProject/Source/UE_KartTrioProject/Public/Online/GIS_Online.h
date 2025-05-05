@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include <Kismet/KismetSystemLibrary.h> // TODO move
+#include <Kismet/KismetSystemLibrary.h>
 
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"

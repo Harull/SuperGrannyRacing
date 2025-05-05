@@ -121,9 +121,10 @@ void USeniorMovementComponent::ApplyFovModificationsBasedOnSpeed()
 void USeniorMovementComponent::ApplyCameraSpringArmRotationBasedOnSteer()
 {
 	if (!ownersSpringArmComponent)return;
-
+	FRotator _currentRelRot = ownersSpringArmComponent->GetRelativeRotation();
 	// Lerp 0 to cameraAngleOnMaxSteering 
-	ownersSpringArmComponent->SetRelativeRotation(FRotator(0, 1, 0) * FMath::Lerp(0, cameraAngleOnMaxSteering, currentSteeringAngle / maxFrontWheelSteeringAngle), false);
+	ownersSpringArmComponent->SetRelativeRotation(FRotator(_currentRelRot.Pitch, 0, _currentRelRot.Roll) + 
+		FRotator(0, 1, 0) * FMath::Lerp(0, cameraAngleOnMaxSteering, currentSteeringAngle / maxFrontWheelSteeringAngle), false);
 }
 
 void USeniorMovementComponent::AddVelocity(const FInputActionValue& _valuePosFloat)
@@ -148,10 +149,14 @@ void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _value
 
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 {
-	if (!canSteerWheels || (!isMovingForward && !isMovingBackward)) return;
-
+	if (!canSteerWheels || (currentVelocity == 0)) return;
 	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds;
 	currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
+
+	////fsdfs;
+	//FMath::Lerp(minimumSteeringSpeed * (currentVelocity< 0 ? -1 : 1) ,_valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds, currentVelocity /
+	//	(currentVelocity < 0 ? (backwardMaxSpeed * -1) : forwardMaxSpeed));
+	//currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
 
 }
 
@@ -185,7 +190,7 @@ void USeniorMovementComponent::LerpRotationToMatchVector(const FVector& _vectorT
 
 void USeniorMovementComponent::LerpSteeringToMatchZero()
 {
-	if (UKismetMathLibrary::Abs(currentSteeringAngle) <= 0.1)return;
+	if (!isMovingForward && !isMovingBackward ||UKismetMathLibrary::Abs(currentSteeringAngle) <= 0.1)return;
 	currentSteeringAngle = UKismetMathLibrary::FInterpTo_Constant(currentSteeringAngle, 0, GetWorld()->DeltaTimeSeconds, toNormalSteeringAngleLerpSpeed);
 }
 

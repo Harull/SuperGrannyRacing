@@ -65,22 +65,18 @@ void ASeniorPlayer::BeginPlay()
 	Super::BeginPlay();
 	InitUniqueID();
 	SetReplicateMovement(false); //somehow the replicate movement fcks up client side movements inputs, so need to replicate it myself
-	FTimerHandle _handle;
 	onInitializationDone.Broadcast();
 	SendNotifyIsReady();
+	InitUsername();
+}
 
-
-	//UKismetSystemLibrary::PrintString(this, FString::FromInt(repActorID), true, true, FLinearColor::Gray, 10.0f); // TODO Remove
-	
-	FString _steamName = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName();
-	UKismetSystemLibrary::PrintString(this, _steamName); // TODO Remove
-
-	if (IsLocallyControlled())
-	{
-		UWS_PlayerClassement* _sub = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
-		_sub->AddPlayerInMap(this, _steamName);
-	
-	}
+void ASeniorPlayer::InitUsername()
+{
+	if (!IsLocallyControlled())return;
+	if (HasAuthority())
+		steamUsername = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName();
+	else
+		Server_ModifySteamUsername(GetWorld()->GetGameInstance()->GetSubsystem<UGIS_Online>()->GetSteamUserName());
 
 }
 
@@ -107,6 +103,7 @@ void ASeniorPlayer::PrintDebug()
 void ASeniorPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//UKismetSystemLibrary::PrintString(this, steamUsername, true, true, FLinearColor::Yellow, 30);
 
 }
 
@@ -170,10 +167,18 @@ void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
 	}
 }
 
+
+void ASeniorPlayer::Server_ModifySteamUsername_Implementation(const FString& _steamUsername)
+{
+	UKismetSystemLibrary::PrintString(this, "rpc CALLED: " + _steamUsername, true, true, FLinearColor::Yellow, 30);
+	steamUsername = _steamUsername;
+}
+
+
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME_CONDITION(ASeniorPlayer, repActorID, COND_InitialOnly);
-
+	DOREPLIFETIME(ASeniorPlayer, steamUsername);
 }
 
