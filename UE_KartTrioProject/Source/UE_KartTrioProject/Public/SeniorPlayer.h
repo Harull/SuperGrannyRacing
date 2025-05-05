@@ -97,7 +97,6 @@ public:
 private:
 	void InitSubsystem();
 	void InitInputs(TObjectPtr<UEnhancedInputComponent> _inputComponent);
-	virtual void Destroyed() override;
 
 private:
 	void InitUniqueID();

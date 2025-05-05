@@ -96,15 +96,6 @@ void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UCollectedItemComponent::DestroyComponent(bool _bPromoteChildren)
-{
-	Super::DestroyComponent(_bPromoteChildren);
-	UKismetSystemLibrary::PrintString(this, "Remove to subsystelm");
-	UWS_PlayerClassement* _subPlayerClassement = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
-	if (_subPlayerClassement)
-		_subPlayerClassement->RemovePlayerCollectedItemComponent(this);
-}
-
 //void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
 //{
 //	if (!usableItem || isCooldown) return;

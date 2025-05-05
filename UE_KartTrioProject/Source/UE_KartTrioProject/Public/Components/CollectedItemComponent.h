@@ -41,7 +41,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	virtual void DestroyComponent(bool _bPromoteChildren = false) override;
 
 public:
 	//UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
