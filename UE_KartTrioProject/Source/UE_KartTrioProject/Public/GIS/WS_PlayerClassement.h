@@ -24,5 +24,6 @@ public:
 	void AddPlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent);
 	void RemovePlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent);
 	TArray<TObjectPtr<UCollectedItemComponent>> UpdatePlayerClassement();
+	void CheckIsPlayerIsNull();
 
 };

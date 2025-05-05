@@ -27,8 +27,10 @@ void UWS_PlayerClassement::AddPlayerCollectedItemComponent(TObjectPtr<UCollected
 
 void UWS_PlayerClassement::RemovePlayerCollectedItemComponent(TObjectPtr<UCollectedItemComponent> _playerCollectedItemComponent)
 {
-	if (!_playerCollectedItemComponent || !allPlayerCollectedItemComponent.Contains(_playerCollectedItemComponent)) return;
+	UKismetSystemLibrary::PrintString(this, "Remove to sub", true, true, FLinearColor::Red, 20.f);
 	allPlayerCollectedItemComponent.Remove(_playerCollectedItemComponent);
+	if (!allPlayerCollectedItemComponent.Contains(_playerCollectedItemComponent)) return;
+
 }
 
 TArray<TObjectPtr<UCollectedItemComponent>> UWS_PlayerClassement::UpdatePlayerClassement()
@@ -60,4 +62,22 @@ TArray<TObjectPtr<UCollectedItemComponent>> UWS_PlayerClassement::UpdatePlayerCl
 	}
 
 	return _newList;
+}
+
+void UWS_PlayerClassement::CheckIsPlayerIsNull()
+{
+	int _size = allPlayerCollectedItemComponent.Num();
+
+	UKismetSystemLibrary::PrintString(this, "Check : " + FString::FromInt(_size));
+	for (int i = 0; i < _size; i++)
+	{
+		UCollectedItemComponent* _collectedItem = allPlayerCollectedItemComponent[i];
+		UKismetSystemLibrary::PrintString(this, _collectedItem->GetOwner()->GetName());
+		if (!_collectedItem->GetOwner())
+		{
+			UKismetSystemLibrary::PrintString(this, "Remove");
+			allPlayerCollectedItemComponent.Remove(_collectedItem);
+			return;
+		}
+	}
 }
