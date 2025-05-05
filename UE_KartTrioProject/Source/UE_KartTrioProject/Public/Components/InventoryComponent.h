@@ -20,8 +20,11 @@ class UE_KARTTRIOPROJECT_API UInventoryComponent : public UActorComponent
 	UPROPERTY() FOnUse onUse;
 
 	UPROPERTY(EditAnywhere)bool canUse = true;
+	UPROPERTY(EditAnywhere)bool canUseSpecialItem = true;
 	UPROPERTY(EditAnywhere) int maxCount = 1;
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AItem>> items;
+	UPROPERTY(EditAnywhere) TSubclassOf<AItem> specialItem;
+	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AItem>> rewardItems;
 
 public:
 	FORCEINLINE FOnUse& OnUse() { return onUse; }
@@ -38,6 +41,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void AddItem(TSubclassOf<AItem> _item);
 	void UseItem(const FInputActionValue& _value);
+	void UseSpecialItem(const FInputActionValue& _value);
+	void Reward();
 
 private:
 	UMainWidget* GetMainWidget()const;

@@ -213,9 +213,11 @@ void USeniorMovementComponent::StopMoveAndRotateTime(const float _time)
 		{
 			SetCanMove(true);
 			SetCanRotate(true);
+			isStun = false;
 		});
 	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, _time, false);
 
+	isStun = true;
 	SetCanMove(false);
 	SetCanRotate(false);
 }

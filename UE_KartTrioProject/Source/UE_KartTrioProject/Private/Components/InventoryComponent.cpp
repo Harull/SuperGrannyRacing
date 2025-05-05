@@ -4,6 +4,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include "UI/MainWidget.h"
 #include "UI/UsableItemWidget.h"
+#include "UI/ObtainItemWidget.h"
 #include "UI/Kart_HUD.h"
 
 UInventoryComponent::UInventoryComponent()
@@ -69,6 +70,56 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 
 	items.RemoveAt(0);
 	UpdateItemIcon();
+}
+
+void UInventoryComponent::UseSpecialItem(const FInputActionValue& _value)
+{
+	if (!canUseSpecialItem || ! specialItem)return;
+
+	ASeniorPlayer* _owner = Cast<ASeniorPlayer>(GetOwner());
+	if (!_owner)return;
+
+	FVector _position = _owner->GetActorLocation() + _owner->GetActorForwardVector() * -150.0f;
+	if (_owner->HasAuthority())
+	{
+		FActorSpawnParameters _spawnParams;
+		_spawnParams.Owner = _owner;
+		_spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		FRotator _rotation = _owner->GetActorRotation();
+
+		AItem* _item = GetWorld()->SpawnActor<AItem>(specialItem, _position, _rotation, _spawnParams);
+
+		if (_item)
+		{
+			_item->Use(_owner);
+		}
+
+	}
+	else
+	{
+		onUse.Broadcast(specialItem, _owner, _position);
+	}
+
+	canUseSpecialItem = false;
+	GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
+
+
+}
+
+void UInventoryComponent::Reward()
+{
+	if (rewardItems.IsEmpty())return;
+	int _count = rewardItems.Num() - 1;
+	int _rand = FMath::RandRange(0,_count);
+	TSubclassOf<AItem> _rewardItem = rewardItems[_rand];
+	AddItem(_rewardItem);
+
+	/*UObtainItemWidget* _obtainItemWidget = GetMainWidget()->GetObtainItemWidget();
+	_obtainItemWidget->SetText(rewardItems[_rand]->GetName());
+	TWeakObjectPtr<UObtainItemWidget> _weakWidget = _obtainItemWidget;
+
+	FTimerHandle _timer;
+	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {if(_weakWidget.IsValid())_weakWidget->ResetText(); }, 2.0f, false);*/
 }
 
 UMainWidget* UInventoryComponent::GetMainWidget() const

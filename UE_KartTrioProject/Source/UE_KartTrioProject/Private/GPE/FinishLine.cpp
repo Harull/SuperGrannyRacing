@@ -52,6 +52,8 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
 				_hud->GetMainWidget()->SetWinScreenVisibility();
 			}
+			_player->DisableInput(_controller);
+			_player->SetActorEnableCollision(false);
 		}
 		onStopRace.Broadcast();
 	}

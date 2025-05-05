@@ -91,6 +91,9 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY() TObjectPtr<ASeniorPlayer> personalOwner;
 	UPROPERTY() TObjectPtr<UCharacterMovementComponent> ownersCharacterMovementComponent;
 
+protected:
+	UPROPERTY(BlueprintReadOnly)bool isStun = false;
+
 
 public:	
 	USeniorMovementComponent();
