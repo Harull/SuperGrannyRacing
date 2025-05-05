@@ -10,7 +10,8 @@ void ULobbyWidget::NativeConstruct()
 	Super::NativeConstruct();
 	//GetWorld()->GetTimerManager().SetTimer(timer, [&]() { maxPlayers->SetText(FText::FromString(FString::FromInt(GetPlayerCount()))); }, 0.4f, true);
 
-	int _maxPLayers = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
+	//int _maxPLayers = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
+	int _maxPLayers = GetPlayerCount();
 
 	maxPlayers->SetText(FText::FromString(FString::FromInt(_maxPLayers)));
 }
@@ -24,9 +25,10 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 	if (currentTimeMaxPlayers >= 2.f)
 	{
 		currentTimeMaxPlayers = 0;
-		int _maxPLayers = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
-
-		maxPlayers->SetText(FText::FromString(FString::FromInt(_maxPLayers)));
+		//GetWorld()->GetSubsystem<UWS_PlayerClassement>()->CheckIsPlayerIsNull();
+		//int _maxPlayers = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
+		int _maxPlayers = GetPlayerCount();
+		maxPlayers->SetText(FText::FromString(FString::FromInt(_maxPlayers)));
 	}
 
 
@@ -69,7 +71,8 @@ void ULobbyWidget::UpdatePlayersReady(int _value)
 
 void ULobbyWidget::IsMaxPlayer()
 {
-	int _totalPlayerConnected = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
+	//int _totalPlayerConnected = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();
+	int _totalPlayerConnected = GetPlayerCount();
 	if (playersReadyCount == _totalPlayerConnected) 
 	{
 		StartTimer();

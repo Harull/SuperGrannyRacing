@@ -153,6 +153,14 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 	//TODO Implement other bindings
 	}
 
+void ASeniorPlayer::Destroyed()
+{
+	Super::Destroyed();
+	
+	UKismetSystemLibrary::PrintString(this, "Senior Destroy",true, true, FLinearColor::Red, 20.f);
+	GetWorld()->GetSubsystem<UWS_PlayerClassement>()->RemovePlayerCollectedItemComponent(collectedItemComponent);
+}
+
 void ASeniorPlayer::InitUniqueID()
 {
 	if (HasAuthority())
