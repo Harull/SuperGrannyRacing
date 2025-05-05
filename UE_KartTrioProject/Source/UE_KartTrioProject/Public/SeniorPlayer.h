@@ -52,10 +52,13 @@ private:
 	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> usePowerup;
 	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> useSpecialItem;
 
+	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadOnly, meta = (AllowPrivateAccess)) FString steamUsername;
+	//UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SteamUsername) FString steamUsername;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitializationDone);
 	UPROPERTY(BlueprintAssignable, meta = (AllowPrivateAccess = True)) FOnInitializationDone onInitializationDone;
 	
+
 public:
 	ASeniorPlayer();
 
@@ -83,11 +86,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+
 	/// <summary>
 	/// This method is used to notify the game that this player is loaded and ready,
 	/// so it's used to know if everybody is ready to start the race
 	/// </summary>
 	virtual void SendNotifyIsReady();
+	void InitUsername();
 	void PrintDebug();
 
 public:	
@@ -103,6 +108,8 @@ private:
 private:
 
 	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
+	UFUNCTION(Server, Reliable) void Server_ModifySteamUsername(const FString& _steamUsername);
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 
