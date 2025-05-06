@@ -3,6 +3,7 @@
 
 #include "GM_KartBase.h"
 #include "GPE/LootBox.h"
+#include "GIS/GIS_CollectedItem.h"
 #include "GPE/ULootBoxSpawnPointSubsystem.h"
 
 void AGM_KartBase::BeginPlay()
@@ -11,4 +12,12 @@ void AGM_KartBase::BeginPlay()
 
 	if (UULootBoxSpawnPointSubsystem* _subsystem = GetWorld()->GetGameInstance()->GetSubsystem< UULootBoxSpawnPointSubsystem>())
 		_subsystem->SetLootBoxToSpawn(lootBox);
+
+
+	UGIS_CollectedItem* _subsystem = GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
+	if (_subsystem && _subsystem->ItemListIsEmpty())
+	{
+		int _sizeList = 6;
+		_subsystem->GenerateAndSetList(_sizeList);
+	}
 }

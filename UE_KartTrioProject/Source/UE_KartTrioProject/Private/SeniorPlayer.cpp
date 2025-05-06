@@ -169,6 +169,14 @@ void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
 	}
 }
 
+//void ASeniorPlayer::ClientRPC_ReceiveShoppingList_Implementation(const TArray<ACollectedItem*>& _sharedList)
+//{
+//	if (UCollectedItemComponent* _collectedItemComp = FindComponentByClass< UCollectedItemComponent>())
+//	{
+//		_collectedItemComp->ReceiveShoppingListFromServer(_sharedList);
+//	}
+//}
+
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

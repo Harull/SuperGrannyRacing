@@ -15,10 +15,6 @@ void UMainWidget::NativeConstruct()
 		playerRef->GetSeniorMovementComponent()->OnSpeedUpdate().AddDynamic(this, &UMainWidget::UpdateSpeed);
 	}
 
-	FTimerHandle _timer;
-
-	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {UMainWidget::InitShoppingList(); }, 0.1f, false);
-
 	//InitShoppingList();
 
 	/*FTimerHandle _timer;
@@ -29,23 +25,16 @@ void UMainWidget::NativeConstruct()
 	GetWorld()->GetTimerManager().SetTimer(_timer, _delegate, 0.1f, true, 1.0f);*/
 }
 
-void UMainWidget::InitShoppingList()
+void UMainWidget::InitShoppingList(const TArray<TObjectPtr<ACollectedItem>>& Items)
 {
+	shoppingList->ClearChildren();
+	allItemsWidget.Empty();
 
-	TArray<TObjectPtr<ACollectedItem>> _allObjects;
-	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
-	if (_sub)
-	{
-		_allObjects = _sub->GetListItem();
-		UKismetSystemLibrary::PrintString(this, "MAINWIDGET ItemList " + FString::FromInt(_sub->GetListItem().Num()));
-
-	}
-
-	const int _count = _allObjects.Num();
+	const int _count = Items.Num();
 	for (int _i = 0; _i < _count; _i++)
 	{
-		TObjectPtr<UItemToCollectWidget> _shopItem = CreateWidget<UItemToCollectWidget>(shoppingList, itemToCollectWidget);
-		_shopItem->Construct(_allObjects[_i]->GetItemName());
+		TObjectPtr<UItemToCollectWidget> _shopItem = CreateWidget<UItemToCollectWidget>(this, itemToCollectWidget);
+		_shopItem->Construct(Items[_i]->GetItemName());
 		_shopItem->Padding.Top = paddingValue;
 		_shopItem->Padding.Bottom = paddingValue;
 		shoppingList->AddChild(_shopItem);
