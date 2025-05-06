@@ -28,6 +28,7 @@ class UE_KARTTRIOPROJECT_API UInventoryComponent : public UActorComponent
 	UPROPERTY(EditAnywhere) TSubclassOf<AItem> specialItem;
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AItem>> rewardItems;
 
+
 public:
 	FORCEINLINE FOnUse& OnUse() { return onUse; }
 	FORCEINLINE int GetMaxCount()const { return maxCount; }

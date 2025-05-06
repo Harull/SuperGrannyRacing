@@ -111,19 +111,20 @@ void UInventoryComponent::StartAnimSpecialItem(const FInputActionValue& _value)
 	if (!canUseSpecialItem || !specialItem)return;
 
 	onStartAnim.Broadcast();
-	UKismetSystemLibrary::PrintString(this, "Start Anim");
+
 }
 
 void UInventoryComponent::Reward()
 {
 	if (rewardItems.IsEmpty())return;
 	int _count = rewardItems.Num() - 1;
-	int _rand = FMath::RandRange(0,_count);
+	int _rand = FMath::RandRange(0, _count);
 	TSubclassOf<AItem> _rewardItem = rewardItems[_rand];
 	AddItem(_rewardItem);
 
 	ToggleText();
 }
+
 
 UMainWidget* UInventoryComponent::GetMainWidget() const
 {
