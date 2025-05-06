@@ -109,6 +109,8 @@ private:
 private:
 	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
 	UFUNCTION(Server, Reliable) void Server_ModifySteamUsername(const FString& _steamUsername);
-
+public:
+	UFUNCTION(Client, Reliable) void Client_ApplyMalusEffect(UMaterialInterface* _material, float _duration);
+private:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
