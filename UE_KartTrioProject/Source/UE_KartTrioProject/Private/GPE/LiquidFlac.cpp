@@ -44,8 +44,11 @@ void ALiquidFlac::NotifyActorBeginOverlap(AActor* OtherActor)
 	TObjectPtr<USeniorMovementComponent> _movement = _player->GetSeniorMovementComponent();
 	if (!_movement) return;
 
-	UKismetSystemLibrary::PrintString(this, "Stun");
-	_movement->StopMoveAndRotateTime(stunTime);
+	//_movement->StopMoveAndRotateTime(slipSettings.slipTime);
+
+
+	//_movement->StopMoveAndRotateTime(slipSettings.slipTime);
+	_movement->Slip(slipSettings);
 	Destroy();
 
 
