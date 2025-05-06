@@ -44,7 +44,7 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 	ASeniorPlayer* _owner = Cast<ASeniorPlayer>(GetOwner());
 	if (!_owner)return;
 
-	FVector _position = _owner->GetActorLocation() + _owner->GetActorForwardVector() * -150.0f;
+	FVector _position = _owner->GetActorLocation() + _owner->GetActorForwardVector() * -250.0f;
 	if (_owner->HasAuthority())
 	{
 		FActorSpawnParameters _spawnParams;

@@ -27,9 +27,10 @@ void ALiquidFlac::Tick(float DeltaTime)
 
 void ALiquidFlac::Use(ASeniorPlayer* _player)
 {
+	UKismetSystemLibrary::PrintString(this, " Before" );
 	if (!_player)return;
-	FVector _position = _player->GetActorLocation() + _player->GetActorForwardVector() * -150.0f;
-
+	FVector _position = _player->GetActorLocation() + _player->GetActorForwardVector() * -200.0f;
+	UKismetSystemLibrary::PrintString(this, FString::FromInt(_position.X) + " " + FString::FromInt(_position.Y));
 	FVector _newPos = FVector(_position.X, _position.Y, 0.0f);
 	SetActorLocation(_newPos);
 }
