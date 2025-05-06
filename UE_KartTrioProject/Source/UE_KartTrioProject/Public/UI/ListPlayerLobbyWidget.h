@@ -18,11 +18,13 @@ class UE_KARTTRIOPROJECT_API UListPlayerLobbyWidget : public UUserWidget
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere) TSubclassOf<UPlayerSlotLobbyWidget> playerSlotRef;
 
-	UPROPERTY(meta = (BindWidget)) TObjectPtr<UScrollBox> playerList;
+protected:
+	UPROPERTY(BlueprintReadWrite,meta = (BindWidget)) TObjectPtr<UScrollBox> playerList;
 
 private:
 	void NativeConstruct() override;
 
 public:
+	void ClearChildrens();
 	void AddPlayer(TObjectPtr<AActor> _playerRef, FString _name);
 };

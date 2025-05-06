@@ -28,6 +28,9 @@ void UPlayerSlotLobbyWidget::Init(TObjectPtr<AActor> _playerRef, FString _name)
 {
 	playerRef = _playerRef;
 	playerName->SetText(FText::FromString(_name));
+
+	if (!_playerRef->HasAuthority())
+		kickButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
 

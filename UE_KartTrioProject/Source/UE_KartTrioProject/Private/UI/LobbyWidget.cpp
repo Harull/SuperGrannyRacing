@@ -76,6 +76,8 @@ void ULobbyWidget::TogglePlayerList()
 
 	UWS_PlayerClassement* _sub = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
 	if (!_sub) return;
+	listPlayerLobbyWidget->ClearChildrens();
+
 	TArray<TObjectPtr<UCollectedItemComponent>> _componentsList = _sub->GetAllPlayerCollectedItemComponent();
 	for (UCollectedItemComponent* _component : _componentsList)
 	{
