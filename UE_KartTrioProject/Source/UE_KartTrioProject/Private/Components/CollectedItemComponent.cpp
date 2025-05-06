@@ -18,43 +18,49 @@ UCollectedItemComponent::UCollectedItemComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-
-	// ...
+	SetIsReplicatedByDefault(true);
 }
 
-
-// Called when the game starts
 void UCollectedItemComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	UKismetSystemLibrary::PrintString(this, "Player List");
 
+	seniorPlayerRef = Cast<ASeniorPlayer>(GetOwner());
+	if (!seniorPlayerRef)
+		return;
 
-	TArray<TObjectPtr<UBillboardComponent>> _allBillboard = GetAllBillBoardComponents();
-	for (UBillboardComponent* _billboardComponent : _allBillboard)
+	TArray<TObjectPtr<UBillboardComponent>> _allBillboards = GetAllBillBoardComponents();
+	for (UBillboardComponent* _billboardComp : _allBillboards)
 	{
-		shoppingKartContentLocation.Add({ _billboardComponent, false });
+		shoppingKartContentLocation.Add({ _billboardComp, false });
 	}
 
-
-	UWS_PlayerClassement* _subPlayerClassement = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
-	if (_subPlayerClassement)
-		_subPlayerClassement->AddPlayerCollectedItemComponent(this);
-
-	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
-	if (_sub)
+	if (UWS_PlayerClassement* _subPlayerClassement = GetWorld()->GetSubsystem<UWS_PlayerClassement>())
 	{
-		if (_sub->GetRange() <= 0) return;
-		_sub->GetRandomList(sizeList);
-		_sub->SetAllItemInList();
-		listItem = _sub->GetListItem();
+		_subPlayerClassement->AddPlayerCollectedItemComponent(this);
+	}
+
+	if (GetOwner()->HasAuthority())
+	{
+		FTimerHandle _timer;
+		//GetWorld()->GetTimerManager().SetTimer(_timer, [this]() {
+		if (UGIS_CollectedItem* _subsys = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>())
+		{
+			listItem = _subsys->GetRandomList(6);
+			OnRep_ListItem();
+		}
+		//}, 1.0f, false);
 	}
 
 	if (listItem.Num() <= 0) return;
-	seniorPlayerRef = Cast<ASeniorPlayer>(GetOwner());
+
 	if (seniorPlayerRef->IsLocallyControlled())
-		seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
+	{
+		if (TObjectPtr<UPlaceArrowSignComponent> _arrowComp = seniorPlayerRef->GetPlaceArrowSignComponent())
+		{
+			_arrowComp->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
+		}
+	}
 }
 
 TArray<TObjectPtr<UBillboardComponent>> UCollectedItemComponent::GetAllBillBoardComponents()
@@ -86,7 +92,7 @@ TArray<TObjectPtr<UBillboardComponent>> UCollectedItemComponent::GetAllBillBoard
 			_result.Swap(_i, _minIndex);
 		}
 	}
-	
+
 	UKismetSystemLibrary::PrintString(this, FString::FromInt(_result.Num()), true, true, FLinearColor::Red, 10.0f);
 	return _result;
 }
@@ -94,6 +100,8 @@ TArray<TObjectPtr<UBillboardComponent>> UCollectedItemComponent::GetAllBillBoard
 void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	//UKismetSystemLibrary::PrintString(this, FString::FromInt(listItem.Num()), true, true, FLinearColor::Red, 1);
+
 }
 
 //void UCollectedItemComponent::UseItem(const FInputActionValue& _valueFloat)
@@ -120,6 +128,7 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 	if (!_collectItem) return;
 	//UKismetSystemLibrary::PrintString(this, "Hello2", true, true, FLinearColor::Blue, 10.0f);
 
+	if (!seniorPlayerRef) return;
 	if (!seniorPlayerRef->IsLocallyControlled()) return;
 
 
@@ -179,6 +188,42 @@ void UCollectedItemComponent::ResetCooldown()
 	isCooldown = false;
 }
 
+
+
+void UCollectedItemComponent::OnRep_ListItem()
+{
+	FString _role = GetOwner()->HasAuthority() ? "Server" : "Client";
+	UKismetSystemLibrary::PrintString(this, "OnRep_ListItem() fired on" + _role + " " + FString::FromInt(listItem.Num()), true, true, FLinearColor::Red, 20);
+		
+	if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
+	{
+		TObjectPtr<UMainWidget> _mainWidget = _hud->GetMainWidget();
+		if (_mainWidget)
+		{
+			UKismetSystemLibrary::PrintString(this, "InitShoppingList", true, true, FLinearColor::Red, 20);
+			_mainWidget->InitShoppingList(listItem);
+		}
+	}
+}
+
+
+void UCollectedItemComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UCollectedItemComponent, listItem);
+}
+
+//void UCollectedItemComponent::ReceiveShoppingListFromServer(const TArray<ACollectedItem*>& _sharedList)
+//{
+//	UKismetSystemLibrary::PrintString(this, "ClientRPC_ReceiveShoppingList", true, true, FLinearColor::Red, 20);
+//	listItem = _sharedList;
+//	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
+//	if (_sub)
+//	{
+//		_sub->SetAllItemInList(listItem);
+//	}
+//}
+
 void UCollectedItemComponent::PlaceItemInShoppingCart(ACollectedItem* _collectItem, const int _meshIndex)
 {
 	// place mesh at a available place
@@ -195,8 +240,6 @@ void UCollectedItemComponent::ServerRPC_PlaceItemInShoppingCart_Implementation(A
 {
 	PlaceItemInShoppingCart(_collectItem, _meshIndex);
 }
-
-
 
 //void UCollectedItemComponent::SpawnItemServer_Implementation(const FVector& _position)
 //{

@@ -5,6 +5,11 @@
 #include <Kismet/KismetSystemLibrary.h>
 
 
+void UGIS_CollectedItem::Initialize(FSubsystemCollectionBase& Collection)
+{
+
+}
+
 void UGIS_CollectedItem::AddCollectedItem(TObjectPtr<ACollectedItem> _item)
 {
 	if (!_item) return;
@@ -69,11 +74,18 @@ TArray<TObjectPtr<ACollectedItem>> UGIS_CollectedItem::GetRandomList(int _sizeTo
 	return allItemToList;
 }
 
-void UGIS_CollectedItem::SetAllItemInList()
+void UGIS_CollectedItem::SetAllItemInList(TArray<TObjectPtr<ACollectedItem>> _allItem)
 {
-	int _size = allItemToList.Num();
+	int _size = _allItem.Num();
 	for (int i = 0; i < _size; i++)
 	{
-		allItemToList[i]->SetIsInTheList(true);
+		_allItem[i]->SetIsInTheList(true);
 	}
+}
+
+
+void UGIS_CollectedItem::GenerateAndSetList(int Size)
+{
+	if (!ItemListIsEmpty()) return;
+	GetRandomList(Size);
 }

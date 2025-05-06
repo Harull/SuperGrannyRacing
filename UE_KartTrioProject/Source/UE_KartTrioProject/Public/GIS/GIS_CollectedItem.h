@@ -8,7 +8,7 @@
 #include "GIS_CollectedItem.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class UE_KARTTRIOPROJECT_API UGIS_CollectedItem : public UGameInstanceSubsystem
@@ -23,8 +23,10 @@ public:
 	FORCEINLINE bool ItemListIsEmpty() const { return allItemToList.Num() <= 0; }
 
 public:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	void AddCollectedItem(TObjectPtr<ACollectedItem> _item);
 	void RemoveCollectedItem(TObjectPtr<ACollectedItem> _item);
 	TArray<TObjectPtr<ACollectedItem>> GetRandomList(int _sizeToList);
-	void SetAllItemInList();
+	void SetAllItemInList(TArray<TObjectPtr<ACollectedItem>> _allItem);
+	void GenerateAndSetList(int Size);
 };

@@ -98,6 +98,7 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	// UFUNCTION(Client, Reliable)	void ClientRPC_ReceiveShoppingList(const TArray<ACollectedItem*>& SharedList);
 
 private:
 	void InitSubsystem();
@@ -106,11 +107,8 @@ private:
 private:
 	void InitUniqueID();
 private:
-
 	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
 	UFUNCTION(Server, Reliable) void Server_ModifySteamUsername(const FString& _steamUsername);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-
 };

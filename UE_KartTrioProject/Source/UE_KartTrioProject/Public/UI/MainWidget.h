@@ -37,11 +37,11 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
-	void InitShoppingList();
 
 public:
 	TObjectPtr<UItemToCollectWidget> FindItemWidget(FString _name);
 	void SetWinScreenVisibility();
+	void InitShoppingList(const TArray<TObjectPtr<ACollectedItem>>& _items);
 
 private:
 	UFUNCTION() void UpdateSpeed(float _speed);

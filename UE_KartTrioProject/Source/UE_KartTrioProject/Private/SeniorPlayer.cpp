@@ -167,13 +167,11 @@ void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
 	}
 }
 
-
 void ASeniorPlayer::Server_ModifySteamUsername_Implementation(const FString& _steamUsername)
 {
 	UKismetSystemLibrary::PrintString(this, "rpc CALLED: " + _steamUsername, true, true, FLinearColor::Yellow, 30);
 	steamUsername = _steamUsername;
 }
-
 
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

@@ -10,7 +10,7 @@
 class ASeniorPlayer;
 class UBillboardComponent;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -21,7 +21,7 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 
 	TArray<TPair<TObjectPtr<UBillboardComponent>, bool>> shoppingKartContentLocation;
 
-	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItem;
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_ListItem) TArray<TObjectPtr<ACollectedItem>> listItem;
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItemCollected;
 	UPROPERTY(VisibleAnywhere) int nbItemCollected = 0;
 	UPROPERTY(EditAnywhere) int sizeList = 4;
@@ -30,12 +30,12 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 	UPROPERTY(EditAnywhere) bool isCooldown = false;
 
 public:
-	FORCEINLINE TObjectPtr<ACollectedItem> GetCurrentItem() const { return listItem[nbItemCollected]; }
+	FORCEINLINE TObjectPtr<ACollectedItem> GetCurrentItem() const { return listItem.IsValidIndex(nbItemCollected) ? listItem[nbItemCollected] : nullptr; }
 	FORCEINLINE bool CanFinish() const { return canFinish; }
 	FORCEINLINE int GetNumItemCollected() const { return nbItemCollected; }
 	FORCEINLINE int GetSizeList() const { return sizeList; }
 
-public:	
+public:
 	UCollectedItemComponent();
 
 protected:
@@ -51,5 +51,7 @@ public:
 	int GetAvailableShoppingKartPosition();
 	UFUNCTION() void ResetCooldown();
 	UFUNCTION(Server, Reliable) void ServerRPC_PlaceItemInShoppingCart(ACollectedItem* _collectItem, const int _meshIndex);
+	UFUNCTION() void OnRep_ListItem();
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void PlaceItemInShoppingCart(ACollectedItem* _collectItem, const int _meshIndex);
 };
