@@ -222,6 +222,7 @@ void USeniorMovementComponent::StopMoveAndRotateTime(const float _time)
 	SetCanRotate(false);
 }
 
+
 void USeniorMovementComponent::DrawDebugs()
 {
 	if (!useDebugs || !personalOwner)return;

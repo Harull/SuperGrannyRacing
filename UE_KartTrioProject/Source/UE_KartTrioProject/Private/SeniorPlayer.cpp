@@ -175,6 +175,21 @@ void ASeniorPlayer::Server_ModifySteamUsername_Implementation(const FString& _st
 }
 
 
+void ASeniorPlayer::Client_ApplyMalusEffect_Implementation(UMaterialInterface* _material, float _duration)
+{
+	UCameraComponent* _camera = FindComponentByClass<UCameraComponent>();
+	if (!_camera || !_material) return;
+
+	UMaterialInstanceDynamic* _dynMat = UMaterialInstanceDynamic::Create(_material, this);
+	_camera->AddOrUpdateBlendable(_dynMat);
+
+	FTimerHandle _timerHandle;
+	GetWorld()->GetTimerManager().SetTimer(_timerHandle, [=]()
+		{
+			_camera->RemoveBlendable(_dynMat);
+		}, _duration, false);
+}
+
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

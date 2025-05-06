@@ -163,6 +163,7 @@ public:
 	
 	void StopMoveAndRotateTime(const float _time);
 
+
 private:
 	UFUNCTION() void LerpRotationToMatchForward();
 	UFUNCTION() void LerpRotationToMatchSymetricalForward();
