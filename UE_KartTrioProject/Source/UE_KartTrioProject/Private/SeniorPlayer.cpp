@@ -147,7 +147,6 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 
 	//_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, collectedItemComponent.Get(), &UCollectedItemComponent::UseItem);
 	_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::UseItem);
-	_inputComponent->BindAction(useSpecialItem, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::StartAnimSpecialItem);
 
 	// Check if we're in the right level
 	TObjectPtr<AHUD> _baseHUD = GetWorld()->GetFirstPlayerController()->GetHUD();
@@ -155,6 +154,7 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 
 	_inputComponent->BindAction(openPlayerList, ETriggerEvent::Started, _hud.Get(), &ALobby_HUD::TogglePlayerList);
 	//_inputComponent->BindAction(openPlayerList, ETriggerEvent::Completed, _lobby.Get(), &ULobbyWidget::TogglePlayerList);
+	_inputComponent->BindAction(useSpecialItem, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::UseSpecialItem);
 	//TODO Implement other bindings
 
 
@@ -177,10 +177,27 @@ void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
 	}
 }
 
+
 void ASeniorPlayer::Server_ModifySteamUsername_Implementation(const FString& _steamUsername)
 {
 	UKismetSystemLibrary::PrintString(this, "rpc CALLED: " + _steamUsername, true, true, FLinearColor::Yellow, 30);
 	steamUsername = _steamUsername;
+}
+
+
+void ASeniorPlayer::Client_ApplyMalusEffect_Implementation(UMaterialInterface* _material, float _duration)
+{
+	UCameraComponent* _camera = FindComponentByClass<UCameraComponent>();
+	if (!_camera || !_material) return;
+
+	UMaterialInstanceDynamic* _dynMat = UMaterialInstanceDynamic::Create(_material, this);
+	_camera->AddOrUpdateBlendable(_dynMat);
+
+	FTimerHandle _timerHandle;
+	GetWorld()->GetTimerManager().SetTimer(_timerHandle, [=]()
+		{
+			_camera->RemoveBlendable(_dynMat);
+		}, _duration, false);
 }
 
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

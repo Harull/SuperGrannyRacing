@@ -179,6 +179,7 @@ public:
 	/// </summary>
 	void Slip(const FSlipperySettings& _slipSettings);
 
+
 private:
 	UFUNCTION() void LerpRotationToMatchForward();
 	UFUNCTION() void LerpRotationToMatchSymetricalForward();

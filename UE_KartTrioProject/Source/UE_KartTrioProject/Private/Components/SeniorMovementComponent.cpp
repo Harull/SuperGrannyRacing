@@ -244,7 +244,10 @@ void USeniorMovementComponent::ManageSlipping(const float _deltaTime)
 	if (currentSteeringAngle == steeringAngleSlipTarget) RandomizeSteeringAngleTarget();
 
 	if (currentSlipTime > chosenSlipSettings.slipTime)
+	{
 		isSlipping = false;
+		steeringSpeed = initialSteeringSpeed;
+	}
 }
 
 

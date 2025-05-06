@@ -28,7 +28,7 @@ void UMainMenuWidget::OnPlay()
 	//Hide MainMenu
 	//Show JoinLobby
 
-	mainMenuLayout->SetVisibility(ESlateVisibility::Hidden);
+	//mainMenuSizeBox->SetVisibility(ESlateVisibility::Hidden);
 	sessionListLayout->SetVisibility(ESlateVisibility::Visible);
 	sessionListLayout->SetIsEnabled(true);
 	sessionListLayout->FindSessions();

@@ -6,6 +6,7 @@
 #include <Components/Button.h>
 #include <Components/Overlay.h>
 #include "SessionListWidget.h"
+#include <Components/SizeBox.h>
 #include "MainMenuWidget.generated.h"
 
 UCLASS()
@@ -15,7 +16,7 @@ class UE_KARTTRIOPROJECT_API UMainMenuWidget : public UUserWidget
 	
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> playButton;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> quitButton;
-	UPROPERTY(meta = (BindWidget)) TObjectPtr<UOverlay> mainMenuLayout;
+	//UPROPERTY(meta = (BindWidget)) TObjectPtr<USizeBox> mainMenuSizeBox;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<USessionListWidget> sessionListLayout;
 
 protected:

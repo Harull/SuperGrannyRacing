@@ -1,5 +1,8 @@
 #include "GPE/BoostingPill.h"
 #include "Components/SeniorMovementComponent.h"
+#include <Kismet/KismetSystemLibrary.h>
+#include "GIS/WS_PlayerClassement.h"
+
 
 ABoostingPill::ABoostingPill()
 {
@@ -19,23 +22,80 @@ void ABoostingPill::Tick(float DeltaTime)
 
 }
 
+//void ABoostingPill::Use(ASeniorPlayer* _target)
+//{
+//	if (!_target)return;
+//	USeniorMovementComponent* _movement = _target->GetComponentByClass<USeniorMovementComponent>();
+//	if (!_movement)return;
+//	float _forward = _movement->GetForwardMaxSpeed() * boostRatio;
+//	float _backward = _movement->GetBackwardMaxSpeed() * boostRatio;
+//	_movement->SetForwardMaxSpeed(_forward);
+//	_movement->SetBackwardMaxSpeed(_backward);
+//
+//	UCameraComponent* _camera = _target->FindComponentByClass<UCameraComponent>();
+//	if (_camera)
+//	{
+//		float _originalFOV = _camera->FieldOfView;
+//		float _boostFOV = _originalFOV + 30.0f; 
+//		_camera->SetFieldOfView(_boostFOV);
+//
+//		UKismetSystemLibrary::PrintString(this, "Rest");
+//		FTimerHandle _fovResetTimer;
+//		GetWorld()->GetTimerManager().SetTimer(_fovResetTimer, [_camera, _originalFOV]()
+//			{
+//				_camera->SetFieldOfView(_originalFOV);
+//			}, boostTime, false);
+//	}
+//
+//
+//	FTimerHandle _timer;
+//	GetWorld()->GetTimerManager().SetTimer(_timer, [_movement]()
+//		{
+//			_movement->ResetForwardMaxSpeed();
+//			_movement->ResetBackwardMaxSpeed();
+//
+//		}, boostTime, false);
+//
+//	
+//}
+
+
+
 void ABoostingPill::Use(ASeniorPlayer* _target)
 {
-	if (!_target)return;
-	USeniorMovementComponent* _movement = _target->GetComponentByClass<USeniorMovementComponent>();
-	if (!_movement)return;
-	float _forward = _movement->GetForwardMaxSpeed() * boostRatio;
-	float _backward = _movement->GetBackwardMaxSpeed() * boostRatio;
-	_movement->SetForwardMaxSpeed(_forward);
-	_movement->SetBackwardMaxSpeed(_backward);
-
-	FTimerHandle _timer;
-	GetWorld()->GetTimerManager().SetTimer(_timer, [_movement]()
-		{
-			_movement->ResetForwardMaxSpeed();
-			_movement->ResetBackwardMaxSpeed();
-
-		}, boostTime, false);
+	if (!_target) return;
 	
+	UWS_PlayerClassement* _classementSystem = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
+	if (_classementSystem)
+	{
+		const int _count = _classementSystem->GetAllPlayerCollectedItemComponent().Num();
+
+		for (int i = 0; i < _count; i++)
+		{
+			ASeniorPlayer* _player = Cast<ASeniorPlayer>(_classementSystem->GetAllPlayerCollectedItemComponent()[i]->GetOwner());
+			if (!_player || _player == _target)continue;
+			
+			_player->Client_ApplyMalusEffect(malusMaterial, time);
+			
+		}
+	}
+
+
+	/*UCameraComponent* _camera = _target->FindComponentByClass<UCameraComponent>();
+	if (_camera && malusMaterial)
+	{
+		UMaterialInstanceDynamic* _dynamicMat = UMaterialInstanceDynamic::Create(malusMaterial, this);
+
+		_camera->AddOrUpdateBlendable(_dynamicMat);
+
+		FTimerHandle _effectTimer;
+		GetWorld()->GetTimerManager().SetTimer(_effectTimer, [=]()
+			{
+				_camera->RemoveBlendable(_dynamicMat);
+			}, time, false);
+	}*/
+
 }
+
+
 

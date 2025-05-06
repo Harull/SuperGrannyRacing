@@ -9,8 +9,9 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API ABoostingPill : public AItem
 {
 	GENERATED_BODY()
-	UPROPERTY(EditAnywhere) float boostTime = 5.0f;
+	UPROPERTY(EditAnywhere) float time = 3.0f;
 	UPROPERTY(EditAnywhere) float boostRatio = 1.5f;
+	UPROPERTY(EditDefaultsOnly) UMaterialInterface* malusMaterial;
 	
 public:	
 	ABoostingPill();
