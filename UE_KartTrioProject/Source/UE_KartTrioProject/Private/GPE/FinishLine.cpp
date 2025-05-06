@@ -51,6 +51,8 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 			{
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
 				_hud->GetMainWidget()->SetWinScreenVisibility();
+				if(_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
+					_hud->GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
 			}
 			_player->DisableInput(_controller);
 			_player->SetActorEnableCollision(false);
