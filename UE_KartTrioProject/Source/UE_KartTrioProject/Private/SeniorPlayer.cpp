@@ -8,6 +8,7 @@
 #include <Components/SeniorMovementComponent.h>
 #include <Kismet/KismetSystemLibrary.h>
 #include "Components/PlaceArrowSignComponent.h"
+#include "Components/DestinationArrowComponent.h"
 #include <Online/GIS_Online.h>
 #include <GPE/ReplicatedStartManager.h>
 #include <Kismet/GameplayStatics.h>
@@ -24,6 +25,7 @@ ASeniorPlayer::ASeniorPlayer()
 	seniorMovementcomponent = CreateDefaultSubobject<USeniorMovementComponent>("MovementComponent");
 	collectedItemComponent = CreateDefaultSubobject<UCollectedItemComponent>("CollectedItem");
 	placeArrowSignComponent = CreateDefaultSubobject<UPlaceArrowSignComponent>("PlaceArrowSign");
+	destinationArrowComponent = CreateDefaultSubobject<UDestinationArrowComponent>("DestinationArrowComponent");
 	inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 	bumpComponent = CreateDefaultSubobject<UBumpComponent>("Bump");
 
@@ -49,6 +51,7 @@ ASeniorPlayer::ASeniorPlayer()
 	AddOwnedComponent(seniorMovementcomponent);
 	AddOwnedComponent(collectedItemComponent);
 	AddOwnedComponent(placeArrowSignComponent);
+	AddOwnedComponent(destinationArrowComponent);
 	AddOwnedComponent(inventory);
 	AddOwnedComponent(bumpComponent);
 }

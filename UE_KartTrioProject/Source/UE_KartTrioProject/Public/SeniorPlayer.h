@@ -15,6 +15,7 @@
 
 class USeniorMovementComponent;
 class UPlaceArrowSignComponent;
+class UDestinationArrowComponent;
 class UInventoryComponent;
 
 UCLASS()
@@ -33,6 +34,7 @@ private:
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
 	UPROPERTY(EditAnywhere) TObjectPtr<UPlaceArrowSignComponent> placeArrowSignComponent;
+	UPROPERTY(EditAnywhere) TObjectPtr<UDestinationArrowComponent> destinationArrowComponent;
 	UPROPERTY(EditAnywhere) TObjectPtr<UInventoryComponent> inventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess=True)) TObjectPtr<UBumpComponent> bumpComponent;
 
@@ -69,6 +71,7 @@ public:
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetLeftFrontWheel()const { return frontLeftWheel; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }
 	FORCEINLINE TObjectPtr<UPlaceArrowSignComponent> GetPlaceArrowSignComponent() const { return placeArrowSignComponent; }
+	FORCEINLINE TObjectPtr<UDestinationArrowComponent> GetDestinationArrowComponent() const { return destinationArrowComponent; }
 	FORCEINLINE TObjectPtr<UInventoryComponent> GetInventoryComponent() const { return inventory; }
 
 	/// <summary>

@@ -13,7 +13,6 @@ class UE_KARTTRIOPROJECT_API UPlaceArrowSignComponent : public UActorComponent
 
 	UPROPERTY(EditAnywhere) TSubclassOf<AArrowSign> arrowToSpawn = nullptr;
 	UPROPERTY(VisibleAnywhere) TObjectPtr<AArrowSign> currentArrow = nullptr;
-
 	UPROPERTY(EditAnywhere) FVector offset = FVector(0.0f, 0.0f, 200.0f);
 
 public:	
