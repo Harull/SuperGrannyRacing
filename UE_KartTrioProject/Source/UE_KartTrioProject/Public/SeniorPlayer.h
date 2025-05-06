@@ -33,7 +33,7 @@ private:
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
 	UPROPERTY(EditAnywhere) TObjectPtr<UPlaceArrowSignComponent> placeArrowSignComponent;
-	UPROPERTY(EditAnywhere) TObjectPtr<UInventoryComponent> inventory;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess)) TObjectPtr<UInventoryComponent> inventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess=True)) TObjectPtr<UBumpComponent> bumpComponent;
 
 

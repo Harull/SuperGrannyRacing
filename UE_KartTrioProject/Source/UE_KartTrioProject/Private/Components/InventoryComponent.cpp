@@ -104,7 +104,8 @@ void UInventoryComponent::UseSpecialItem(const FInputActionValue& _value)
 
 	canUseSpecialItem = false;
 	GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
-
+	onStartAnim.Broadcast();
+	UKismetSystemLibrary::PrintString(this, "Start Anim");
 
 }
 
