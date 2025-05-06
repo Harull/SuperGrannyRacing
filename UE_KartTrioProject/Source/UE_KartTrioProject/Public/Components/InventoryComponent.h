@@ -42,8 +42,9 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void AddItem(TSubclassOf<AItem> _item);
-	void UseItem(const FInputActionValue& _value);
-	void UseSpecialItem(const FInputActionValue& _value);
+	UFUNCTION() void UseItem(const FInputActionValue& _value);
+	UFUNCTION(BlueprintCallable) void UseSpecialItem();
+	UFUNCTION() void StartAnimSpecialItem(const FInputActionValue& _value);
 	void Reward();
 
 private:

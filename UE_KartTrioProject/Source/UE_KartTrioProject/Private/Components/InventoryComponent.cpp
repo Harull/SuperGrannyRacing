@@ -74,9 +74,8 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 	UpdateItemIcon();
 }
 
-void UInventoryComponent::UseSpecialItem(const FInputActionValue& _value)
+void UInventoryComponent::UseSpecialItem()
 {
-	if (!canUseSpecialItem || ! specialItem)return;
 
 	ASeniorPlayer* _owner = Cast<ASeniorPlayer>(GetOwner());
 	if (!_owner)return;
@@ -104,9 +103,15 @@ void UInventoryComponent::UseSpecialItem(const FInputActionValue& _value)
 
 	canUseSpecialItem = false;
 	GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
+
+}
+
+void UInventoryComponent::StartAnimSpecialItem(const FInputActionValue& _value)
+{
+	if (!canUseSpecialItem || !specialItem)return;
+
 	onStartAnim.Broadcast();
 	UKismetSystemLibrary::PrintString(this, "Start Anim");
-
 }
 
 void UInventoryComponent::Reward()

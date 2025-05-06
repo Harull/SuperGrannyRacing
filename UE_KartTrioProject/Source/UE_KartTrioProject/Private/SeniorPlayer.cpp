@@ -146,7 +146,7 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 
 	//_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, collectedItemComponent.Get(), &UCollectedItemComponent::UseItem);
 	_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::UseItem);
-	_inputComponent->BindAction(useSpecialItem, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::UseSpecialItem);
+	_inputComponent->BindAction(useSpecialItem, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::StartAnimSpecialItem);
 	//TODO Implement other bindings
 	}
 
