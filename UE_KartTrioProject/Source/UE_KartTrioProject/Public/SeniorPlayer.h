@@ -51,6 +51,7 @@ private:
 	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> interact;
 	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> usePowerup;
 	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> useSpecialItem;
+	UPROPERTY(EditAnywhere) TObjectPtr<UInputAction> openPlayerList;
 
 	UPROPERTY(VisibleAnywhere, Replicated, BlueprintReadOnly, meta = (AllowPrivateAccess)) FString steamUsername;
 	//UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_SteamUsername) FString steamUsername;
@@ -70,6 +71,7 @@ public:
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }
 	FORCEINLINE TObjectPtr<UPlaceArrowSignComponent> GetPlaceArrowSignComponent() const { return placeArrowSignComponent; }
 	FORCEINLINE TObjectPtr<UInventoryComponent> GetInventoryComponent() const { return inventory; }
+	FORCEINLINE FString GetSteamUsername() const { return steamUsername; }
 
 	/// <summary>
 	/// Custom id replicated, used for network

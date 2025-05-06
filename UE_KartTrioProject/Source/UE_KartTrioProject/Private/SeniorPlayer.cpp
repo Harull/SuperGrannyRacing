@@ -13,6 +13,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "Components/InventoryComponent.h"
 #include <GIS/WS_PlayerClassement.h>
+#include "UI/Lobby_HUD.h"
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -147,8 +148,17 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 	//_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, collectedItemComponent.Get(), &UCollectedItemComponent::UseItem);
 	_inputComponent->BindAction(usePowerup, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::UseItem);
 	_inputComponent->BindAction(useSpecialItem, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::StartAnimSpecialItem);
+
+	// Check if we're in the right level
+	TObjectPtr<AHUD> _baseHUD = GetWorld()->GetFirstPlayerController()->GetHUD();
+	TObjectPtr<ALobby_HUD> _hud = Cast<ALobby_HUD>(_baseHUD);
+
+	_inputComponent->BindAction(openPlayerList, ETriggerEvent::Started, _hud.Get(), &ALobby_HUD::TogglePlayerList);
+	//_inputComponent->BindAction(openPlayerList, ETriggerEvent::Completed, _lobby.Get(), &ULobbyWidget::TogglePlayerList);
 	//TODO Implement other bindings
-	}
+
+
+}
 
 void ASeniorPlayer::InitUniqueID()
 {

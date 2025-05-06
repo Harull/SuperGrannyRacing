@@ -19,6 +19,7 @@ class UE_KARTTRIOPROJECT_API ALobby_HUD : public AHUD
 
 public:
 	FORCEINLINE TObjectPtr<ULobbyWidget> GetLobbyMenu() const { return lobbyMenu; }
+	void TogglePlayerList();
 
 private:
 	virtual void BeginPlay() override;

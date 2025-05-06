@@ -69,6 +69,22 @@ void ULobbyWidget::UpdatePlayersReady(int _value)
 	IsMaxPlayer();
 }
 
+void ULobbyWidget::TogglePlayerList()
+{
+	ESlateVisibility _visibility = listPlayerLobbyWidget->IsVisible() ? ESlateVisibility::Hidden : ESlateVisibility::Visible;
+	listPlayerLobbyWidget->SetVisibility(_visibility);
+
+	UWS_PlayerClassement* _sub = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
+	if (!_sub) return;
+	TArray<TObjectPtr<UCollectedItemComponent>> _componentsList = _sub->GetAllPlayerCollectedItemComponent();
+	for (UCollectedItemComponent* _component : _componentsList)
+	{
+		AActor* _actor = _component->GetOwner();
+		ASeniorPlayer* _player = Cast<ASeniorPlayer>(_actor);
+		listPlayerLobbyWidget->AddPlayer(_player, _player->GetSteamUsername());
+	}
+}
+
 void ULobbyWidget::IsMaxPlayer()
 {
 	//int _totalPlayerConnected = GetWorld()->GetSubsystem<UWS_PlayerClassement>()->GetRange();

@@ -41,6 +41,7 @@ private:
 
 public:
 	UFUNCTION() void UpdatePlayersReady(int _value);
+	void TogglePlayerList();
 
 private:
 	void IsMaxPlayer();
@@ -49,4 +50,5 @@ private:
 	void ResetTimer();
 	void UpdateTimer(float _value);
 	int GetPlayerCount();
+
 };

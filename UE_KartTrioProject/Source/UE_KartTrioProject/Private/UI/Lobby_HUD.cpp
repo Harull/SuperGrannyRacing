@@ -1,6 +1,7 @@
 
 #include "UI/Lobby_HUD.h"
 
+
 void ALobby_HUD::BeginPlay()
 {
 	Super::BeginPlay();
@@ -9,4 +10,9 @@ void ALobby_HUD::BeginPlay()
 	lobbyMenu->AddToViewport();
 
 	GetOwningPlayerController()->SetShowMouseCursor(true);
+}
+
+void ALobby_HUD::TogglePlayerList()
+{
+	lobbyMenu->TogglePlayerList();
 }
