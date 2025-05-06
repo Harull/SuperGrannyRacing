@@ -234,6 +234,30 @@ void USeniorMovementComponent::Slip(const FSlipperySettings& _slipSettings)
 	RandomizeSteeringAngleTarget();
 }
 
+void USeniorMovementComponent::ActivateSpeedBoost()
+{
+	if (isBoosting)
+		return;
+
+	isBoosting = true;
+
+	initialForwardMaxSpeed = forwardMaxSpeed;
+	initialBackwardMaxSpeed = backwardMaxSpeed;
+
+	forwardMaxSpeed *= boostMultiplier;
+	backwardMaxSpeed *= boostMultiplier;
+
+	GetWorld()->GetTimerManager().SetTimer(boostTimerHandle, this, &USeniorMovementComponent::ResetSpeedAfterBoost, boostDuration, false);
+}
+
+void USeniorMovementComponent::ResetSpeedAfterBoost()
+{
+	forwardMaxSpeed = initialForwardMaxSpeed;
+	backwardMaxSpeed = initialBackwardMaxSpeed;
+
+	isBoosting = false;
+}
+
 void USeniorMovementComponent::ManageSlipping(const float _deltaTime)
 {
 	if (!isSlipping)return;

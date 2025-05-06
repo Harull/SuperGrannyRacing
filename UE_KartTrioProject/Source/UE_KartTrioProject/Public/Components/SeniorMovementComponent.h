@@ -104,6 +104,11 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY() TObjectPtr<ASeniorPlayer> personalOwner;
 	UPROPERTY() TObjectPtr<UCharacterMovementComponent> ownersCharacterMovementComponent;
 
+	FTimerHandle boostTimerHandle;
+	bool isBoosting = false;
+	UPROPERTY(EditAnywhere, Category = "Boost")float boostMultiplier = 2.0f;
+	UPROPERTY(EditAnywhere, Category = "Boost")float boostDuration = 2.0f;
+
 protected:
 	UPROPERTY(BlueprintReadOnly) bool isStun = false;
 
@@ -178,6 +183,9 @@ public:
 	/// Instatiate the slipping state
 	/// </summary>
 	void Slip(const FSlipperySettings& _slipSettings);
+
+	void ActivateSpeedBoost();
+	void ResetSpeedAfterBoost();
 
 
 private:
