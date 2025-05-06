@@ -7,6 +7,7 @@
 #include <InputAction.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <SeniorPlayer.h>
+#include <GPE/LiquidFlac.h>
 #include "SeniorMovementComponent.generated.h"
 
 
@@ -29,6 +30,7 @@ public:
 	{
 	}
 };
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
@@ -88,11 +90,22 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere, Category = "Debug|Movement", meta = (AllowPrivateAccess), ReplicatedUsing = OnRep_CurrentTransform) FPersonalPackageNetwork currentPackageNetwork;
 
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess)) bool isSlipping = false;
+	UPROPERTY(VisibleAnywhere) float currentSlipTime = 0;
+	UPROPERTY(VisibleAnywhere) float currentSlipSpeed = 0;
+	UPROPERTY(VisibleAnywhere) float steeringAngleSlipTarget = 0;
+	UPROPERTY(VisibleAnywhere) float initialSteeringAngle = 0;
+	UPROPERTY(VisibleAnywhere) float initialSteeringSpeed = 0;
+	UPROPERTY(VisibleAnywhere) FSlipperySettings chosenSlipSettings;
+
+
+
 	UPROPERTY() TObjectPtr<ASeniorPlayer> personalOwner;
 	UPROPERTY() TObjectPtr<UCharacterMovementComponent> ownersCharacterMovementComponent;
 
 protected:
-	UPROPERTY(BlueprintReadOnly)bool isStun = false;
+	UPROPERTY(BlueprintReadOnly) bool isStun = false;
 
 
 public:	
@@ -160,8 +173,11 @@ public:
 	//Binded externaly to inputs
 
 	//Not used for movement, but for outside only
-	
 	void StopMoveAndRotateTime(const float _time);
+	/// <summary>
+	/// Instatiate the slipping state
+	/// </summary>
+	void Slip(const FSlipperySettings& _slipSettings);
 
 private:
 	UFUNCTION() void LerpRotationToMatchForward();
@@ -169,6 +185,17 @@ private:
 	UFUNCTION() void LerpRotationToMatchVector(const FVector& _vectorToMatch);
 	UFUNCTION() void LerpSteeringToMatchZero();
 	UFUNCTION() void UpdateMeshRotationYaw();
+
+	/// <summary>
+	/// We are currently slipping, meaning we modify a bunch of rotation and other during tick
+	/// </summary>
+	void ManageSlipping(const float _deltaTime);
+
+	/// <summary>
+	/// This method is used for the slip
+	/// Chose between available steering angle, an angle to steer to. Independent to the player's choice. 
+	/// </summary>
+	void RandomizeSteeringAngleTarget();
 private:
 	void DrawDebugs();
 

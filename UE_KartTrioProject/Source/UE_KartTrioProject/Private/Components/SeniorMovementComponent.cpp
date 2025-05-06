@@ -31,6 +31,7 @@ void USeniorMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	ApplyDeceleration();
 	ApplyFovModificationsBasedOnSpeed();
 	ApplyCameraSpringArmRotationBasedOnSteer();
+	ManageSlipping(DeltaTime);
 	DrawDebugs();
 }
 
@@ -149,7 +150,7 @@ void USeniorMovementComponent::SubstractVelocity(const FInputActionValue& _value
 
 void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 {
-	if (!canSteerWheels || (currentVelocity == 0)) return;
+	if (!canSteerWheels || (currentVelocity == 0) /*|| isSlipping*/) return;
 	currentSteeringAngle += _valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds;
 	currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
 
@@ -190,7 +191,7 @@ void USeniorMovementComponent::LerpRotationToMatchVector(const FVector& _vectorT
 
 void USeniorMovementComponent::LerpSteeringToMatchZero()
 {
-	if (!isMovingForward && !isMovingBackward ||UKismetMathLibrary::Abs(currentSteeringAngle) <= 0.1)return;
+	if (!isMovingForward && !isMovingBackward ||UKismetMathLibrary::Abs(currentSteeringAngle) <= 0.1 || isSlipping)return;
 	currentSteeringAngle = UKismetMathLibrary::FInterpTo_Constant(currentSteeringAngle, 0, GetWorld()->DeltaTimeSeconds, toNormalSteeringAngleLerpSpeed);
 }
 
@@ -220,6 +221,36 @@ void USeniorMovementComponent::StopMoveAndRotateTime(const float _time)
 	isStun = true;
 	SetCanMove(false);
 	SetCanRotate(false);
+}
+
+void USeniorMovementComponent::Slip(const FSlipperySettings& _slipSettings)
+{
+	initialSteeringSpeed = steeringSpeed;
+	isSlipping = true;
+	chosenSlipSettings = _slipSettings;
+	steeringSpeed = initialSteeringSpeed * chosenSlipSettings.losingControlOverSteeringRation;
+	currentSlipTime = 0;
+	currentSlipSpeed = _slipSettings.slipSpeed;
+	RandomizeSteeringAngleTarget();
+}
+
+void USeniorMovementComponent::ManageSlipping(const float _deltaTime)
+{
+	if (!isSlipping)return;
+	currentSlipTime += _deltaTime;
+	currentSlipSpeed = FMath::Lerp(chosenSlipSettings.slipSpeed, chosenSlipSettings.slipSpeed/2, currentSlipTime / chosenSlipSettings.slipTime);
+	currentSteeringAngle = FMath::FInterpConstantTo(currentSteeringAngle, steeringAngleSlipTarget, _deltaTime, currentSlipSpeed); //TODO CHANGE AND MAKE THE SLIPPING LOGIC HERE
+
+	if (currentSteeringAngle == steeringAngleSlipTarget) RandomizeSteeringAngleTarget();
+
+	if (currentSlipTime > chosenSlipSettings.slipTime)
+		isSlipping = false;
+}
+
+
+void USeniorMovementComponent::RandomizeSteeringAngleTarget()
+{
+	steeringAngleSlipTarget = (FMath::RandBool() ? 1 : -1) * FMath::FRandRange(maxFrontWheelSteeringAngle / 4.f, maxFrontWheelSteeringAngle);
 }
 
 void USeniorMovementComponent::DrawDebugs()
