@@ -157,7 +157,7 @@ void ASeniorPlayer::InitInputs(TObjectPtr<UEnhancedInputComponent> _inputCompone
 
 	_inputComponent->BindAction(openPlayerList, ETriggerEvent::Started, _hud.Get(), &ALobby_HUD::TogglePlayerList);
 	//_inputComponent->BindAction(openPlayerList, ETriggerEvent::Completed, _lobby.Get(), &ULobbyWidget::TogglePlayerList);
-	_inputComponent->BindAction(useSpecialItem, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::UseSpecialItem);
+	_inputComponent->BindAction(useSpecialItem, ETriggerEvent::Started, inventory.Get(), &UInventoryComponent::StartAnimSpecialItem);
 	//TODO Implement other bindings
 
 

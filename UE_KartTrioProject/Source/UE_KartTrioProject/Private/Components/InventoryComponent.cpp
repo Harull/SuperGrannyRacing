@@ -111,7 +111,6 @@ void UInventoryComponent::StartAnimSpecialItem(const FInputActionValue& _value)
 	if (!canUseSpecialItem || !specialItem)return;
 
 	onStartAnim.Broadcast();
-
 }
 
 void UInventoryComponent::Reward()
