@@ -59,6 +59,7 @@ void ADenture::NotifyActorBeginOverlap(AActor* OtherActor)
 		TObjectPtr<USeniorMovementComponent> _movement = _player->GetSeniorMovementComponent();
 		if (!_movement) return;
 		_movement->StopMoveAndRotateTime(stunTime);
+		_movement->ResetVelocity();
 		Destroy();
 	}
 	else
