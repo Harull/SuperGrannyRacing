@@ -65,35 +65,9 @@ void ABoostingPill::Use(ASeniorPlayer* _target)
 {
 	if (!_target) return;
 	
-	UWS_PlayerClassement* _classementSystem = GetWorld()->GetSubsystem<UWS_PlayerClassement>();
-	if (_classementSystem)
-	{
-		const int _count = _classementSystem->GetAllPlayerCollectedItemComponent().Num();
-
-		for (int i = 0; i < _count; i++)
-		{
-			ASeniorPlayer* _player = Cast<ASeniorPlayer>(_classementSystem->GetAllPlayerCollectedItemComponent()[i]->GetOwner());
-			if (!_player || _player == _target)continue;
-			
-			_player->Client_ApplyMalusEffect(malusMaterial, time);
-			
-		}
-	}
-
-
-	/*UCameraComponent* _camera = _target->FindComponentByClass<UCameraComponent>();
-	if (_camera && malusMaterial)
-	{
-		UMaterialInstanceDynamic* _dynamicMat = UMaterialInstanceDynamic::Create(malusMaterial, this);
-
-		_camera->AddOrUpdateBlendable(_dynamicMat);
-
-		FTimerHandle _effectTimer;
-		GetWorld()->GetTimerManager().SetTimer(_effectTimer, [=]()
-			{
-				_camera->RemoveBlendable(_dynamicMat);
-			}, time, false);
-	}*/
+	USeniorMovementComponent* _movement = _target->GetSeniorMovementComponent();
+	if (!_movement)return;
+	_movement->ActivateSpeedBoost();
 
 }
 
