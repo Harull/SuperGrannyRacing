@@ -56,6 +56,6 @@ void ACollectedItem::Init()
 
 	boxPosition = box->GetComponentLocation();
 
-	UGIS_CollectedItem* _sub = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
+	UGIS_CollectedItem* _sub = GetWorld()->GetSubsystem<UGIS_CollectedItem>();
 	_sub->AddCollectedItem(this);
 }

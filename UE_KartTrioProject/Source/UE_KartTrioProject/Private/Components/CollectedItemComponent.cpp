@@ -46,7 +46,7 @@ void UCollectedItemComponent::BeginPlay()
 	{
 		FTimerHandle _timer;
 		//GetWorld()->GetTimerManager().SetTimer(_timer, [this]() {
-		if (UGIS_CollectedItem* _subsys = GetWorld()->GetGameInstance()->GetSubsystem<UGIS_CollectedItem>())
+		if (UGIS_CollectedItem* _subsys = GetWorld()->GetSubsystem<UGIS_CollectedItem>())
 		{
 			listItem = _subsys->GetRandomList(6);
 			OnRep_ListItem();

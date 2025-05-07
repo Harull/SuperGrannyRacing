@@ -14,7 +14,7 @@ void AGM_KartBase::BeginPlay()
 		_subsystem->SetLootBoxToSpawn(lootBox);
 
 
-	UGIS_CollectedItem* _subsystem = GetGameInstance()->GetSubsystem<UGIS_CollectedItem>();
+	UGIS_CollectedItem* _subsystem = GetWorld()->GetSubsystem<UGIS_CollectedItem>();
 	if (_subsystem && _subsystem->ItemListIsEmpty())
 	{
 		int _sizeList = 6;

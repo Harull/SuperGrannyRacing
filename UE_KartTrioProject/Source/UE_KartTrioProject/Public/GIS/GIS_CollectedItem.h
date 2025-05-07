@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include <GPE/CollectedItem.h>
+#include "Subsystems/WorldSubsystem.h"
 #include "GIS_CollectedItem.generated.h"
 
 /**
  *
  */
 UCLASS()
-class UE_KARTTRIOPROJECT_API UGIS_CollectedItem : public UGameInstanceSubsystem
+class UE_KARTTRIOPROJECT_API UGIS_CollectedItem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 	UPROPERTY() TArray<TObjectPtr<ACollectedItem>> allCollectedItem; //Tous les collectedItem sur la map
@@ -23,7 +24,6 @@ public:
 	FORCEINLINE bool ItemListIsEmpty() const { return allItemToList.Num() <= 0; }
 
 public:
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	void AddCollectedItem(TObjectPtr<ACollectedItem> _item);
 	void RemoveCollectedItem(TObjectPtr<ACollectedItem> _item);
 	TArray<TObjectPtr<ACollectedItem>> GetRandomList(int _sizeToList);

@@ -5,10 +5,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 
 
-void UGIS_CollectedItem::Initialize(FSubsystemCollectionBase& Collection)
-{
 
-}
 
 void UGIS_CollectedItem::AddCollectedItem(TObjectPtr<ACollectedItem> _item)
 {
