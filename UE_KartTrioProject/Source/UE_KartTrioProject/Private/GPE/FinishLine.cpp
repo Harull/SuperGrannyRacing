@@ -11,7 +11,7 @@
 // Sets default values
 AFinishLine::AFinishLine()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	//billboard = CreateDefaultSubobject<UBillboardComponent>("Billboard");
@@ -25,7 +25,7 @@ AFinishLine::AFinishLine()
 void AFinishLine::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -40,18 +40,19 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	ASeniorPlayer* _player = Cast<ASeniorPlayer>(_otherActor);
 	if (!_player) return;
 	//UCollectedItemComponent* _comp =  _player->GetComponentByClass<UCollectedItemComponent>();
-	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
+	UCollectedItemComponent* _comp = _player->GetCollectedItemComponent();
 	if (!_comp) return;
 	if (_comp->CanFinish())
 	{
 		UKismetSystemLibrary::PrintString(this, "Finish");
-		if(APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
+		if (APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
 		{
 			if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(_controller->GetHUD()))
 			{
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
 				_hud->GetMainWidget()->SetWinScreenVisibility();
-				if(_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
+				_hud->GetOwningPlayerController()->SetShowMouseCursor(true);
+				if (_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
 					_hud->GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
 			}
 			_player->DisableInput(_controller);
