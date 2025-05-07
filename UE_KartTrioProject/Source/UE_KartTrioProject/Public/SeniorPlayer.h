@@ -15,6 +15,7 @@
 
 class USeniorMovementComponent;
 class UPlaceArrowSignComponent;
+class UDestinationArrowComponent;
 class UInventoryComponent;
 
 UCLASS()
@@ -34,8 +35,8 @@ private:
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
 	UPROPERTY(EditAnywhere) TObjectPtr<UPlaceArrowSignComponent> placeArrowSignComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess)) TObjectPtr<UInventoryComponent> inventory;
+	UPROPERTY(EditAnywhere) TObjectPtr<UDestinationArrowComponent> destinationArrowComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess=True)) TObjectPtr<UBumpComponent> bumpComponent;
-
 
 	UPROPERTY(EditAnywhere) TObjectPtr<UCapsuleComponent> cartCapsuleComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess)) TObjectPtr<UStaticMeshComponent> shoppingCart;
@@ -70,6 +71,7 @@ public:
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetLeftFrontWheel()const { return frontLeftWheel; }
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetRightFrontWheel()const { return frontRightWheel; }
 	FORCEINLINE TObjectPtr<UPlaceArrowSignComponent> GetPlaceArrowSignComponent() const { return placeArrowSignComponent; }
+	FORCEINLINE TObjectPtr<UDestinationArrowComponent> GetDestinationArrowComponent() const { return destinationArrowComponent; }
 	FORCEINLINE TObjectPtr<UInventoryComponent> GetInventoryComponent() const { return inventory; }
 	FORCEINLINE FString GetSteamUsername() const { return steamUsername; }
 

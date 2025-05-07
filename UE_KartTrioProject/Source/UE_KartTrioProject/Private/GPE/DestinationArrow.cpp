@@ -1,0 +1,76 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "GPE/DestinationArrow.h"
+
+// Sets default values
+ADestinationArrow::ADestinationArrow()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
+	arrowMesh = CreateDefaultSubobject<UStaticMeshComponent>("ArrowMesh");
+
+	arrowMesh->SetupAttachment(RootComponent);
+
+}
+
+void ADestinationArrow::SetTarget(const FVector& _newTarget)
+{
+    targetPoint = _newTarget;
+}
+
+bool ADestinationArrow::IsStraightAheadItsDestination()
+{
+    GetActorRotation();
+
+    FVector _arrowLocation = GetActorLocation();
+    FVector _direction = targetPoint - _arrowLocation;
+
+    const float _dot = FVector::DotProduct(_arrowLocation.GetSafeNormal(), _direction.GetSafeNormal());
+    return _dot <= 1;
+}
+
+
+// Called when the game starts or when spawned
+void ADestinationArrow::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+}
+
+// Called every frame
+void ADestinationArrow::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+    if (!targetPoint.IsNearlyZero())
+    {
+        arrowMesh->SetVisibility(true);
+        FVector _arrowLocation = GetActorLocation();
+        FVector _direction = targetPoint - _arrowLocation;
+
+        _direction.Z = 0.f;
+
+        if (!_direction.IsNearlyZero())
+        {
+            FRotator _lookRotation = _direction.Rotation();
+            _lookRotation.Pitch = 0.f;
+            _lookRotation.Roll = -90.f;
+            _lookRotation.Yaw -= 180;
+            SetActorRotation(_lookRotation);
+        }
+    }
+    else
+    {
+        arrowMesh->SetVisibility(false);
+    }
+    //if (IsStraightAheadItsDestination())
+    //{
+    //    SetActorRotation(straightAheadRotation);
+    //}
+}
+
+
+
+

@@ -7,6 +7,8 @@
 #include <UI/Kart_HUD.h>
 #include <SeniorPlayer.h>
 #include "Components/PlaceArrowSignComponent.h"
+#include "Components/DestinationArrowComponent.h"
+#include "GPE/DestinationArrow.h"
 #include "Components/BillboardComponent.h"
 #include "Algo/Sort.h"
 #include "Components/InventoryComponent.h"
@@ -59,6 +61,16 @@ void UCollectedItemComponent::BeginPlay()
 		if (TObjectPtr<UPlaceArrowSignComponent> _arrowComp = seniorPlayerRef->GetPlaceArrowSignComponent())
 		{
 			_arrowComp->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
+			
+			FTimerHandle _timer;
+			GetWorld()->GetTimerManager().SetTimer(_timer, [&]()
+				{
+					if (TObjectPtr<ADestinationArrow> _arrow = seniorPlayerRef->GetDestinationArrowComponent()->GetCurrentArrow())
+					{
+						_arrow->SetTarget(GetCurrentItem()->GetItemPosition());
+						UKismetSystemLibrary::PrintString(this, "Salut la team", true, true, FLinearColor::Red, 20.0f);
+					}
+				}, 1, false);
 		}
 	}
 }
@@ -152,8 +164,18 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 				_itemWidget->CrossItem();
 		}
 
-		canFinish ? seniorPlayerRef->GetPlaceArrowSignComponent()->NoMoreItem()
-			: seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
+		if (canFinish)
+		{
+			seniorPlayerRef->GetPlaceArrowSignComponent()->NoMoreItem();
+			if (TObjectPtr<ADestinationArrow> _arrow = seniorPlayerRef->GetDestinationArrowComponent()->GetCurrentArrow())
+				_arrow->SetTarget(FVector::ZeroVector);
+		}
+		else
+		{
+			seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
+			if (TObjectPtr<ADestinationArrow> _arrow = seniorPlayerRef->GetDestinationArrowComponent()->GetCurrentArrow())
+				_arrow->SetTarget(GetCurrentItem()->GetItemPosition());
+		}
 	}
 }
 
