@@ -26,4 +26,5 @@ protected:
 private:
 	UFUNCTION() void OnPlay();
 	UFUNCTION() void OnQuit();
+
 };

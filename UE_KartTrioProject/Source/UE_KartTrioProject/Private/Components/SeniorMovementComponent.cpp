@@ -191,7 +191,6 @@ void USeniorMovementComponent::SteerWheels(const FInputActionValue& _valueFloat)
 	//FMath::Lerp(minimumSteeringSpeed * (currentVelocity< 0 ? -1 : 1) ,_valueFloat.Get<float>() * steeringSpeed * GetWorld()->DeltaTimeSeconds, currentVelocity /
 	//	(currentVelocity < 0 ? (backwardMaxSpeed * -1) : forwardMaxSpeed));
 	//currentSteeringAngle = FMath::Clamp(currentSteeringAngle, -maxFrontWheelSteeringAngle, maxFrontWheelSteeringAngle);
-
 }
 
 void USeniorMovementComponent::SetIsMovingForward(const FInputActionValue& _valueFloat)

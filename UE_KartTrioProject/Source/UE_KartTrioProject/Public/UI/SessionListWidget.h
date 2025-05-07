@@ -17,7 +17,7 @@ class UE_KARTTRIOPROJECT_API USessionListWidget : public UUserWidget
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> createButton;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> refreshButton;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UButton> startGameButton;
-	UPROPERTY(meta = (BindWidget)) TObjectPtr<UScrollBox> sessionList;
+	UPROPERTY(BlueprintReadOnly,meta = (BindWidget, AllowPrivateAccess)) TObjectPtr<UScrollBox> sessionList;
 
 	UPROPERTY() TObjectPtr<UGIS_Online> subsystem;
 	UPROPERTY() TArray<TObjectPtr<USessionSlotWidget>> allSessions;
