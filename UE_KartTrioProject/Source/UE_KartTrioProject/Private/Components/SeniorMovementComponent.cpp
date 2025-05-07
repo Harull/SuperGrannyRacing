@@ -90,21 +90,53 @@ void USeniorMovementComponent::Move()
 {
 	if (!canMove || !ownersCharacterMovementComponent) return;
 
-	if (currentVelocity > 0)
-	{
-		ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * (currentVelocity/forwardMaxSpeed) /** GetWorld()->DeltaTimeSeconds*/);
-		onMoveForwardDone.Broadcast();
-	}
-	else if (currentVelocity < 0)
-	{
-		ownersCharacterMovementComponent->AddInputVector(GetSymetricalForwardVectorRotatedBySteerAngle() * (currentVelocity/backwardMaxSpeed/2)/** GetWorld()->DeltaTimeSeconds*/);
-		onMoveBackwardDone.Broadcast();
-	}
-	else
-		return;
-	onSpeedUpdate.Broadcast(currentVelocity);
-	//ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);
-	onMovementDone.Broadcast();
+	/*if (isBoosting)
+	{*/
+		//UKismetSystemLibrary::PrintString(this, "1");
+		FVector _moveDirection;
+		float _absVelocity = FMath::Abs(currentVelocity);
+
+		if (currentVelocity > 0)
+		{
+			_moveDirection = GetForwardVectorRotatedBySteerAngle().GetSafeNormal();
+			onMoveForwardDone.Broadcast();
+		}
+		else if (currentVelocity < 0)
+		{
+			_moveDirection = -GetSymetricalForwardVectorRotatedBySteerAngle().GetSafeNormal();
+			onMoveBackwardDone.Broadcast();
+		}
+		else
+			return;
+
+		const float _mappedSpeed = isBoosting ? FMath::GetMappedRangeValueClamped(FVector2D(0.0f, forwardMaxSpeed), FVector2D(0.0f, dynamicMaxWalkSpeed), _absVelocity) * 0.90f : FMath::GetMappedRangeValueClamped(FVector2D(0.0f, forwardMaxSpeed), FVector2D(0.0f, dynamicMaxWalkSpeed), _absVelocity) / 2.0f;
+
+		ownersCharacterMovementComponent->MaxWalkSpeed = _mappedSpeed;
+		ownersCharacterMovementComponent->AddInputVector(_moveDirection);
+
+		onSpeedUpdate.Broadcast(currentVelocity);
+		onMovementDone.Broadcast();
+	//}
+
+	//else
+	//{
+	//	//UKismetSystemLibrary::PrintString(this, "2");
+	//	if (currentVelocity > 0)
+	//	{
+	//		ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * (currentVelocity / forwardMaxSpeed) /** GetWorld()->DeltaTimeSeconds*/);
+	//		onMoveForwardDone.Broadcast();
+	//	}
+	//	else if (currentVelocity < 0)
+	//	{
+	//		ownersCharacterMovementComponent->AddInputVector(GetSymetricalForwardVectorRotatedBySteerAngle() * (currentVelocity / backwardMaxSpeed / 2)/** GetWorld()->DeltaTimeSeconds*/);
+	//		onMoveBackwardDone.Broadcast();
+	//	}
+	//	else
+	//		return;
+	//	onSpeedUpdate.Broadcast(currentVelocity);
+	//	//ownersCharacterMovementComponent->AddInputVector(GetForwardVectorRotatedBySteerAngle() * _currentSpeed);
+	//	onMovementDone.Broadcast();
+	//}
 	
 }
 
@@ -131,6 +163,7 @@ void USeniorMovementComponent::ApplyCameraSpringArmRotationBasedOnSteer()
 void USeniorMovementComponent::AddVelocity(const FInputActionValue& _valuePosFloat)
 {
 	if (!canMove) return;
+	//float _accelSpeed = isBoosting ? forwardAccelerationSpeed * boostMultiplier : forwardAccelerationSpeed;
 	float _newValue = currentVelocity + forwardAccelerationSpeed * GetWorld()->DeltaTimeSeconds;
 	SetCurrentVelocity(FMath::Clamp(_newValue, -backwardMaxSpeed, forwardMaxSpeed));
 
@@ -241,21 +274,46 @@ void USeniorMovementComponent::ActivateSpeedBoost()
 
 	isBoosting = true;
 
-	initialForwardMaxSpeed = forwardMaxSpeed;
-	initialBackwardMaxSpeed = backwardMaxSpeed;
+	/*initialForwardMaxSpeed = forwardMaxSpeed;
+	initialBackwardMaxSpeed = backwardMaxSpeed;*/
 
 	forwardMaxSpeed *= boostMultiplier;
 	backwardMaxSpeed *= boostMultiplier;
 
+	//SetCurrentVelocity(FMath::Clamp(currentVelocity, -backwardMaxSpeed, forwardMaxSpeed));
 	GetWorld()->GetTimerManager().SetTimer(boostTimerHandle, this, &USeniorMovementComponent::ResetSpeedAfterBoost, boostDuration, false);
 }
 
 void USeniorMovementComponent::ResetSpeedAfterBoost()
 {
-	forwardMaxSpeed = initialForwardMaxSpeed;
-	backwardMaxSpeed = initialBackwardMaxSpeed;
+	if (isResetting)return;
 
+	isResetting = true;
 	isBoosting = false;
+	boostResetElapsed = 0.0f;
+	boostedForwardMaxSpeed = forwardMaxSpeed;
+	boostedBackwardMaxSpeed = backwardMaxSpeed;
+	GetWorld()->GetTimerManager().SetTimer(boostResetTimerHandle, this, &USeniorMovementComponent::UpdateBoostReset, GetWorld()->GetDeltaSeconds(), true);
+}
+
+void USeniorMovementComponent::UpdateBoostReset()
+{
+	boostResetElapsed += GetWorld()->GetDeltaSeconds();
+	float _alpha = FMath::Clamp(boostResetElapsed / boostResetDuration, 0.0f, 1.0f);
+
+	forwardMaxSpeed = FMath::Lerp(boostedForwardMaxSpeed, initialForwardMaxSpeed, _alpha);
+	backwardMaxSpeed = FMath::Lerp(boostedBackwardMaxSpeed, initialBackwardMaxSpeed, _alpha);
+	
+	if (_alpha >= 1.0f)
+	{
+		UKismetSystemLibrary::PrintString(this, "End boost");
+		//isBoosting = false;
+		isResetting = false;
+		ResetForwardMaxSpeed();
+		ResetBackwardMaxSpeed();
+		SetCurrentVelocity(FMath::Clamp(currentVelocity, -backwardMaxSpeed, forwardMaxSpeed));
+		GetWorld()->GetTimerManager().ClearTimer(boostResetTimerHandle);
+	}
 }
 
 void USeniorMovementComponent::ManageSlipping(const float _deltaTime)

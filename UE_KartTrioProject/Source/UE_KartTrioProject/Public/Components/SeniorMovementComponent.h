@@ -105,9 +105,16 @@ class UE_KARTTRIOPROJECT_API USeniorMovementComponent : public UActorComponent
 	UPROPERTY() TObjectPtr<UCharacterMovementComponent> ownersCharacterMovementComponent;
 
 	FTimerHandle boostTimerHandle;
+	FTimerHandle boostResetTimerHandle;
 	bool isBoosting = false;
-	UPROPERTY(EditAnywhere, Category = "Boost")float boostMultiplier = 2.0f;
-	UPROPERTY(EditAnywhere, Category = "Boost")float boostDuration = 2.0f;
+	UPROPERTY(EditAnywhere, Category = "Boost")float boostMultiplier = 1.5f;
+	UPROPERTY(EditAnywhere, Category = "Boost")float boostDuration = 3.0f;
+	float boostResetDuration = 1.0f;
+	float boostResetElapsed = 0.0f;
+	float boostedForwardMaxSpeed = 0.0f;
+	float boostedBackwardMaxSpeed = 0.0f;
+	float dynamicMaxWalkSpeed = 1200.0f;
+	bool isResetting = false;
 
 protected:
 	UPROPERTY(BlueprintReadOnly) bool isStun = false;
@@ -186,6 +193,7 @@ public:
 
 	void ActivateSpeedBoost();
 	void ResetSpeedAfterBoost();
+	void UpdateBoostReset();
 
 
 private:
