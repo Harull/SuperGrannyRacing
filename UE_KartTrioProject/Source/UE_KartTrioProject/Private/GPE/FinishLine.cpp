@@ -6,6 +6,7 @@
 #include <SeniorPlayer.h>
 #include <Components/CollectedItemComponent.h>
 #include <Kismet/KismetSystemLibrary.h>
+#include "Components/SeniorMovementComponent.h"
 #include <UI/Kart_HUD.h>
 
 // Sets default values
@@ -56,6 +57,7 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 			}
 			_player->DisableInput(_controller);
 			_player->SetActorEnableCollision(false);
+			_player->GetSeniorMovementComponent()->ResetVelocity();
 		}
 		onStopRace.Broadcast();
 	}
