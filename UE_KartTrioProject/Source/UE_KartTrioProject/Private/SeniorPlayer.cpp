@@ -15,6 +15,9 @@
 #include "Components/InventoryComponent.h"
 #include <GIS/WS_PlayerClassement.h>
 #include "UI/Lobby_HUD.h"
+#include <UI/Kart_HUD.h>
+#include "UI/MainWidget.h"
+#include "UI/WarningScreenWidget.h"
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -201,6 +204,26 @@ void ASeniorPlayer::Client_ApplyMalusEffect_Implementation(UMaterialInterface* _
 		{
 			_camera->RemoveBlendable(_dynMat);
 		}, _duration, false);
+}
+
+void ASeniorPlayer::Client_Warning_Implementation(float _duration)
+{
+	APlayerController* _playerController = Cast<APlayerController>(GetController());
+	UKismetSystemLibrary::PrintString(this, "0");
+	if (!_playerController) return;
+	UKismetSystemLibrary::PrintString(this, "1");
+	AKart_HUD* _HUD = Cast< AKart_HUD>(_playerController->GetHUD());
+	if (!_HUD)return;
+	UKismetSystemLibrary::PrintString(this, "2");
+	UMainWidget* _mw = _HUD->GetMainWidget();
+	if (!_mw)return;
+	UKismetSystemLibrary::PrintString(this, "3");
+	UWarningScreenWidget* _warningScreen = _mw->GetWarningScreenWidget();
+	if (!_warningScreen)return;
+	UKismetSystemLibrary::PrintString(this, "4");
+	_warningScreen->SetVisibility(ESlateVisibility::Visible);
+
+	
 }
 
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
