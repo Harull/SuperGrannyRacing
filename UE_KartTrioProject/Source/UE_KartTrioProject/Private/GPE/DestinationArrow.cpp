@@ -53,13 +53,7 @@ void ADestinationArrow::Tick(float DeltaTime)
         _direction.Z = 0.f;
 
         if (!_direction.IsNearlyZero())
-        {
-            FRotator _lookRotation = _direction.Rotation();
-            _lookRotation.Pitch = 0.f;
-            _lookRotation.Roll = -90.f;
-            _lookRotation.Yaw -= 180;
-            SetActorRotation(_lookRotation);
-        }
+            SetActorRotation(_direction.Rotation());
     }
     else
     {
