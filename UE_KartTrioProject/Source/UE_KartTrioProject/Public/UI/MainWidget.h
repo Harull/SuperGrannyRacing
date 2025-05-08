@@ -11,6 +11,7 @@
 #include "UI/UsableItemWidget.h"
 #include "UI/ObtainItemWidget.h"
 #include "UI/WarningScreenWidget.h"
+#include "UI/StatusEffectWidget.h"
 #include "MainWidget.generated.h"
 
 UCLASS()
@@ -21,6 +22,7 @@ class UE_KARTTRIOPROJECT_API UMainWidget : public UUserWidget
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UVerticalBox> shoppingList;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UWinScreenWidget> winScreen;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UWarningScreenWidget> warningScreen;
+	UPROPERTY(meta = (BindWidget)) TObjectPtr<UStatusEffectWidget> statusEffectWidget;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UUsableItemWidget> usableItemWidget;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UUsableItemWidget> usableSpecialItemWidget;
 	UPROPERTY(meta = (BindWidget)) TObjectPtr<UObtainItemWidget> obtainItemWidget;
@@ -37,6 +39,7 @@ public:
 	FORCEINLINE TObjectPtr<UUsableItemWidget> GetUsableSpecialItemWidget() { return usableSpecialItemWidget; }
 	FORCEINLINE TObjectPtr<UObtainItemWidget> GetObtainItemWidget() { return obtainItemWidget; }
 	FORCEINLINE TObjectPtr<UWarningScreenWidget> GetWarningScreenWidget() { return warningScreen; }
+	FORCEINLINE TObjectPtr<UStatusEffectWidget> GetStatusEffectWidget() { return statusEffectWidget; }
 
 protected:
 	virtual void NativeConstruct() override;

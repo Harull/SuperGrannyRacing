@@ -17,6 +17,7 @@ class USeniorMovementComponent;
 class UPlaceArrowSignComponent;
 class UDestinationArrowComponent;
 class UInventoryComponent;
+class UMainWidget;
 
 UCLASS()
 class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
@@ -110,6 +111,7 @@ private:
 
 private:
 	void InitUniqueID();
+	UMainWidget* GetMainWidget();
 private:
 	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
 	UFUNCTION(Server, Reliable) void Server_ModifySteamUsername(const FString& _steamUsername);

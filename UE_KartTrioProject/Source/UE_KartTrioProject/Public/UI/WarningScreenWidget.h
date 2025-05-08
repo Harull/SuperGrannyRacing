@@ -11,7 +11,7 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API UWarningScreenWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	UPROPERTY(EditAnywhere, meta = (BindWidgetl)) TObjectPtr<UImage> iconFlash = nullptr;
+	UPROPERTY(EditAnywhere, meta = (BindWidget)) TObjectPtr<UImage> iconFlash;
 	UPROPERTY(EditAnywhere, meta = (BindWidget)) TObjectPtr<UTextBlock> textFlash;
 public:
 	FORCEINLINE TObjectPtr<UImage> GetWarningIcon() { return iconFlash; }

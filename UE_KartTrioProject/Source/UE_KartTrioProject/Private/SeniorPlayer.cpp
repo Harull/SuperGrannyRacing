@@ -173,6 +173,15 @@ void ASeniorPlayer::InitUniqueID()
 	actorLocalID = this->GetUniqueID();
 }
 
+UMainWidget* ASeniorPlayer::GetMainWidget()
+{
+	APlayerController* _playerController = Cast<APlayerController>(GetController());
+	if (!_playerController) return nullptr;
+	AKart_HUD* _HUD = Cast< AKart_HUD>(_playerController->GetHUD());
+	if (!_HUD)return nullptr;
+	return _HUD->GetMainWidget();
+}
+
 void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
 {
 	UKismetSystemLibrary::PrintString(this, "THE SERVER RPC IS CALLED", true, true, FLinearColor::Yellow, 30);
@@ -208,20 +217,14 @@ void ASeniorPlayer::Client_ApplyMalusEffect_Implementation(UMaterialInterface* _
 
 void ASeniorPlayer::Client_Warning_Implementation(float _duration)
 {
-	APlayerController* _playerController = Cast<APlayerController>(GetController());
-	UKismetSystemLibrary::PrintString(this, "0");
-	if (!_playerController) return;
-	UKismetSystemLibrary::PrintString(this, "1");
-	AKart_HUD* _HUD = Cast< AKart_HUD>(_playerController->GetHUD());
-	if (!_HUD)return;
-	UKismetSystemLibrary::PrintString(this, "2");
-	UMainWidget* _mw = _HUD->GetMainWidget();
+	UMainWidget* _mw = GetMainWidget();
 	if (!_mw)return;
-	UKismetSystemLibrary::PrintString(this, "3");
 	UWarningScreenWidget* _warningScreen = _mw->GetWarningScreenWidget();
 	if (!_warningScreen)return;
-	UKismetSystemLibrary::PrintString(this, "4");
 	_warningScreen->SetVisibility(ESlateVisibility::Visible);
+
+	FTimerHandle _timer;
+	GetWorld()->GetTimerManager().SetTimer(_timer, [_warningScreen]() {_warningScreen->SetVisibility(ESlateVisibility::Hidden); }, _duration, false);
 
 	
 }
