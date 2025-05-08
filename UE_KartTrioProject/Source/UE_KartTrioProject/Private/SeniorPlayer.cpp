@@ -122,6 +122,14 @@ void ASeniorPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+void ASeniorPlayer::SetTemporaryStatus(EPlayerStatus _newStatus, float _duration)
+{
+	FTimerHandle _timer;
+	currentStatus = _newStatus;
+	GetMainWidget()->GetStatusEffectWidget()->UpdateStatus(currentStatus);
+	GetWorld()->GetTimerManager().SetTimer(_timer, this, &ASeniorPlayer::ResetStatus, _duration, false);
+}
+
 void ASeniorPlayer::InitSubsystem()
 {
 	TObjectPtr<UEnhancedInputLocalPlayerSubsystem> _subsys = GetWorld()->GetFirstPlayerController()->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
@@ -180,6 +188,12 @@ UMainWidget* ASeniorPlayer::GetMainWidget()
 	AKart_HUD* _HUD = Cast< AKart_HUD>(_playerController->GetHUD());
 	if (!_HUD)return nullptr;
 	return _HUD->GetMainWidget();
+}
+
+void ASeniorPlayer::ResetStatus()
+{
+	currentStatus = EPlayerStatus::NONE;
+	GetMainWidget()->GetStatusEffectWidget()->HideStatus();
 }
 
 void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()

@@ -253,6 +253,7 @@ void USeniorMovementComponent::StopMoveAndRotateTime(const float _time)
 	isStun = true;
 	SetCanMove(false);
 	SetCanRotate(false);
+	//personalOwner->SetTemporaryStatus(EPlayerStatus::STUN, _time);
 }
 
 void USeniorMovementComponent::Slip(const FSlipperySettings& _slipSettings)

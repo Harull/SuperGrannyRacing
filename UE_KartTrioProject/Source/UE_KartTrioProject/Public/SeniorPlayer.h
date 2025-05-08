@@ -19,6 +19,15 @@ class UDestinationArrowComponent;
 class UInventoryComponent;
 class UMainWidget;
 
+UENUM()
+enum class EPlayerStatus 
+{
+	NONE,
+	STUN,
+	FROZEN,
+	SLIPPING
+};
+
 UCLASS()
 class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 {
@@ -60,6 +69,8 @@ private:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitializationDone);
 	UPROPERTY(BlueprintAssignable, meta = (AllowPrivateAccess = True)) FOnInitializationDone onInitializationDone;
+
+	UPROPERTY()EPlayerStatus currentStatus;
 	
 
 public:
@@ -104,7 +115,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// UFUNCTION(Client, Reliable)	void ClientRPC_ReceiveShoppingList(const TArray<ACollectedItem*>& SharedList);
-
+	void SetTemporaryStatus(EPlayerStatus _newStatus, float _duration);
 private:
 	void InitSubsystem();
 	void InitInputs(TObjectPtr<UEnhancedInputComponent> _inputComponent);
@@ -112,6 +123,7 @@ private:
 private:
 	void InitUniqueID();
 	UMainWidget* GetMainWidget();
+	void ResetStatus();
 private:
 	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
 	UFUNCTION(Server, Reliable) void Server_ModifySteamUsername(const FString& _steamUsername);
