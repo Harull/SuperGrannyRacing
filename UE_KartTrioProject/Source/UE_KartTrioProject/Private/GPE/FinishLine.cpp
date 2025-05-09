@@ -42,6 +42,7 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	//UCollectedItemComponent* _comp =  _player->GetComponentByClass<UCollectedItemComponent>();
 	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
 	if (!_comp) return;
+	
 	if (_comp->CanFinish() && !arrivedPlayers.Contains(_player))
 	{
 		_comp->SetHasFinish(true);
@@ -95,5 +96,12 @@ FString AFinishLine::GetOrdinalSuffix(int _number)
 	default: 
 		return "th";
 	}
+}
+
+void AFinishLine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFinishLine, arrivedPlayers);
 }
 
