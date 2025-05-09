@@ -20,7 +20,7 @@ class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 	//UPROPERTY(EditAnywhere) TObjectPtr<UBillboardComponent> billboard = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 
-	UPROPERTY(VisibleAnywhere) TArray<ASeniorPlayer*> arrivedPlayers;
+	UPROPERTY(EditAnywhere) TArray<ASeniorPlayer*> arrivedPlayers;
 	
 public:
 	FOnStopRace& OnStopRace() { return onStopRace; }
@@ -33,5 +33,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	FString GetOrdinalSuffix(int _number);
 
 };

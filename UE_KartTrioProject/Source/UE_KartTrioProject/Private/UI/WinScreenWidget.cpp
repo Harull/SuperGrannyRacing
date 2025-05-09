@@ -33,3 +33,8 @@ void UWinScreenWidget::SetVisible()
 	if (!appearAnim) return;
 	PlayAnimation(appearAnim);
 }
+
+void UWinScreenWidget::SetText(FText _text)
+{
+	raceClassement->SetText(_text);
+}

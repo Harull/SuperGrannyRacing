@@ -44,13 +44,22 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	if (!_comp) return;
 	if (_comp->CanFinish() && !arrivedPlayers.Contains(_player))
 	{
+		_comp->SetHasFinish(true);
 		arrivedPlayers.Add(_player);
+		int _position = arrivedPlayers.Num();
+		UKismetSystemLibrary::PrintString(this, FString::FromInt(_position));
+		FString _suffix = GetOrdinalSuffix(_position);
+		FString _string = " You are : " + FString::FromInt(_position) + _suffix + " ! ";
+		FString _positionText =_string;
+		_positionText += TEXT("\n Good Granny !!!");
+
 		UKismetSystemLibrary::PrintString(this, "Finish");
 		if(APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
 		{
 			if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(_controller->GetHUD()))
 			{
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
+				_hud->GetMainWidget()->GetWinScreenWidget()->SetText(FText::FromString(_positionText));
 				_hud->GetMainWidget()->SetWinScreenVisibility();
 				if(_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
 					_hud->GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
@@ -64,6 +73,27 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	{
 
 		UKismetSystemLibrary::PrintString(this, "NO Finish");
+	}
+}
+
+FString AFinishLine::GetOrdinalSuffix(int _number)
+{
+	int _tens = _number % 100;
+	int _unit = _number % 10;
+
+	if (_tens >= 11 && _tens <= 13)
+		return "th";
+
+	switch (_unit)
+	{
+	case 1: 
+		return "st";
+	case 2:
+		return "nd";
+	case 3: 
+		return "rd";
+	default: 
+		return "th";
 	}
 }
 

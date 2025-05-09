@@ -39,8 +39,8 @@ class UE_KARTTRIOPROJECT_API ASeniorPlayer : public ACharacter
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<USeniorMovementComponent> seniorMovementcomponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TObjectPtr<UCollectedItemComponent> collectedItemComponent;
 private:
-	UPROPERTY(EditAnywhere) TObjectPtr<UCollectedItemComponent> collectedItemComponent;
 	UPROPERTY(EditAnywhere) TObjectPtr<USpringArmComponent> springArm;
 	UPROPERTY(EditAnywhere) TObjectPtr<UCameraComponent> camera;
 	UPROPERTY(EditAnywhere) TObjectPtr<UPlaceArrowSignComponent> placeArrowSignComponent;

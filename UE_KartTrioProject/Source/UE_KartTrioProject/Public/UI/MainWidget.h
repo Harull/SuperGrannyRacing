@@ -38,6 +38,7 @@ public:
 	FORCEINLINE TObjectPtr<UUsableItemWidget> GetUsableItemWidget() { return usableItemWidget; }
 	FORCEINLINE TObjectPtr<UUsableItemWidget> GetUsableSpecialItemWidget() { return usableSpecialItemWidget; }
 	FORCEINLINE TObjectPtr<UObtainItemWidget> GetObtainItemWidget() { return obtainItemWidget; }
+	FORCEINLINE TObjectPtr<UWinScreenWidget> GetWinScreenWidget() { return winScreen; }
 	FORCEINLINE TObjectPtr<UWarningScreenWidget> GetWarningScreenWidget() { return warningScreen; }
 	FORCEINLINE TObjectPtr<UStatusEffectWidget> GetStatusEffectWidget() { return statusEffectWidget; }
 
