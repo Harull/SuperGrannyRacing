@@ -7,6 +7,8 @@
 #include <Components/BoxComponent.h>
 #include "FinishLine.generated.h"
 
+class ASeniorPlayer;
+
 UCLASS()
 class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 {
@@ -17,9 +19,12 @@ class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 	
 	//UPROPERTY(EditAnywhere) TObjectPtr<UBillboardComponent> billboard = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
+
+	UPROPERTY(VisibleAnywhere) TArray<ASeniorPlayer*> arrivedPlayers;
 	
 public:
 	FOnStopRace& OnStopRace() { return onStopRace; }
+	FORCEINLINE TArray<ASeniorPlayer*> GetArrivedPlayers(){return arrivedPlayers;}
 
 public:	
 	AFinishLine();

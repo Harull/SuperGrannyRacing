@@ -124,10 +124,32 @@ void ASeniorPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ASeniorPlayer::SetTemporaryStatus(EPlayerStatus _newStatus, float _duration)
 {
-	FTimerHandle _timer;
 	currentStatus = _newStatus;
-	GetMainWidget()->GetStatusEffectWidget()->UpdateStatus(currentStatus);
-	GetWorld()->GetTimerManager().SetTimer(_timer, this, &ASeniorPlayer::ResetStatus, _duration, false);
+	
+	if (UMainWidget* _mw = GetMainWidget())
+	{
+		if (UStatusEffectWidget* _sw = _mw->GetStatusEffectWidget())
+		{
+			_sw->UpdateStatus(currentStatus);
+		}
+	}
+
+	GetWorld()->GetTimerManager().ClearTimer(timer);
+	GetWorld()->GetTimerManager().SetTimer(timer, this, &ASeniorPlayer::ResetStatus, _duration, false);
+}
+
+void ASeniorPlayer::ActivateSpeedBoost()
+{
+	if (HasAuthority())
+	{
+		UKismetSystemLibrary::PrintString(this, "Server");
+		seniorMovementcomponent->ActivateSpeedBoost();
+	}
+	else
+	{
+		UKismetSystemLibrary::PrintString(this, "client");
+		Server_ActivateSpeedBoost(); 
+	}
 }
 
 void ASeniorPlayer::InitSubsystem()
@@ -193,7 +215,20 @@ UMainWidget* ASeniorPlayer::GetMainWidget()
 void ASeniorPlayer::ResetStatus()
 {
 	currentStatus = EPlayerStatus::NONE;
-	GetMainWidget()->GetStatusEffectWidget()->HideStatus();
+
+	if (UMainWidget* _mw = GetMainWidget())
+	{
+		if (UStatusEffectWidget* _sw = _mw->GetStatusEffectWidget())
+		{
+			_sw->HideStatus();
+		}
+	}
+}
+
+void ASeniorPlayer::Server_ActivateSpeedBoost_Implementation()
+{
+	UKismetSystemLibrary::PrintString(this, "Server RPC");
+	seniorMovementcomponent->ActivateSpeedBoost();
 }
 
 void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()

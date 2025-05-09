@@ -42,8 +42,9 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	//UCollectedItemComponent* _comp =  _player->GetComponentByClass<UCollectedItemComponent>();
 	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
 	if (!_comp) return;
-	if (_comp->CanFinish())
+	if (_comp->CanFinish() && !arrivedPlayers.Contains(_player))
 	{
+		arrivedPlayers.Add(_player);
 		UKismetSystemLibrary::PrintString(this, "Finish");
 		if(APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
 		{

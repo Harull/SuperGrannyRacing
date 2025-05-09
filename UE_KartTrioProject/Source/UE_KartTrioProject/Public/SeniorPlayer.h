@@ -70,7 +70,8 @@ private:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInitializationDone);
 	UPROPERTY(BlueprintAssignable, meta = (AllowPrivateAccess = True)) FOnInitializationDone onInitializationDone;
 
-	UPROPERTY()EPlayerStatus currentStatus;
+	UPROPERTY()EPlayerStatus currentStatus = EPlayerStatus::NONE;
+	FTimerHandle timer;
 	
 
 public:
@@ -116,6 +117,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// UFUNCTION(Client, Reliable)	void ClientRPC_ReceiveShoppingList(const TArray<ACollectedItem*>& SharedList);
 	void SetTemporaryStatus(EPlayerStatus _newStatus, float _duration);
+	void ActivateSpeedBoost();
 private:
 	void InitSubsystem();
 	void InitInputs(TObjectPtr<UEnhancedInputComponent> _inputComponent);
@@ -127,6 +129,7 @@ private:
 private:
 	UFUNCTION(Server, Reliable) void Server_IncrementCurrentPlayerReady();
 	UFUNCTION(Server, Reliable) void Server_ModifySteamUsername(const FString& _steamUsername);
+	UFUNCTION(Server, Reliable) void Server_ActivateSpeedBoost();
 public:
 	UFUNCTION(Client, Reliable) void Client_ApplyMalusEffect(UMaterialInterface* _material, float _duration);
 	UFUNCTION(Client, Reliable) void Client_Warning(float _duration);

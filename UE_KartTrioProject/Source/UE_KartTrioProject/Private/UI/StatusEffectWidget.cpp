@@ -1,5 +1,6 @@
 #include "UI/StatusEffectWidget.h"
 #include "SeniorPlayer.h"
+#include <Kismet/KismetSystemLibrary.h>
 
 void UStatusEffectWidget::NativeConstruct()
 {
@@ -9,25 +10,23 @@ void UStatusEffectWidget::NativeConstruct()
 void UStatusEffectWidget::UpdateStatus(EPlayerStatus _newStatus)
 {
 	if (!statusEffectImage) return;
-
 	if (_newStatus == EPlayerStatus::NONE)
 	{
 		statusEffectImage->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
 
-	if (UTexture2D* _foundTexture = statusImages.Contains(_newStatus) ? statusImages[_newStatus] : nullptr)
+	if (UTexture2D* _foundTexture = statusImages[_newStatus])
 	{
 		statusEffectImage->SetBrushFromTexture(_foundTexture);
-		statusEffectImage->SetVisibility(ESlateVisibility::Visible);
+		SetVisibility(ESlateVisibility::Visible);
 	}
+
 }
 
 
 void UStatusEffectWidget::HideStatus()
 {
-	if (statusEffectImage)
-	{
-		statusEffectImage->SetVisibility(ESlateVisibility::Hidden);
-	}
+    SetVisibility(ESlateVisibility::Hidden);
+	
 }
