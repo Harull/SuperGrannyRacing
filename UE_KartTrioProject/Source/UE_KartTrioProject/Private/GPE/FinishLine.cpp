@@ -8,6 +8,7 @@
 #include <Kismet/KismetSystemLibrary.h>
 #include <UI/Kart_HUD.h>
 
+
 // Sets default values
 AFinishLine::AFinishLine()
 {
@@ -43,16 +44,9 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	UCollectedItemComponent* _comp =  _player->GetCollectedItemComponent();
 	if (!_comp) return;
 	
-	if (_comp->CanFinish() && !arrivedPlayers.Contains(_player))
+	if (_comp->CanFinish())
 	{
 		_comp->SetHasFinish(true);
-		arrivedPlayers.Add(_player);
-		int _position = arrivedPlayers.Num();
-		UKismetSystemLibrary::PrintString(this, FString::FromInt(_position));
-		FString _suffix = GetOrdinalSuffix(_position);
-		FString _string = " You are : " + FString::FromInt(_position) + _suffix + " ! ";
-		FString _positionText =_string;
-		_positionText += TEXT("\n Good Granny !!!");
 
 		UKismetSystemLibrary::PrintString(this, "Finish");
 		if(APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
@@ -60,7 +54,6 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 			if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(_controller->GetHUD()))
 			{
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
-				_hud->GetMainWidget()->GetWinScreenWidget()->SetText(FText::FromString(_positionText));
 				_hud->GetMainWidget()->SetWinScreenVisibility();
 				if(_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
 					_hud->GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
@@ -72,7 +65,6 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	}
 	else
 	{
-
 		UKismetSystemLibrary::PrintString(this, "NO Finish");
 	}
 }
@@ -98,10 +90,5 @@ FString AFinishLine::GetOrdinalSuffix(int _number)
 	}
 }
 
-void AFinishLine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AFinishLine, arrivedPlayers);
-}
 

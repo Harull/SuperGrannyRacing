@@ -21,11 +21,9 @@ class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 	//UPROPERTY(EditAnywhere) TObjectPtr<UBillboardComponent> billboard = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
 
-	UPROPERTY(Replicated) TArray<ASeniorPlayer*> arrivedPlayers;
 	
 public:
 	FOnStopRace& OnStopRace() { return onStopRace; }
-	FORCEINLINE TArray<ASeniorPlayer*> GetArrivedPlayers(){return arrivedPlayers;}
 
 public:	
 	AFinishLine();
@@ -35,7 +33,5 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	FString GetOrdinalSuffix(int _number);
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 };

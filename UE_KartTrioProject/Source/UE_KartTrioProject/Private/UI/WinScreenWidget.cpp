@@ -4,6 +4,7 @@
 
 void UWinScreenWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 	/*FProperty* _prop = GetClass()->PropertyLink;
 	
 	while (_prop != nullptr)

@@ -5,6 +5,7 @@
 #include "GPE/LootBox.h"
 #include "GIS/GIS_CollectedItem.h"
 #include "GPE/ULootBoxSpawnPointSubsystem.h"
+#include <SeniorPlayer.h>
 
 void AGM_KartBase::BeginPlay()
 {
@@ -17,7 +18,8 @@ void AGM_KartBase::BeginPlay()
 	UGIS_CollectedItem* _subsystem = GetWorld()->GetSubsystem<UGIS_CollectedItem>();
 	if (_subsystem && _subsystem->ItemListIsEmpty())
 	{
-		int _sizeList = 6;
+		int _sizeList = 1;
 		_subsystem->GenerateAndSetList(_sizeList);
 	}
 }
+
