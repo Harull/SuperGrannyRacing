@@ -18,7 +18,7 @@ void AGM_KartBase::BeginPlay()
 	UGIS_CollectedItem* _subsystem = GetWorld()->GetSubsystem<UGIS_CollectedItem>();
 	if (_subsystem && _subsystem->ItemListIsEmpty())
 	{
-		int _sizeList = 1;
+		int _sizeList = 6;
 		_subsystem->GenerateAndSetList(_sizeList);
 	}
 }

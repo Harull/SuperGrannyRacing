@@ -47,6 +47,10 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	if (_comp->CanFinish())
 	{
 		_comp->SetHasFinish(true);
+		RegisterPlayerFinish(_player);
+		int _rank = GetPlayerRank(_player);
+
+		FString _rankStr = FString::Printf(TEXT("You finished %d%s!"), _rank, *GetOrdinalSuffix(_rank));
 
 		UKismetSystemLibrary::PrintString(this, "Finish");
 		if(APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
@@ -55,6 +59,7 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 			{
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
 				_hud->GetMainWidget()->SetWinScreenVisibility();
+				_hud->GetMainWidget()->GetWinScreenWidget()->SetText(FText::FromString(_rankStr));
 				if(_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
 					_hud->GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
 			}
@@ -88,6 +93,34 @@ FString AFinishLine::GetOrdinalSuffix(int _number)
 	default: 
 		return "th";
 	}
+}
+
+void AFinishLine::RegisterPlayerFinish(ASeniorPlayer* _player)
+{
+	//if (!HasAuthority()) return;
+
+	/*if (!playerPlacements.Contains(_player))
+	{*/
+		playerFinishCount++;
+		//playerPlacements.Add(_player, playerFinishCount);
+	//}
+}
+
+int AFinishLine::GetPlayerRank(ASeniorPlayer* _player)
+{
+	/*if (playerPlacements.Contains(_player))
+	{
+		return playerPlacements[_player];
+	}
+	return -1;*/
+	return playerFinishCount;
+}
+
+void AFinishLine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFinishLine, playerFinishCount);
 }
 
 
