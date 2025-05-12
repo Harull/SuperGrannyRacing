@@ -34,6 +34,7 @@ public:
 	FORCEINLINE bool CanFinish() const { return canFinish; }
 	FORCEINLINE int GetNumItemCollected() const { return nbItemCollected; }
 	FORCEINLINE int GetSizeList() const { return sizeList; }
+	FORCEINLINE bool AreAllItemsCollected() { return listItem.Num() == listItemCollected.Num(); }
 
 public:
 	UCollectedItemComponent();
