@@ -16,7 +16,7 @@ class UE_KARTTRIOPROJECT_API UFinishLineSubsystem : public UWorldSubsystem
 
 public:
 	FORCEINLINE const TArray<TObjectPtr<AFinishLine>>& GetAllFinishLines() const { return allFinishLine; }
-	TObjectPtr<AFinishLine> GetClosestAvailableFinish(const FVector& FromLocation) const;
+	TObjectPtr<AFinishLine> GetClosestAvailableFinishLine(const FVector& FromLocation) const;
 	void RegisterFinishLine(AFinishLine* FinishLine);
 
 

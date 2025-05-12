@@ -15,6 +15,8 @@ class UE_KARTTRIOPROJECT_API ADestinationArrow : public AActor
 	UPROPERTY(EditAnywhere, Category = "Arrow") FVector targetPoint;
 	UPROPERTY(EditAnywhere, Category = "Arrow") FRotator straightAheadRotation;
 	UPROPERTY(EditAnywhere, Category = "Arrow") bool shoppingListCompleted;
+	FTimerHandle updateTargetTimerHandle;
+
 	
 public:	
 	FORCEINLINE void ToggleVisibility() { arrowMesh->SetVisibility(!arrowMesh->IsVisible()); }
@@ -22,12 +24,9 @@ public:
 	FORCEINLINE void SetShoppingListCompleted(const bool _bool) { shoppingListCompleted = _bool; }
 	ADestinationArrow();
 	void SetTarget(const FVector& _newDestination);
-	bool IsStraightAheadItsDestination();
 protected:
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+private:
+	void UpdateTargetPoint();
 };

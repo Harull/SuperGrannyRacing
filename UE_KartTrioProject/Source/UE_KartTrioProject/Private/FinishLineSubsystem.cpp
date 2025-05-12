@@ -6,15 +6,17 @@
 #include <Kismet/KismetSystemLibrary.h>
 
 
-TObjectPtr<AFinishLine> UFinishLineSubsystem::GetClosestAvailableFinish(const FVector& _fromLocation) const
+TObjectPtr<AFinishLine> UFinishLineSubsystem::GetClosestAvailableFinishLine(const FVector& _fromLocation) const
 {
 	AFinishLine* _closest = nullptr;
-	float _minDistance = TNumericLimits<float>::Max(); // max float
-	UKismetSystemLibrary::PrintString(GetWorld(), FString::FromInt(allFinishLine.Num()), true, true, FLinearColor::MakeRandomColor());
+	float _minDistance = 999999999;
+	// UKismetSystemLibrary::PrintString(GetWorld(), FString::FromInt(allFinishLine.Num()), true, true, FLinearColor::Black, 20.0);
 	for (AFinishLine* _line : allFinishLine)
 	{
-		if (_line && _line->GetIsAvailable()) 
+		if (_line && _line->GetIsAvailable())
 		{
+			//UKismetSystemLibrary::PrintString(GetWorld(), "Step 1", true, true, FLinearColor::Black, 20.0);
+
 			float _dist = FVector::Dist(_line->GetActorLocation(), _fromLocation);
 			if (_dist < _minDistance)
 			{
@@ -23,6 +25,7 @@ TObjectPtr<AFinishLine> UFinishLineSubsystem::GetClosestAvailableFinish(const FV
 			}
 		}
 	}
+
 	return _closest;
 }
 
