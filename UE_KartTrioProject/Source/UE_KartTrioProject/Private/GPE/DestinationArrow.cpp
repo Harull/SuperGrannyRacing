@@ -2,11 +2,14 @@
 
 
 #include "GPE/DestinationArrow.h"
+#include <GPE/FinishLine.h>
+#include <Kismet/GameplayStatics.h>
+#include <SeniorPlayer.h>
 
 // Sets default values
 ADestinationArrow::ADestinationArrow()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
 	arrowMesh = CreateDefaultSubobject<UStaticMeshComponent>("ArrowMesh");
@@ -17,18 +20,18 @@ ADestinationArrow::ADestinationArrow()
 
 void ADestinationArrow::SetTarget(const FVector& _newTarget)
 {
-    targetPoint = _newTarget;
+	targetPoint = _newTarget;
 }
 
 bool ADestinationArrow::IsStraightAheadItsDestination()
 {
-    GetActorRotation();
+	GetActorRotation();
 
-    FVector _arrowLocation = GetActorLocation();
-    FVector _direction = targetPoint - _arrowLocation;
+	FVector _arrowLocation = GetActorLocation();
+	FVector _direction = targetPoint - _arrowLocation;
 
-    const float _dot = FVector::DotProduct(_arrowLocation.GetSafeNormal(), _direction.GetSafeNormal());
-    return _dot <= 1;
+	const float _dot = FVector::DotProduct(_arrowLocation.GetSafeNormal(), _direction.GetSafeNormal());
+	return _dot <= 1;
 }
 
 
@@ -44,25 +47,30 @@ void ADestinationArrow::BeginPlay()
 void ADestinationArrow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-    if (!targetPoint.IsNearlyZero())
-    {
-        arrowMesh->SetVisibility(true);
-        FVector _arrowLocation = GetActorLocation();
-        FVector _direction = targetPoint - _arrowLocation;
+	if (!targetPoint.IsNearlyZero())
+	{
+		arrowMesh->SetVisibility(true);
+		FVector _arrowLocation = GetActorLocation();
+		FVector _direction = targetPoint - _arrowLocation;
 
-        _direction.Z = 0.f;
+		_direction.Z = 0.f;
 
-        if (!_direction.IsNearlyZero())
-            SetActorRotation(_direction.Rotation());
-    }
-    else
-    {
-        arrowMesh->SetVisibility(false);
-    }
-    //if (IsStraightAheadItsDestination())
-    //{
-    //    SetActorRotation(straightAheadRotation);
-    //}
+		if (!_direction.IsNearlyZero())
+			SetActorRotation(_direction.Rotation());
+	}
+	else if (shoppingListCompleted)
+	{
+		if (AFinishLine* _fnl = Cast<AFinishLine>(UGameplayStatics::GetActorOfClass(GetWorld(), AFinishLine::StaticClass())))
+			targetPoint = _fnl->GetActorLocation();
+	}
+	else
+	{
+		arrowMesh->SetVisibility(false);
+	}
+	//if (IsStraightAheadItsDestination())
+	//{
+	//    SetActorRotation(straightAheadRotation);
+	//}
 }
 
 
