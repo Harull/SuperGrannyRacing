@@ -25,15 +25,19 @@ class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere) TArray<TObjectPtr<ACollectedItem>> listItemCollected;
 	UPROPERTY(VisibleAnywhere) int nbItemCollected = 0;
 	UPROPERTY(EditAnywhere) int sizeList = 4;
-	UPROPERTY(EditAnywhere) bool canFinish = false;
 	UPROPERTY(EditAnywhere) float timeCooldown = 2;
 	UPROPERTY(EditAnywhere) bool isCooldown = false;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) bool canFinish = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly) bool hasFinish = false;
 
 public:
 	FORCEINLINE TObjectPtr<ACollectedItem> GetCurrentItem() const { return listItem.IsValidIndex(nbItemCollected) ? listItem[nbItemCollected] : nullptr; }
 	FORCEINLINE bool CanFinish() const { return canFinish; }
+	FORCEINLINE void SetHasFinish(bool _value)  { hasFinish = _value; }
 	FORCEINLINE int GetNumItemCollected() const { return nbItemCollected; }
 	FORCEINLINE int GetSizeList() const { return sizeList; }
+	FORCEINLINE bool AreAllItemsCollected() { return listItem.Num() == listItemCollected.Num(); }
 
 public:
 	UCollectedItemComponent();

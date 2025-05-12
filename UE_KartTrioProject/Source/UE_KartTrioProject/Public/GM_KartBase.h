@@ -7,6 +7,7 @@
 #include "GM_KartBase.generated.h"
 
 class ALootBox;
+class ASeniorPlayer;
 
 /**
  * 

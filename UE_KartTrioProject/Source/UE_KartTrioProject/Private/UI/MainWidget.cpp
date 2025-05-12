@@ -35,8 +35,8 @@ void UMainWidget::InitShoppingList(const TArray<TObjectPtr<ACollectedItem>>& Ite
 	{
 		TObjectPtr<UItemToCollectWidget> _shopItem = CreateWidget<UItemToCollectWidget>(this, itemToCollectWidget);
 		_shopItem->Construct(Items[_i]->GetItemName());
-		_shopItem->Padding.Top = paddingValue;
-		_shopItem->Padding.Bottom = paddingValue;
+		//_shopItem->Padding.Top = paddingValue;
+		//_shopItem->Padding.Bottom = paddingValue;
 		shoppingList->AddChild(_shopItem);
 		_shopItem->AddToViewport();
 		allItemsWidget.Add(_shopItem);

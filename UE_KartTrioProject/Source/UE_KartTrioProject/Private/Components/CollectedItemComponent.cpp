@@ -61,7 +61,7 @@ void UCollectedItemComponent::BeginPlay()
 		if (TObjectPtr<UPlaceArrowSignComponent> _arrowComp = seniorPlayerRef->GetPlaceArrowSignComponent())
 		{
 			_arrowComp->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
-			
+
 			FTimerHandle _timer;
 			GetWorld()->GetTimerManager().SetTimer(_timer, [&]()
 				{
@@ -154,8 +154,8 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 		nbItemCollected++;
 		listItemCollected.Add(_collectItem);
 		AddCollectedItemMeshToShoppingKart(_collectItem);
-
 		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
+
 
 		if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
 		{
@@ -163,19 +163,21 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 			if (_itemWidget)
 				_itemWidget->CrossItem();
 		}
-
+		TObjectPtr<ADestinationArrow> _arrow = seniorPlayerRef->GetDestinationArrowComponent()->GetCurrentArrow();
 		if (canFinish)
 		{
 			seniorPlayerRef->GetPlaceArrowSignComponent()->NoMoreItem();
-			if (TObjectPtr<ADestinationArrow> _arrow = seniorPlayerRef->GetDestinationArrowComponent()->GetCurrentArrow())
+			if (_arrow)
 				_arrow->SetTarget(FVector::ZeroVector);
 		}
 		else
 		{
 			seniorPlayerRef->GetPlaceArrowSignComponent()->PlaceArrowNewPosition(GetCurrentItem()->GetItemPosition());
-			if (TObjectPtr<ADestinationArrow> _arrow = seniorPlayerRef->GetDestinationArrowComponent()->GetCurrentArrow())
+			if (_arrow)
 				_arrow->SetTarget(GetCurrentItem()->GetItemPosition());
 		}
+		if (_arrow)
+			_arrow->SetShoppingListCompleted(AreAllItemsCollected());
 	}
 }
 
@@ -216,7 +218,7 @@ void UCollectedItemComponent::OnRep_ListItem()
 {
 	FString _role = GetOwner()->HasAuthority() ? "Server" : "Client";
 	UKismetSystemLibrary::PrintString(this, "OnRep_ListItem() fired on" + _role + " " + FString::FromInt(listItem.Num()), true, true, FLinearColor::Red, 20);
-		
+
 	if (TObjectPtr<AKart_HUD> _hud = Cast<AKart_HUD>(GetWorld()->GetFirstPlayerController()->GetHUD()))
 	{
 		TObjectPtr<UMainWidget> _mainWidget = _hud->GetMainWidget();
