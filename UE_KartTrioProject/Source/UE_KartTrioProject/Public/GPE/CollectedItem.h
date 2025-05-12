@@ -10,6 +10,9 @@
 /**
  * 
  */
+
+class AItem;
+
 UCLASS()
 class UE_KARTTRIOPROJECT_API ACollectedItem : public AActor
 {
@@ -20,6 +23,7 @@ class UE_KARTTRIOPROJECT_API ACollectedItem : public AActor
 	UPROPERTY(EditAnywhere) bool isInTheList = false;
 	UPROPERTY(VisibleAnywhere) FVector boxPosition = FVector();
 	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMesh> itemMesh = nullptr;
+	//UPROPERTY(EditAnywhere) TArray<TSubclassOf<AItem>> rewardItems;
 
 
 
@@ -38,4 +42,5 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void Init();
+	//TSubclassOf<AItem> GiveItem();
 };

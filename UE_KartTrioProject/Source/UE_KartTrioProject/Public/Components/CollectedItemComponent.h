@@ -9,6 +9,7 @@
 
 class ASeniorPlayer;
 class UBillboardComponent;
+class AItem;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UE_KARTTRIOPROJECT_API UCollectedItemComponent : public UActorComponent
@@ -50,8 +51,8 @@ public:
 	//UFUNCTION() void UseItem(const FInputActionValue& _valueFloat);
 	//UFUNCTION(Server, Unreliable) void SpawnItemServer(const FVector& _position);
 	TArray<TObjectPtr<UBillboardComponent>> GetAllBillBoardComponents();
-	void UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem);
-	void AddCollectedItemMeshToShoppingKart(TObjectPtr<ACollectedItem> _collectItem);
+	void UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem/*, TSubclassOf<AItem> _givenItem*/);
+	void AddCollectedItemMeshToShoppingKart(TObjectPtr<ACollectedItem> _collectItem/*, TSubclassOf<AItem> _givenItem*/);
 	int GetAvailableShoppingKartPosition();
 	UFUNCTION() void ResetCooldown();
 	UFUNCTION(Server, Reliable) void ServerRPC_PlaceItemInShoppingCart(ACollectedItem* _collectItem, const int _meshIndex);
