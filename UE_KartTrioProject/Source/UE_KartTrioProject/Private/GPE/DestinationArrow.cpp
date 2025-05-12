@@ -4,6 +4,7 @@
 #include "GPE/DestinationArrow.h"
 #include <GPE/FinishLine.h>
 #include <Kismet/GameplayStatics.h>
+#include "FinishLineSubsystem.h"
 #include <SeniorPlayer.h>
 
 // Sets default values
@@ -60,8 +61,13 @@ void ADestinationArrow::Tick(float DeltaTime)
 	}
 	else if (shoppingListCompleted)
 	{
-		if (AFinishLine* _fnl = Cast<AFinishLine>(UGameplayStatics::GetActorOfClass(GetWorld(), AFinishLine::StaticClass())))
-			targetPoint = _fnl->GetActorLocation();
+		//if (AFinishLine* _fnl = Cast<AFinishLine>(UGameplayStatics::GetActorOfClass(GetWorld(), AFinishLine::StaticClass())))
+		//	targetPoint = _fnl->GetActorLocation();
+		if (UFinishLineSubsystem* _sub = GetWorld()->GetSubsystem<UFinishLineSubsystem>())
+		{
+			AFinishLine* _nearestFinish = _sub->GetClosestAvailableFinish(GetActorLocation());
+			targetPoint = _nearestFinish->GetActorLocation();
+		}
 	}
 	else
 	{

@@ -6,6 +6,7 @@
 #include <SeniorPlayer.h>
 #include <Components/CollectedItemComponent.h>
 #include <Kismet/KismetSystemLibrary.h>
+#include "FinishLineSubsystem.h"
 #include <UI/Kart_HUD.h>
 
 
@@ -28,7 +29,9 @@ AFinishLine::AFinishLine()
 void AFinishLine::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (UFinishLineSubsystem* _sub = GetWorld()->GetSubsystem<UFinishLineSubsystem>())
+		_sub->RegisterFinishLine(this);
+
 }
 
 // Called every frame
@@ -67,6 +70,7 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 			}
 			_player->DisableInput(_controller);
 			_player->SetActorEnableCollision(false);
+			isAvailable = false;
 		}
 		onStopRace.Broadcast();
 	}

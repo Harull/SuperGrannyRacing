@@ -24,11 +24,13 @@ class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 	UPROPERTY(EditAnywhere,Replicated)int playerFinishCount = 0;
 
 	UPROPERTY()TMap<ASeniorPlayer*, int> playerPlacements;
+	UPROPERTY() bool isAvailable = true;
 
 	
 
 	
 public:
+	FORCEINLINE bool GetIsAvailable() const { return isAvailable; }
 	FOnStopRace& OnStopRace() { return onStopRace; }
 
 public:	
