@@ -20,6 +20,8 @@ AFinishLine::AFinishLine()
 
 	//billboard->SetupAttachment(RootComponent);
 	box->SetupAttachment(RootComponent);
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
