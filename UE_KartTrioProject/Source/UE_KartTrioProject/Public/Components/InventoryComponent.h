@@ -46,7 +46,7 @@ public:
 	UFUNCTION() void UseItem(const FInputActionValue& _value);
 	UFUNCTION(BlueprintCallable) void UseSpecialItem();
 	UFUNCTION() void StartAnimSpecialItem(const FInputActionValue& _value);
-	void Reward();
+	void Reward(/*TSubclassOf<AItem> _givenItem*/);
 
 private:
 	UMainWidget* GetMainWidget()const;

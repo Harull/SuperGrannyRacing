@@ -13,6 +13,7 @@
 #include "Algo/Sort.h"
 #include "Components/InventoryComponent.h"
 #include <GIS/WS_PlayerClassement.h>
+#include "GPE/Item.h"
 
 // Sets default values for this component's properties
 UCollectedItemComponent::UCollectedItemComponent()
@@ -133,7 +134,7 @@ void UCollectedItemComponent::TickComponent(float DeltaTime, ELevelTick TickType
 //	GetWorld()->GetTimerManager().SetTimer(_timer, [&]() {UCollectedItemComponent::ResetCooldown(); }, timeCooldown, false);
 //}
 
-void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem)
+void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _collectItem/*, TSubclassOf<AItem> _givenItem*/)
 {
 	//UKismetSystemLibrary::PrintString(this, "Hello1", true, true, FLinearColor::Blue, 10.0f);
 
@@ -153,7 +154,7 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 	{
 		nbItemCollected++;
 		listItemCollected.Add(_collectItem);
-		AddCollectedItemMeshToShoppingKart(_collectItem);
+		AddCollectedItemMeshToShoppingKart(_collectItem/*, _givenItem*/);
 		if (listItem.Num() == listItemCollected.Num()) canFinish = true;
 
 
@@ -181,7 +182,7 @@ void UCollectedItemComponent::UpdateCurrentItem(TObjectPtr<ACollectedItem> _coll
 	}
 }
 
-void UCollectedItemComponent::AddCollectedItemMeshToShoppingKart(TObjectPtr<ACollectedItem> _collectItem)
+void UCollectedItemComponent::AddCollectedItemMeshToShoppingKart(TObjectPtr<ACollectedItem> _collectItem/*, TSubclassOf<AItem> _givenItem*/)
 {
 	int _meshIndex = GetAvailableShoppingKartPosition();
 	UKismetSystemLibrary::PrintString(this, FString::FromInt(_meshIndex), true, true, FLinearColor::Blue, 10.0f);
@@ -191,7 +192,7 @@ void UCollectedItemComponent::AddCollectedItemMeshToShoppingKart(TObjectPtr<ACol
 		ServerRPC_PlaceItemInShoppingCart(_collectItem, _meshIndex);
 		PlaceItemInShoppingCart(_collectItem, _meshIndex);
 	}
-	seniorPlayerRef->GetInventoryComponent()->Reward();
+	seniorPlayerRef->GetInventoryComponent()->Reward(/*_givenItem*/);
 }
 
 int UCollectedItemComponent::GetAvailableShoppingKartPosition()

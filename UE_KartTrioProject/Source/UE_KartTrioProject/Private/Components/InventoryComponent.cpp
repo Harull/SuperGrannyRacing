@@ -113,13 +113,14 @@ void UInventoryComponent::StartAnimSpecialItem(const FInputActionValue& _value)
 	onStartAnim.Broadcast();
 }
 
-void UInventoryComponent::Reward()
+void UInventoryComponent::Reward(/*TSubclassOf<AItem> _givenItem*/)
 {
 	if (rewardItems.IsEmpty())return;
 	int _count = rewardItems.Num() - 1;
 	int _rand = FMath::RandRange(0, _count);
 	TSubclassOf<AItem> _rewardItem = rewardItems[_rand];
 	AddItem(_rewardItem);
+	//AddItem(_givenItem);
 
 	ToggleText();
 }

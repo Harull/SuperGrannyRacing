@@ -6,6 +6,7 @@
 #include "GIS/GIS_CollectedItem.h"
 #include <SeniorPlayer.h>
 #include <Kismet/KismetSystemLibrary.h>
+#include "GPE/Item.h"
 
 ACollectedItem::ACollectedItem()
 {
@@ -47,7 +48,7 @@ void ACollectedItem::NotifyActorBeginOverlap(AActor* OtherActor)
 	//UKismetSystemLibrary::PrintString(this, _comp->GetOwner()->GetName());
 	//UKismetSystemLibrary::PrintString(this, "Hi4", true, true, FLinearColor::Blue, 10.0f);
 
-	_comp->UpdateCurrentItem(this);
+	_comp->UpdateCurrentItem(this/*, GiveItem()*/);
 }
 
 void ACollectedItem::Init()
@@ -59,3 +60,12 @@ void ACollectedItem::Init()
 	UGIS_CollectedItem* _sub = GetWorld()->GetSubsystem<UGIS_CollectedItem>();
 	_sub->AddCollectedItem(this);
 }
+
+//TSubclassOf<AItem> ACollectedItem::GiveItem()
+//{
+//	if (rewardItems.IsEmpty())return nullptr;
+//	int _count = rewardItems.Num() - 1;
+//	int _rand = FMath::RandRange(0, _count);
+//	TSubclassOf<AItem> _rewardItem = rewardItems[_rand];
+//	return _rewardItem;
+//}
