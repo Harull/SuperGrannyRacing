@@ -157,6 +157,8 @@ public:
 
 	FORCEINLINE void ResetVelocity() { SetCurrentVelocity(0); }
 
+	FORCEINLINE bool GetIsStun() { return isStun; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

@@ -15,6 +15,9 @@
 #include "Components/InventoryComponent.h"
 #include <GIS/WS_PlayerClassement.h>
 #include "UI/Lobby_HUD.h"
+#include <UI/Kart_HUD.h>
+#include "UI/MainWidget.h"
+#include "UI/WarningScreenWidget.h"
 
 // Sets default values
 ASeniorPlayer::ASeniorPlayer()
@@ -119,6 +122,36 @@ void ASeniorPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+void ASeniorPlayer::SetTemporaryStatus(EPlayerStatus _newStatus, float _duration)
+{
+	currentStatus = _newStatus;
+	
+	if (UMainWidget* _mw = GetMainWidget())
+	{
+		if (UStatusEffectWidget* _sw = _mw->GetStatusEffectWidget())
+		{
+			_sw->UpdateStatus(currentStatus);
+		}
+	}
+
+	GetWorld()->GetTimerManager().ClearTimer(timer);
+	GetWorld()->GetTimerManager().SetTimer(timer, this, &ASeniorPlayer::ResetStatus, _duration, false);
+}
+
+void ASeniorPlayer::ActivateSpeedBoost()
+{
+	if (HasAuthority())
+	{
+		UKismetSystemLibrary::PrintString(this, "Server");
+		seniorMovementcomponent->ActivateSpeedBoost();
+	}
+	else
+	{
+		UKismetSystemLibrary::PrintString(this, "client");
+		Server_ActivateSpeedBoost(); 
+	}
+}
+
 void ASeniorPlayer::InitSubsystem()
 {
 	TObjectPtr<UEnhancedInputLocalPlayerSubsystem> _subsys = GetWorld()->GetFirstPlayerController()->GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
@@ -170,6 +203,34 @@ void ASeniorPlayer::InitUniqueID()
 	actorLocalID = this->GetUniqueID();
 }
 
+UMainWidget* ASeniorPlayer::GetMainWidget()
+{
+	APlayerController* _playerController = Cast<APlayerController>(GetController());
+	if (!_playerController) return nullptr;
+	AKart_HUD* _HUD = Cast< AKart_HUD>(_playerController->GetHUD());
+	if (!_HUD)return nullptr;
+	return _HUD->GetMainWidget();
+}
+
+void ASeniorPlayer::ResetStatus()
+{
+	currentStatus = EPlayerStatus::NONE;
+
+	if (UMainWidget* _mw = GetMainWidget())
+	{
+		if (UStatusEffectWidget* _sw = _mw->GetStatusEffectWidget())
+		{
+			_sw->HideStatus();
+		}
+	}
+}
+
+void ASeniorPlayer::Server_ActivateSpeedBoost_Implementation()
+{
+	UKismetSystemLibrary::PrintString(this, "Server RPC");
+	seniorMovementcomponent->ActivateSpeedBoost();
+}
+
 void ASeniorPlayer::Server_IncrementCurrentPlayerReady_Implementation()
 {
 	UKismetSystemLibrary::PrintString(this, "THE SERVER RPC IS CALLED", true, true, FLinearColor::Yellow, 30);
@@ -201,6 +262,20 @@ void ASeniorPlayer::Client_ApplyMalusEffect_Implementation(UMaterialInterface* _
 		{
 			_camera->RemoveBlendable(_dynMat);
 		}, _duration, false);
+}
+
+void ASeniorPlayer::Client_Warning_Implementation(float _duration)
+{
+	UMainWidget* _mw = GetMainWidget();
+	if (!_mw)return;
+	UWarningScreenWidget* _warningScreen = _mw->GetWarningScreenWidget();
+	if (!_warningScreen)return;
+	_warningScreen->SetVisibility(ESlateVisibility::Visible);
+
+	FTimerHandle _timer;
+	GetWorld()->GetTimerManager().SetTimer(_timer, [_warningScreen]() {_warningScreen->SetVisibility(ESlateVisibility::Hidden); }, _duration, false);
+
+	
 }
 
 void ASeniorPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

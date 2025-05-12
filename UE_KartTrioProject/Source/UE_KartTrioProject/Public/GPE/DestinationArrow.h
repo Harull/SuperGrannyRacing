@@ -14,11 +14,12 @@ class UE_KARTTRIOPROJECT_API ADestinationArrow : public AActor
 	UPROPERTY(EditAnywhere, Category = "Arrow")	TObjectPtr<UStaticMeshComponent> arrowMesh = nullptr;
 	UPROPERTY(EditAnywhere, Category = "Arrow") FVector targetPoint;
 	UPROPERTY(EditAnywhere, Category = "Arrow") FRotator straightAheadRotation;
-
+	UPROPERTY(EditAnywhere, Category = "Arrow") bool shoppingListCompleted;
 	
 public:	
 	FORCEINLINE void ToggleVisibility() { arrowMesh->SetVisibility(!arrowMesh->IsVisible()); }
 	FORCEINLINE FRotator GetStraightAheadRotation() { return straightAheadRotation; }
+	FORCEINLINE void SetShoppingListCompleted(const bool _bool) { shoppingListCompleted = _bool; }
 	ADestinationArrow();
 	void SetTarget(const FVector& _newDestination);
 	bool IsStraightAheadItsDestination();

@@ -10,6 +10,8 @@ class UE_KARTTRIOPROJECT_API AFlashLight : public AItem
 {
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere) float time = 3.0f;
+	UPROPERTY(EditAnywhere) float warningDelay = 1.0f;
+	UPROPERTY(EditAnywhere) USoundBase* warningSound;
 	UPROPERTY(EditDefaultsOnly) UMaterialInterface* malusMaterial;
 	
 public:	
@@ -19,5 +21,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void Use(ASeniorPlayer* _target)override;
+	void Flash(ASeniorPlayer* _target);
 
 };
