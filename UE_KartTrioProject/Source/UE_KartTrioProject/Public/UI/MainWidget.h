@@ -28,7 +28,7 @@ class UE_KARTTRIOPROJECT_API UMainWidget : public UUserWidget
 	UPROPERTY(EditAnywhere) TSubclassOf<UItemToCollectWidget> itemToCollectWidget = nullptr;
 	UPROPERTY() TArray<TObjectPtr<UItemToCollectWidget>> allItemsWidget;
 
-	UPROPERTY() float paddingValue = -10.0f;
+	//UPROPERTY() float paddingValue = -10.0f;
 
 public:
 	FORCEINLINE TObjectPtr<UUsableItemWidget> GetUsableItemWidget() { return usableItemWidget; }
