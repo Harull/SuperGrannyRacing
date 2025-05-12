@@ -5,6 +5,7 @@
 #include "GPE/LootBox.h"
 #include "GIS/GIS_CollectedItem.h"
 #include "GPE/ULootBoxSpawnPointSubsystem.h"
+#include <SeniorPlayer.h>
 
 void AGM_KartBase::BeginPlay()
 {
@@ -21,3 +22,4 @@ void AGM_KartBase::BeginPlay()
 		_subsystem->GenerateAndSetList(_sizeList);
 	}
 }
+

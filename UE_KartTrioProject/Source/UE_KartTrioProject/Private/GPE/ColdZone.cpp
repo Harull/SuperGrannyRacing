@@ -63,5 +63,6 @@ void AColdZone::NotifyActorEndOverlap(AActor* OtherActor)
 			_movement->ResetBackwardMaxSpeed();
 
 		}, slowTime, false);
+	_player->SetTemporaryStatus(EPlayerStatus::FROZEN, slowTime);
 }
 

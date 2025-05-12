@@ -67,7 +67,9 @@ void ABoostingPill::Use(ASeniorPlayer* _target)
 	
 	USeniorMovementComponent* _movement = _target->GetSeniorMovementComponent();
 	if (!_movement)return;
-	_movement->ActivateSpeedBoost();
+	UKismetSystemLibrary::PrintString(this, "Activate");
+	//_movement->ActivateSpeedBoost();
+	_target->ActivateSpeedBoost();
 
 }
 

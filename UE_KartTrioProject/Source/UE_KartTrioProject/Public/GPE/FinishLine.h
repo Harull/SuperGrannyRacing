@@ -7,6 +7,9 @@
 #include <Components/BoxComponent.h>
 #include "FinishLine.generated.h"
 
+class ASeniorPlayer;
+class UCollectedItemComponent;
+
 UCLASS()
 class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 {
@@ -17,6 +20,13 @@ class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 	
 	//UPROPERTY(EditAnywhere) TObjectPtr<UBillboardComponent> billboard = nullptr;
 	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> box = nullptr;
+
+	UPROPERTY(EditAnywhere,Replicated)int playerFinishCount = 0;
+
+	UPROPERTY()TMap<ASeniorPlayer*, int> playerPlacements;
+
+	
+
 	
 public:
 	FOnStopRace& OnStopRace() { return onStopRace; }
@@ -28,5 +38,10 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	FString GetOrdinalSuffix(int _number);
+	void RegisterPlayerFinish(ASeniorPlayer* _player);
+	int GetPlayerRank(ASeniorPlayer* _player);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 };
