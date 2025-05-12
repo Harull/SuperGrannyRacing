@@ -16,6 +16,7 @@ UCLASS()
 class UE_KARTTRIOPROJECT_API AGM_KartBase : public AGameModeBase
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere) int sizeList = 6;
 	UPROPERTY(EditAnywhere) TSubclassOf<ALootBox> lootBox;
 
 protected:
