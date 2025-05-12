@@ -4,6 +4,7 @@
 #include "GPE/DestinationArrow.h"
 #include <GPE/FinishLine.h>
 #include <Kismet/GameplayStatics.h>
+#include "FinishLineSubsystem.h"
 #include <SeniorPlayer.h>
 
 // Sets default values
@@ -23,25 +24,28 @@ void ADestinationArrow::SetTarget(const FVector& _newTarget)
 	targetPoint = _newTarget;
 }
 
-bool ADestinationArrow::IsStraightAheadItsDestination()
-{
-	GetActorRotation();
-
-	FVector _arrowLocation = GetActorLocation();
-	FVector _direction = targetPoint - _arrowLocation;
-
-	const float _dot = FVector::DotProduct(_arrowLocation.GetSafeNormal(), _direction.GetSafeNormal());
-	return _dot <= 1;
-}
-
-
-// Called when the game starts or when spawned
 void ADestinationArrow::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	GetWorld()->GetTimerManager().SetTimer(updateTargetTimerHandle, this, &ADestinationArrow::UpdateTargetPoint, 2.0f, true);
 }
+
+
+void ADestinationArrow::UpdateTargetPoint()
+{
+	if (shoppingListCompleted)
+	{
+		if (UFinishLineSubsystem* _sub = GetWorld()->GetSubsystem<UFinishLineSubsystem>())
+		{
+			if (AFinishLine* _nearestFinish = _sub->GetClosestAvailableFinishLine(GetActorLocation()))
+			{
+				targetPoint = _nearestFinish->GetActorLocation();
+			}
+		}
+	}
+}
+
 
 // Called every frame
 void ADestinationArrow::Tick(float DeltaTime)
@@ -58,19 +62,11 @@ void ADestinationArrow::Tick(float DeltaTime)
 		if (!_direction.IsNearlyZero())
 			SetActorRotation(_direction.Rotation());
 	}
-	else if (shoppingListCompleted)
-	{
-		if (AFinishLine* _fnl = Cast<AFinishLine>(UGameplayStatics::GetActorOfClass(GetWorld(), AFinishLine::StaticClass())))
-			targetPoint = _fnl->GetActorLocation();
-	}
 	else
 	{
 		arrowMesh->SetVisibility(false);
 	}
-	//if (IsStraightAheadItsDestination())
-	//{
-	//    SetActorRotation(straightAheadRotation);
-	//}
+
 }
 
 
