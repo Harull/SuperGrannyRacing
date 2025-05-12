@@ -11,7 +11,7 @@ void AGM_KartBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (UULootBoxSpawnPointSubsystem* _subsystem = GetWorld()->GetGameInstance()->GetSubsystem< UULootBoxSpawnPointSubsystem>())
+	if (UULootBoxSpawnPointSubsystem* _subsystem = GetWorld()->GetGameInstance()->GetSubsystem<UULootBoxSpawnPointSubsystem>())
 		_subsystem->SetLootBoxToSpawn(lootBox);
 
 

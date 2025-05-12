@@ -76,7 +76,6 @@ void UInventoryComponent::UseItem(const FInputActionValue& _value)
 
 void UInventoryComponent::UseSpecialItem()
 {
-
 	ASeniorPlayer* _owner = Cast<ASeniorPlayer>(GetOwner());
 	if (!_owner)return;
 

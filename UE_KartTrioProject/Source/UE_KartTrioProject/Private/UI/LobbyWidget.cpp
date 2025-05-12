@@ -34,7 +34,7 @@ void ULobbyWidget::NativeTick(const FGeometry&, float _DeltaTime)
 
 	if (timerIsStarted)
 	{
-		currentTime += _DeltaTime;
+		currentTime += _DeltaTime + 5; //TODO REMOVE THE + 5
 		UpdateTimer(1 - (currentTime/timeMax));
 		if (currentTime >= timeMax)
 		{

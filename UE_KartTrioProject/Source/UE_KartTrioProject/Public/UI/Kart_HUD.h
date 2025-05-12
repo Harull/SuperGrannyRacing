@@ -17,7 +17,7 @@ class UE_KARTTRIOPROJECT_API AKart_HUD : public AHUD
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere) TSubclassOf<UMainWidget> mainWidgetRef;
-	UPROPERTY() TObjectPtr<UMainWidget> mainWidget;
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess)) TObjectPtr<UMainWidget> mainWidget;
 
 public:
 	FORCEINLINE TObjectPtr<UMainWidget> GetMainWidget() const { return mainWidget; }

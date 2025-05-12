@@ -8,6 +8,5 @@ void AKart_HUD::BeginPlay()
 	Super::BeginPlay();
 
 	mainWidget = CreateWidget<UMainWidget>(GetWorld(), mainWidgetRef);
-	mainWidget->AddToViewport();	
 }
 
