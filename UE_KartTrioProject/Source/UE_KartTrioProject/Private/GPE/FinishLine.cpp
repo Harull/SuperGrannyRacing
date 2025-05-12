@@ -48,11 +48,11 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 	
 	if (_comp->CanFinish())
 	{
-		_comp->SetHasFinish(true);
+		/*_comp->SetHasFinish(true);
 		RegisterPlayerFinish(_player);
 		int _rank = GetPlayerRank(_player);
 
-		FString _rankStr = FString::Printf(TEXT("You finished %d%s!"), _rank, *GetOrdinalSuffix(_rank));
+		FString _rankStr = FString::Printf(TEXT("You finished %d%s!"), _rank, *GetOrdinalSuffix(_rank));*/
 
 		UKismetSystemLibrary::PrintString(this, "Finish");
 		if(APlayerController* _controller = Cast<APlayerController>(_player->GetController()))
@@ -61,7 +61,7 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 			{
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
 				_hud->GetMainWidget()->SetWinScreenVisibility();
-				_hud->GetMainWidget()->GetWinScreenWidget()->SetText(FText::FromString(_rankStr));
+				//_hud->GetMainWidget()->GetWinScreenWidget()->SetText(FText::FromString(_rankStr));
 				if(_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
 					_hud->GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
 			}
