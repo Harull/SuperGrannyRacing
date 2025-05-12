@@ -19,4 +19,6 @@ public:
 public:
 	void SetVisible();
 	void SetText(FText _text);
+	UFUNCTION() void OnReturnToMenu();
+	UFUNCTION() void OnReturnToLobby();
 };

@@ -42,7 +42,6 @@ void UWinScreenWidget::SetText(FText _text)
 
 void UWinScreenWidget::OnReturnToMenu()
 {
-	const FString _menuLevelName = "/Game/Levels/LVL_MainMenu?listen";
 	const FString& _menuLevelName = "/Game/Levels/LVL_MainMenu?listen";
 
 	if (GetOwningPlayer()->HasAuthority())
@@ -51,7 +50,6 @@ void UWinScreenWidget::OnReturnToMenu()
 
 void UWinScreenWidget::OnReturnToLobby()
 {
-	const FString _lobbyLevelName = "/Game/Levels/LVL_Lobby?listen";
 	const FString& _lobbyLevelName = "/Game/Levels/LVL_Lobby?listen";
 
 	if (GetOwningPlayer()->HasAuthority())
