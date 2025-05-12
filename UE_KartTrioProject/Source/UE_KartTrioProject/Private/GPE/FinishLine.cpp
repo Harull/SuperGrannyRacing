@@ -43,6 +43,7 @@ void AFinishLine::Tick(float DeltaTime)
 
 void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 {
+	if (!isAvailable) return;
 	ASeniorPlayer* _player = Cast<ASeniorPlayer>(_otherActor);
 	if (!_player) return;
 	//UCollectedItemComponent* _comp =  _player->GetComponentByClass<UCollectedItemComponent>();
@@ -64,15 +65,22 @@ void AFinishLine::NotifyActorBeginOverlap(AActor* _otherActor)
 			{
 				UKismetSystemLibrary::PrintString(this, "Affiche WIN");
 				_hud->GetMainWidget()->SetWinScreenVisibility();
-				//_hud->GetMainWidget()->GetWinScreenWidget()->SetText(FText::FromString(_rankStr));
+
+				if (TObjectPtr<UFinishLineSubsystem> _subsys = GetWorld()->GetSubsystem<UFinishLineSubsystem>())
+				{
+					int _rank = _subsys->GetUnavailableFinishLineCount();
+					FString _rankStr = FString::Printf(TEXT("You finished %d%s!"), _rank, *GetOrdinalSuffix(_rank));
+					_hud->GetMainWidget()->GetWinScreenWidget()->SetText(FText::FromString(_rankStr));
+				}
+				
 				if(_hud->GetMainWidget()->GetUsableSpecialItemWidget()->GetVisibility() == ESlateVisibility::Visible)
 					_hud->GetMainWidget()->GetUsableSpecialItemWidget()->SetVisibility(ESlateVisibility::Hidden);
 			}
 			_player->DisableInput(_controller);
 			_player->SetActorEnableCollision(false);
-			isAvailable = false;
 		}
 		onStopRace.Broadcast();
+		isAvailable = false;
 	}
 	else
 	{
@@ -127,6 +135,7 @@ void AFinishLine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AFinishLine, playerFinishCount);
+	DOREPLIFETIME(AFinishLine, isAvailable);
 }
 
 
