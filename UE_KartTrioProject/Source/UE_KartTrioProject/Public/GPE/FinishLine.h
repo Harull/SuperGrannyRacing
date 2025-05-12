@@ -24,7 +24,7 @@ class UE_KARTTRIOPROJECT_API AFinishLine : public AActor
 	UPROPERTY(EditAnywhere,Replicated)int playerFinishCount = 0;
 
 	UPROPERTY()TMap<ASeniorPlayer*, int> playerPlacements;
-	UPROPERTY() bool isAvailable = true;
+	UPROPERTY(EditAnywhere, Replicated) bool isAvailable = true;
 
 	
 
@@ -45,5 +45,6 @@ protected:
 	int GetPlayerRank(ASeniorPlayer* _player);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 
 };
