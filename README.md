@@ -72,4 +72,6 @@ It is no longer actively developed, but serves as a demonstration of:
 - [@SilverIkito ](https://github.com/SilverIkito)
 - [@RaphBv](https://github.com/RaphBv)
 - [@DMystop](https://github.com/DMystop) 
+- [@OlivierM98](https://github.com/OlivierM98)
 - [@Harull](https://github.com/Harull)
+  
